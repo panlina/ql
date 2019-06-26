@@ -1,0 +1,11 @@
+{
+  "name": "ql",
+  "version": "0.0.0",
+  "keywords": [
+    "sql",
+    "oql",
+    "orm"
+  ],
+  "author": "Jack Lu <jacklu@jacklu.me>",
+  "license": "ISC"
+}
