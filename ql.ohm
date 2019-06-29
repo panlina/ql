@@ -1,0 +1,5 @@
+ql {
+	Expression = ExpressionName
+	ExpressionName = identifier
+	identifier = alnum*
+}
