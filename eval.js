@@ -5,8 +5,15 @@ function eval(expression, environment) {
 			return environment[expression.identifier];
 		case Expression.Filter:
 			return eval(expression.expression, environment).filter(
-				value => eval(expression.filter, { __proto__: environment, ...value })
+				value => truthy(
+					eval(expression.filter, { __proto__: environment, ...value })
+				)
 			);
 	}
+}
+function truthy(value) {
+	return value instanceof Array ?
+		value.length :
+		value;
 }
 module.exports = eval;
