@@ -1,7 +1,10 @@
 ql {
 	Expression = ExpressionFilter
 	ExpressionFilter =
-		ExpressionFilter "|" ExpressionName	-- filter
+		ExpressionFilter "|" ExpressionAtom	-- filter
+		| ExpressionAtom
+	ExpressionAtom =
+		"(" Expression ")"	-- parentheses
 		| ExpressionName
 	ExpressionName = identifier
 	identifier = alnum*
