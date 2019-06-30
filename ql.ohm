@@ -1,5 +1,8 @@
 ql {
-	Expression = ExpressionName
+	Expression = ExpressionFilter
+	ExpressionFilter =
+		ExpressionFilter "|" ExpressionName	-- filter
+		| ExpressionName
 	ExpressionName = identifier
 	identifier = alnum*
 }

@@ -7,5 +7,14 @@ class Name extends Expression {
 	}
 }
 
+class Filter extends Expression {
+	constructor(expression, filter) {
+		super();
+		this.expression = expression;
+		this.filter = filter;
+	}
+}
+
 module.exports = Expression;
 module.exports.Name = Name;
+module.exports.Filter = Filter;
