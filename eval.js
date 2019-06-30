@@ -3,12 +3,34 @@ function eval(expression, environment) {
 	switch (expression.constructor) {
 		case Expression.Name:
 			return environment[expression.identifier];
+		case Expression.Compare:
+			return operate(
+				expression.operator,
+				eval(expression.left, environment),
+				eval(expression.right, environment)
+			);
 		case Expression.Filter:
 			return eval(expression.expression, environment).filter(
 				value => truthy(
 					eval(expression.filter, { __proto__: environment, ...value })
 				)
 			);
+	}
+}
+function operate(operator, left, right) {
+	switch (operator) {
+		case '<=':
+			return left <= right;
+		case '=':
+			return left == right;
+		case '>=':
+			return left >= right;
+		case '<':
+			return left < right;
+		case '!=':
+			return left != right;
+		case '>':
+			return left > right;
 	}
 }
 function truthy(value) {

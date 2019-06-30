@@ -1,7 +1,10 @@
 ql {
 	Expression = ExpressionFilter
 	ExpressionFilter =
-		ExpressionFilter "|" ExpressionAtom	-- filter
+		ExpressionFilter "|" ExpressionCompare	-- filter
+		| ExpressionCompare
+	ExpressionCompare =
+		ExpressionCompare ("<="|"="|">="|"<"|"!="|">") ExpressionAtom	-- compare
 		| ExpressionAtom
 	ExpressionAtom =
 		"(" Expression ")"	-- parentheses
