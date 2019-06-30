@@ -7,5 +7,5 @@ ql {
 		"(" Expression ")"	-- parentheses
 		| ExpressionName
 	ExpressionName = identifier
-	identifier = alnum*
+	identifier = alnum+
 }
