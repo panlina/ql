@@ -1,5 +1,7 @@
 var Expression = require('./Expression');
 function eval(expression, environment) {
+	if (typeof expression == 'number')
+		return expression;
 	switch (expression.constructor) {
 		case Expression.Name:
 			return environment[expression.identifier];

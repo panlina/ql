@@ -9,6 +9,8 @@ ql {
 	ExpressionAtom =
 		"(" Expression ")"	-- parentheses
 		| ExpressionName
+		| number
 	ExpressionName = identifier
-	identifier = alnum+
+	identifier = &letter alnum+
+	number = digit+
 }

@@ -1,7 +1,8 @@
 var grammar = require('./grammar');
 var Expression = require('./Expression');
 var semantics = grammar.createSemantics().addOperation('parse', {
-	identifier: x => x.sourceString,
+	number: x => +x.sourceString,
+	identifier: (_, x) => x.sourceString,
 	ExpressionName: identifier => new Expression.Name(identifier.parse()),
 	ExpressionAtom: expression => expression.parse(),
 	ExpressionAtom_parentheses: (open, expression, close) => expression.parse(),
