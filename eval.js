@@ -7,6 +7,12 @@ function eval(expression, environment) {
 	switch (expression.constructor) {
 		case Expression.Name:
 			return environment[expression.identifier];
+		case Expression.Add:
+			return operate(
+				expression.operator,
+				eval(expression.left, environment),
+				eval(expression.right, environment)
+			);
 		case Expression.Compare:
 			return operate(
 				expression.operator,
@@ -29,8 +35,10 @@ function eval(expression, environment) {
 }
 function operate(operator, left, right) {
 	switch (operator) {
-		case '<=':
-			return left <= right;
+		case '+':
+			return left + right;
+		case '-':
+			return left - right;
 		case '=':
 			return left == right;
 		case '>=':

@@ -7,6 +7,12 @@ var semantics = grammar.createSemantics().addOperation('parse', {
 	ExpressionName: identifier => new Expression.Name(identifier.parse()),
 	ExpressionAtom: expression => expression.parse(),
 	ExpressionAtom_parentheses: (open, expression, close) => expression.parse(),
+	ExpressionAdd: expression => expression.parse(),
+	ExpressionAdd_add: (left, operator, right) => new Expression.Add(
+		operator.sourceString,
+		left.parse(),
+		right.parse()
+	),
 	ExpressionCompare: expression => expression.parse(),
 	ExpressionCompare_compare: (left, operator, right) => new Expression.Compare(
 		operator.sourceString,

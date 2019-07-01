@@ -7,6 +7,15 @@ class Name extends Expression {
 	}
 }
 
+class Add extends Expression {
+	constructor(operator, left, right) {
+		super();
+		this.operator = operator;
+		this.left = left;
+		this.right = right;
+	}
+}
+
 class Compare extends Expression {
 	constructor(operator, left, right) {
 		super();
@@ -35,6 +44,7 @@ class Filter extends Expression {
 
 module.exports = Expression;
 module.exports.Name = Name;
+module.exports.Add = Add;
 module.exports.Compare = Compare;
 module.exports.Logic = Logic;
 module.exports.Filter = Filter;

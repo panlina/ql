@@ -7,7 +7,10 @@ ql {
 		ExpressionLogic ("&&"|"||") ExpressionCompare	-- logic
 		| ExpressionCompare
 	ExpressionCompare =
-		ExpressionCompare ("<="|"="|">="|"<"|"!="|">") ExpressionAtom	-- compare
+		ExpressionCompare ("<="|"="|">="|"<"|"!="|">") ExpressionAdd	-- compare
+		| ExpressionAdd
+	ExpressionAdd =
+		ExpressionAdd ("+"|"-") ExpressionAtom	-- add
 		| ExpressionAtom
 	ExpressionAtom =
 		"(" Expression ")"	-- parentheses
