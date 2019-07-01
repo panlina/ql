@@ -13,6 +13,12 @@ function eval(expression, environment) {
 				eval(expression.left, environment),
 				eval(expression.right, environment)
 			);
+		case Expression.Logic:
+			return operate(
+				expression.operator,
+				eval(expression.left, environment),
+				eval(expression.right, environment)
+			);
 		case Expression.Filter:
 			return eval(expression.expression, environment).filter(
 				value => truthy(
@@ -35,6 +41,10 @@ function operate(operator, left, right) {
 			return left != right;
 		case '>':
 			return left > right;
+		case '&&':
+			return left && right;
+		case '||':
+			return left || right;
 	}
 }
 function truthy(value) {

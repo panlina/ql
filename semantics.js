@@ -13,6 +13,12 @@ var semantics = grammar.createSemantics().addOperation('parse', {
 		left.parse(),
 		right.parse()
 	),
+	ExpressionLogic: expression => expression.parse(),
+	ExpressionLogic_logic: (left, operator, right) => new Expression.Logic(
+		operator.sourceString,
+		left.parse(),
+		right.parse()
+	),
 	ExpressionFilter: expression => expression.parse(),
 	ExpressionFilter_filter: (expression, bar, filter) => new Expression.Filter(
 		expression.parse(),

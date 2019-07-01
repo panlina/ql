@@ -1,7 +1,10 @@
 ql {
 	Expression = ExpressionFilter
 	ExpressionFilter =
-		ExpressionFilter "|" ExpressionCompare	-- filter
+		ExpressionFilter "|" ExpressionLogic	-- filter
+		| ExpressionLogic
+	ExpressionLogic =
+		ExpressionLogic ("&&"|"||") ExpressionCompare	-- logic
 		| ExpressionCompare
 	ExpressionCompare =
 		ExpressionCompare ("<="|"="|">="|"<"|"!="|">") ExpressionAtom	-- compare
