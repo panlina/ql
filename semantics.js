@@ -8,19 +8,19 @@ var semantics = grammar.createSemantics().addOperation('parse', {
 	ExpressionAtom: expression => expression.parse(),
 	ExpressionAtom_parentheses: (open, expression, close) => expression.parse(),
 	ExpressionAdd: expression => expression.parse(),
-	ExpressionAdd_add: (left, operator, right) => new Expression.Add(
+	ExpressionAdd_add: (left, operator, right) => new Expression.Binary(
 		operator.sourceString,
 		left.parse(),
 		right.parse()
 	),
 	ExpressionCompare: expression => expression.parse(),
-	ExpressionCompare_compare: (left, operator, right) => new Expression.Compare(
+	ExpressionCompare_compare: (left, operator, right) => new Expression.Binary(
 		operator.sourceString,
 		left.parse(),
 		right.parse()
 	),
 	ExpressionLogic: expression => expression.parse(),
-	ExpressionLogic_logic: (left, operator, right) => new Expression.Logic(
+	ExpressionLogic_logic: (left, operator, right) => new Expression.Binary(
 		operator.sourceString,
 		left.parse(),
 		right.parse()

@@ -7,19 +7,7 @@ function eval(expression, environment) {
 	switch (expression.constructor) {
 		case Expression.Name:
 			return environment[expression.identifier];
-		case Expression.Add:
-			return operate(
-				expression.operator,
-				eval(expression.left, environment),
-				eval(expression.right, environment)
-			);
-		case Expression.Compare:
-			return operate(
-				expression.operator,
-				eval(expression.left, environment),
-				eval(expression.right, environment)
-			);
-		case Expression.Logic:
+		case Expression.Binary:
 			return operate(
 				expression.operator,
 				eval(expression.left, environment),
