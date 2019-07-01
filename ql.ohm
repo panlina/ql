@@ -10,7 +10,9 @@ ql {
 		"(" Expression ")"	-- parentheses
 		| ExpressionName
 		| number
+		| string
 	ExpressionName = identifier
 	identifier = &letter alnum+
 	number = digit+
+	string = "\"" (~"\"" any)* "\""
 }
