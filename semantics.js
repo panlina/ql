@@ -19,8 +19,14 @@ var semantics = grammar.createSemantics().addOperation('parse', {
 		left.parse(),
 		right.parse()
 	),
-	ExpressionLogic: expression => expression.parse(),
-	ExpressionLogic_logic: (left, operator, right) => new Expression.Binary(
+	ExpressionAnd: expression => expression.parse(),
+	ExpressionAnd_and: (left, operator, right) => new Expression.Binary(
+		operator.sourceString,
+		left.parse(),
+		right.parse()
+	),
+	ExpressionOr: expression => expression.parse(),
+	ExpressionOr_or: (left, operator, right) => new Expression.Binary(
 		operator.sourceString,
 		left.parse(),
 		right.parse()
