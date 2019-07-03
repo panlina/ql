@@ -5,37 +5,29 @@ var semantics = grammar.createSemantics().addOperation('parse', {
 	string: (open, x, close) => x.sourceString,
 	identifier: (_, x) => x.sourceString,
 	ExpressionName: identifier => new Expression.Name(identifier.parse()),
-	ExpressionAtom: expression => expression.parse(),
+	ExpressionAtom: _default,
 	ExpressionAtom_parentheses: (open, expression, close) => expression.parse(),
-	ExpressionAdd: expression => expression.parse(),
-	ExpressionAdd_add: (left, operator, right) => new Expression.Binary(
-		operator.sourceString,
-		left.parse(),
-		right.parse()
-	),
-	ExpressionCompare: expression => expression.parse(),
-	ExpressionCompare_compare: (left, operator, right) => new Expression.Binary(
-		operator.sourceString,
-		left.parse(),
-		right.parse()
-	),
-	ExpressionAnd: expression => expression.parse(),
-	ExpressionAnd_and: (left, operator, right) => new Expression.Binary(
-		operator.sourceString,
-		left.parse(),
-		right.parse()
-	),
-	ExpressionOr: expression => expression.parse(),
-	ExpressionOr_or: (left, operator, right) => new Expression.Binary(
-		operator.sourceString,
-		left.parse(),
-		right.parse()
-	),
-	ExpressionFilter: expression => expression.parse(),
+	ExpressionAdd: _default,
+	ExpressionAdd_add: binary,
+	ExpressionCompare: _default,
+	ExpressionCompare_compare: binary,
+	ExpressionAnd: _default,
+	ExpressionAnd_and: binary,
+	ExpressionOr: _default,
+	ExpressionOr_or: binary,
+	ExpressionFilter: _default,
 	ExpressionFilter_filter: (expression, bar, filter) => new Expression.Filter(
 		expression.parse(),
 		filter.parse()
 	),
-	Expression: expression => expression.parse()
+	Expression: _default
 });
+function _default(expression) { return expression.parse(); }
+function binary(left, operator, right) {
+	return new Expression.Binary(
+		operator.sourceString,
+		left.parse(),
+		right.parse()
+	);
+}
 module.exports = semantics;
