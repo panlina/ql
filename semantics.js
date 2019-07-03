@@ -11,6 +11,8 @@ var semantics = grammar.createSemantics().addOperation('parse', {
 	ExpressionAdd_add: binary,
 	ExpressionCompare: _default,
 	ExpressionCompare_compare: binary,
+	ExpressionNot: _default,
+	ExpressionNot_not: unary,
 	ExpressionAnd: _default,
 	ExpressionAnd_and: binary,
 	ExpressionOr: _default,
@@ -28,6 +30,12 @@ function binary(left, operator, right) {
 		operator.sourceString,
 		left.parse(),
 		right.parse()
+	);
+}
+function unary(operator, operand) {
+	return new Expression.Unary(
+		operator.sourceString,
+		operand.parse()
 	);
 }
 module.exports = semantics;

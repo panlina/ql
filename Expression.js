@@ -7,6 +7,14 @@ class Name extends Expression {
 	}
 }
 
+class Unary extends Expression {
+	constructor(operator, operand) {
+		super();
+		this.operator = operator;
+		this.operand = operand;
+	}
+}
+
 class Binary extends Expression {
 	constructor(operator, left, right) {
 		super();
@@ -26,5 +34,6 @@ class Filter extends Expression {
 
 module.exports = Expression;
 module.exports.Name = Name;
+module.exports.Unary = Unary;
 module.exports.Binary = Binary;
 module.exports.Filter = Filter;

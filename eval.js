@@ -7,6 +7,11 @@ function eval(expression, environment) {
 	switch (expression.constructor) {
 		case Expression.Name:
 			return environment[expression.identifier];
+		case Expression.Unary:
+			return operate(
+				expression.operator,
+				eval(expression.operand, environment)
+			);
 		case Expression.Binary:
 			return operate(
 				expression.operator,
@@ -37,6 +42,8 @@ function operate(operator, left, right) {
 			return left != right;
 		case '>':
 			return left > right;
+		case '!':
+			return !left;
 		case '&&':
 			return left && right;
 		case '||':

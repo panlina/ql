@@ -7,7 +7,10 @@ ql {
 		ExpressionOr "||" ExpressionAnd	-- or
 		| ExpressionAnd
 	ExpressionAnd =
-		ExpressionAnd "&&" ExpressionCompare	-- and
+		ExpressionAnd "&&" ExpressionNot	-- and
+		| ExpressionNot
+	ExpressionNot =
+		"!" ExpressionNot	-- not
 		| ExpressionCompare
 	ExpressionCompare =
 		ExpressionCompare ("<="|"="|">="|"<"|"!="|">") ExpressionAdd	-- compare
