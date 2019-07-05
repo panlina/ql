@@ -1,22 +1,21 @@
-var Expression = require('./Expression');
 function eval(expression, environment) {
-	switch (expression.constructor) {
-		case Expression.Literal:
+	switch (expression.type) {
+		case 'literal':
 			return expression.value;
-		case Expression.Name:
+		case 'name':
 			return environment[expression.identifier];
-		case Expression.Unary:
+		case 'unary':
 			return operate(
 				expression.operator,
 				eval(expression.operand, environment)
 			);
-		case Expression.Binary:
+		case 'binary':
 			return operate(
 				expression.operator,
 				eval(expression.left, environment),
 				eval(expression.right, environment)
 			);
-		case Expression.Filter:
+		case 'filter':
 			return eval(expression.expression, environment).filter(
 				value => truthy(
 					eval(expression.filter, { __proto__: environment, ...value })

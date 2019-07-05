@@ -1,22 +1,26 @@
-class Expression { }
+class Expression {
+	constructor(type) {
+		this.type = type;
+	}
+ }
 
 class Literal extends Expression {
 	constructor(value) {
-		super();
+		super('literal');
 		this.value = value;
 	}
 }
 
 class Name extends Expression {
 	constructor(identifier) {
-		super();
+		super('name');
 		this.identifier = identifier;
 	}
 }
 
 class Unary extends Expression {
 	constructor(operator, operand) {
-		super();
+		super('unary');
 		this.operator = operator;
 		this.operand = operand;
 	}
@@ -24,7 +28,7 @@ class Unary extends Expression {
 
 class Binary extends Expression {
 	constructor(operator, left, right) {
-		super();
+		super('binary');
 		this.operator = operator;
 		this.left = left;
 		this.right = right;
@@ -33,7 +37,7 @@ class Binary extends Expression {
 
 class Filter extends Expression {
 	constructor(expression, filter) {
-		super();
+		super('filter');
 		this.expression = expression;
 		this.filter = filter;
 	}
