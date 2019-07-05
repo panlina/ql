@@ -1,10 +1,8 @@
 var Expression = require('./Expression');
 function eval(expression, environment) {
-	if (typeof expression == 'number')
-		return expression;
-	if (typeof expression == 'string')
-		return expression;
 	switch (expression.constructor) {
+		case Expression.Literal:
+			return expression.value;
 		case Expression.Name:
 			return environment[expression.identifier];
 		case Expression.Unary:

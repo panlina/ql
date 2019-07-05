@@ -1,5 +1,12 @@
 class Expression { }
 
+class Literal extends Expression {
+	constructor(value) {
+		super();
+		this.value = value;
+	}
+}
+
 class Name extends Expression {
 	constructor(identifier) {
 		super();
@@ -33,6 +40,7 @@ class Filter extends Expression {
 }
 
 module.exports = Expression;
+module.exports.Literal = Literal;
 module.exports.Name = Name;
 module.exports.Unary = Unary;
 module.exports.Binary = Binary;
