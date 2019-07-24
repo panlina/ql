@@ -4,6 +4,8 @@ function eval(expression, environment) {
 			return expression.value;
 		case 'name':
 			return environment[expression.identifier];
+		case 'property':
+			return eval(expression.expression, environment)[expression.property];
 		case 'unary':
 			return operate(
 				expression.operator,

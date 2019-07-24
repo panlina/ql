@@ -18,6 +18,14 @@ class Name extends Expression {
 	}
 }
 
+class Property extends Expression {
+	constructor(expression, property) {
+		super('property');
+		this.expression = expression;
+		this.property = property;
+	}
+}
+
 class Unary extends Expression {
 	constructor(operator, operand) {
 		super('unary');
@@ -46,6 +54,7 @@ class Filter extends Expression {
 module.exports = Expression;
 module.exports.Literal = Literal;
 module.exports.Name = Name;
+module.exports.Property = Property;
 module.exports.Unary = Unary;
 module.exports.Binary = Binary;
 module.exports.Filter = Filter;
