@@ -18,7 +18,7 @@ function eval(expression, environment) {
 		case 'filter':
 			return eval(expression.expression, environment).filter(
 				value => truthy(
-					eval(expression.filter, { __proto__: environment, ...value })
+					eval(expression.filter, { __proto__: environment, ...value, this: value })
 				)
 			);
 	}
