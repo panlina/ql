@@ -6,6 +6,11 @@ function eval(expression, environment) {
 			return environment[expression.identifier];
 		case 'property':
 			return eval(expression.expression, environment)[expression.property];
+		case 'index':
+			var index = eval(expression.index, environment);
+			return eval(expression.expression, environment).find(
+				value => value.id == index
+			);
 		case 'unary':
 			return operate(
 				expression.operator,

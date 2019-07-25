@@ -26,6 +26,14 @@ class Property extends Expression {
 	}
 }
 
+class Index extends Expression {
+	constructor(expression, index) {
+		super('index');
+		this.expression = expression;
+		this.index = index;
+	}
+}
+
 class Unary extends Expression {
 	constructor(operator, operand) {
 		super('unary');
@@ -55,6 +63,7 @@ module.exports = Expression;
 module.exports.Literal = Literal;
 module.exports.Name = Name;
 module.exports.Property = Property;
+module.exports.Index = Index;
 module.exports.Unary = Unary;
 module.exports.Binary = Binary;
 module.exports.Filter = Filter;

@@ -16,10 +16,11 @@ ql {
 		ExpressionCompare ("<="|"="|">="|"<"|"!="|">") ExpressionAdd	-- compare
 		| ExpressionAdd
 	ExpressionAdd =
-		ExpressionAdd ("+"|"-") ExpressionProperty	-- add
-		| ExpressionProperty
-	ExpressionProperty =
-		ExpressionProperty "." identifier	-- property
+		ExpressionAdd ("+"|"-") ExpressionMember	-- add
+		| ExpressionMember
+	ExpressionMember =
+		ExpressionMember "." identifier	-- property
+		| ExpressionMember "#" ExpressionAtom	-- index
 		| ExpressionAtom
 	ExpressionAtom =
 		"(" Expression ")"	-- parentheses
