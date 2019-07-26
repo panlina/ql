@@ -10,5 +10,12 @@
   "license": "ISC",
   "dependencies": {
     "ohm-js": "^0.14.0"
+  },
+  "devDependencies": {
+    "mocha": "^6.2.0",
+    "request": "^2.88.0"
+  },
+  "scripts": {
+    "test": "mocha"
   }
 }
