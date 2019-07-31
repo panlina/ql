@@ -24,7 +24,7 @@ before(function () {
 it('', function () {
 	var q = ql.parse("posts|!this.id>50&&title<=posts#1.title");
 	assert.equal(
-		ql.eval(q, data).length,
+		ql.eval(q, new ql.Environment(new ql.Scope(data))).length,
 		data.posts.filter(post => !(post.id > 50) && post.title <= data.posts.find(post => post.id == 1).title).length
 	);
 });

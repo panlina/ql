@@ -1,9 +1,11 @@
+var Scope = require('./Scope');
+var Environment = require('./Environment');
 function eval(expression, environment) {
 	switch (expression.type) {
 		case 'literal':
 			return expression.value;
 		case 'name':
-			return environment[expression.identifier];
+			return environment.resolve(expression.identifier);
 		case 'property':
 			return eval(expression.expression, environment)[expression.property];
 		case 'index':
@@ -25,7 +27,7 @@ function eval(expression, environment) {
 		case 'filter':
 			return eval(expression.expression, environment).filter(
 				value => truthy(
-					eval(expression.filter, { __proto__: environment, ...value, this: value })
+					eval(expression.filter, new Environment(new Scope({}, value), environment))
 				)
 			);
 	}
