@@ -10,8 +10,8 @@ function compile(expression) {
 		case 'name':
 			var $identifier = expression.identifier;
 			return t(function () {
-				return this.resolve($identifier);
-			}, this.resolve(expression.identifier));
+				return this.resolve($identifier)[0];
+			}, this.resolve(expression.identifier)[0]);
 		case 'property':
 			var $expression = compile.call(this, expression.expression),
 				$property = expression.property;

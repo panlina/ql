@@ -4,9 +4,11 @@ class Environment {
 		this.parent = parent;
 	}
 	resolve(name) {
-		var value = this.scope.resolve(name);
-		if (value !== undefined)
-			return value;
+		var resolution = this.scope.resolve(name);
+		if (resolution) {
+			var [value, key] = resolution;
+			return [value, [this.scope, key]];
+		}
 		if (this.parent)
 			return this.parent.resolve(name);
 	}

@@ -5,12 +5,12 @@ class Scope {
 	}
 	resolve(name) {
 		if (name in this.local)
-			return this.local[name];
+			return [this.local[name], 'local'];
 		if (this.this) {
 			if (name == 'this')
-				return this.this;
+				return [this.this, 'local'];
 			if (name in this.this)
-				return this.this[name];
+				return [this.this[name], 'this'];
 		}
 	}
 }
