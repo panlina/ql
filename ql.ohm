@@ -27,7 +27,7 @@ ql {
 		| ExpressionName
 		| number
 		| string
-	ExpressionName = identifier
+	ExpressionName = "::"? identifier
 	identifier = &letter alnum+
 	number = digit+
 	string = "\"" (~"\"" any)* "\""

@@ -12,9 +12,10 @@ class Literal extends Expression {
 }
 
 class Name extends Expression {
-	constructor(identifier) {
+	constructor(identifier, global) {
 		super('name');
 		this.identifier = identifier;
+		this.global = global;
 	}
 }
 

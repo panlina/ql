@@ -22,7 +22,7 @@ before(function () {
 	});
 });
 it('', function () {
-	var q = ql.parse("posts|!this.id>50&&title<=posts#1.title");
+	var q = ql.parse("posts|!this.id>50&&title<=::posts#1.title");
 	var _function = ql.compile.call(new ql.Environment(new ql.Scope(type)), q);
 	assert.equal(_function.type, type.posts);
 	assert.equal(
