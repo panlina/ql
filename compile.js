@@ -68,6 +68,18 @@ function compile(expression) {
 						)
 					);
 				}, $expression.type);
+			case 'comma':
+				var $head = {
+					name: expression.head.name,
+					value: compile.call(this, expression.head.value)
+				},
+					$body = compile.call(new Environment(new Scope({ [$head.name]: $head.value.type }), this), expression.body);
+				return t(function (global) {
+					return $body.call(
+						new Environment(new Scope({ [$head.name]: $head.value.call(this, global) }), this),
+						global
+					);
+				}, $body.type);
 		}
 	}
 	function t(_function, type) {

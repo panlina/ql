@@ -25,6 +25,13 @@ var semantics = grammar.createSemantics().addOperation('parse', {
 		expression.parse(),
 		filter.parse()
 	),
+	ExpressionComma_comma: (name, equal, value, comma, body) => new Expression.Comma(
+		{
+			name: name.parse(),
+			value: value.parse()
+		},
+		body.parse()
+	),
 	Expression: _default
 });
 function _default(expression) { return expression.parse(); }

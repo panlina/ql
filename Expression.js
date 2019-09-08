@@ -60,6 +60,14 @@ class Filter extends Expression {
 	}
 }
 
+class Comma extends Expression {
+	constructor(head, body) {
+		super('comma');
+		this.head = head;
+		this.body = body;
+	}
+}
+
 module.exports = Expression;
 module.exports.Literal = Literal;
 module.exports.Name = Name;
@@ -68,3 +76,4 @@ module.exports.Index = Index;
 module.exports.Unary = Unary;
 module.exports.Binary = Binary;
 module.exports.Filter = Filter;
+module.exports.Comma = Comma;

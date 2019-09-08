@@ -1,5 +1,8 @@
 ql {
-	Expression = ExpressionFilter
+	Expression = ExpressionComma
+	ExpressionComma =
+		identifier "=" ExpressionFilter "," ExpressionComma	-- comma
+		| ExpressionFilter
 	ExpressionFilter =
 		ExpressionFilter "|" ExpressionOr	-- filter
 		| ExpressionOr
