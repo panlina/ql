@@ -12,5 +12,6 @@ class Environment {
 		if (this.parent)
 			return this.parent.resolve(name);
 	}
+	push(scope) { return new Environment(scope, this); }
 }
 module.exports = Environment;

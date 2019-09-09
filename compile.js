@@ -1,5 +1,4 @@
 var Scope = require('./Scope');
-var Environment = require('./Environment');
 function compile(expression) {
 	var global = this;
 	var _function = compile.call(this, expression);
@@ -60,11 +59,11 @@ function compile(expression) {
 				}, operatetype(expression.operator, $left.type, $right.type));
 			case 'filter':
 				var $expression = compile.call(this, expression.expression),
-					$filter = compile.call(new Environment(new Scope({}, $expression.type[0]), this), expression.filter);
+					$filter = compile.call(this.push(new Scope({}, $expression.type[0])), expression.filter);
 				return t(function (global) {
 					return $expression.call(this, global).filter(
 						value => truthy(
-							$filter.call(new Environment(new Scope({}, value), this), global)
+							$filter.call(this.push(new Scope({}, value)), global)
 						)
 					);
 				}, $expression.type);
@@ -73,10 +72,10 @@ function compile(expression) {
 					name: expression.head.name,
 					value: compile.call(this, expression.head.value)
 				},
-					$body = compile.call(new Environment(new Scope({ [$head.name]: $head.value.type }), this), expression.body);
+					$body = compile.call(this.push(new Scope({ [$head.name]: $head.value.type })), expression.body);
 				return t(function (global) {
 					return $body.call(
-						new Environment(new Scope({ [$head.name]: $head.value.call(this, global) }), this),
+						this.push(new Scope({ [$head.name]: $head.value.call(this, global) })),
 						global
 					);
 				}, $body.type);
