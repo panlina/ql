@@ -7,10 +7,17 @@ class Environment {
 		var resolution = this.scope.resolve(name);
 		if (resolution) {
 			var [value, key] = resolution;
-			return [value, [this.scope, key]];
+			return [value, [0, key]];
 		}
-		if (this.parent)
-			return this.parent.resolve(name);
+		if (this.parent) {
+			var [value, [depth, key]] = this.parent.resolve(name);
+			return [value, [depth + 1, key]];
+		}
+	}
+	ancestor(depth) {
+		return depth ?
+			this.parent.ancestor(depth - 1) :
+			this;
 	}
 	push(scope) { return new Environment(scope, this); }
 }
