@@ -15,7 +15,7 @@ function compile(expression) {
 				}, typeof $value);
 			case 'name':
 				var $identifier = expression.identifier;
-				return expression.global ?
+				return expression.depth == Infinity ?
 					t(function (global) {
 						return global.resolve($identifier)[0];
 					}, global.resolve(expression.identifier)[0]) :
