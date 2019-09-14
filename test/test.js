@@ -1,6 +1,7 @@
 var assert = require('assert');
 var ql = require('..');
 var data, type = require('./type');
+type = require('lodash.mapvalues')(type, require('../Type.parse'));
 before(function () {
 	var fs = require('fs'), path = require('path');
 	var file = path.join(__dirname, 'data.json');
@@ -28,5 +29,14 @@ it('', function () {
 	assert.equal(
 		_function.call(new ql.Environment(new ql.Scope(data))).length,
 		data.posts.filter(post => !(post.id > 50) && post.title <= data.posts.find(post => post.id == 1).title).length
+	);
+});
+it('', function () {
+	var q = ql.parse("users|(posts|id>10)");
+	var _function = ql.compile.call(new ql.Environment(new ql.Scope(type)), q);
+	assert.equal(_function.type, type.users);
+	assert.equal(
+		_function.call(new ql.Environment(new ql.Scope(data))).length,
+		data.users.filter(user => data.posts.filter(post => post.userId == user.id && post.id > 10).length > 0).length
 	);
 });

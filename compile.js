@@ -1,4 +1,5 @@
 var Scope = require('./Scope');
+var Expression = require('./Expression');
 function compile(expression) {
 	var global = this;
 	var _function = compile.call(this, expression);
@@ -14,20 +15,38 @@ function compile(expression) {
 					return $value;
 				}, typeof $value);
 			case 'name':
+				var [value, [depth, key]] = resolve.call(this, expression);
+				if (key == 'this' && value.value)
+					return compile.call(this, new Expression.Property(new Expression.Name('this', depth), expression.identifier));
 				var $identifier = expression.identifier;
-				return expression.depth == Infinity ?
-					t(function (global) {
-						return global.resolve($identifier)[0];
-					}, global.resolve(expression.identifier)[0]) :
-					t(function () {
-						return this.resolve($identifier)[0];
-					}, this.resolve(expression.identifier)[0]);
+				return t(function (global) {
+					return ancestor.call(this, global, depth).scope.resolve($identifier)[0];
+				}, value);
+				function resolve(expression) {
+					if (expression.depth == Infinity)
+						var [value, key] = global.scope.resolve(expression.identifier),
+							depth = Infinity;
+					else
+						var [value, [depth, key]] = this.resolve(expression.identifier);
+					return [value, [depth, key]];
+				}
+				function ancestor(global, depth) {
+					return depth == Infinity ?
+						global :
+						this.ancestor(depth);
+				}
 			case 'property':
 				var $expression = compile.call(this, expression.expression),
 					$property = expression.property;
+				if ($expression.type[expression.property].value) {
+					var $value = compile.call(global.push(new Scope({}, $expression.type)), $expression.type[expression.property].value);
+					return t(function (global) {
+						return $value.call(global.push(new Scope({}, $expression.call(this, global))), global)
+					}, $value.type);
+				}
 				return t(function (global) {
 					return $expression.call(this, global)[$property];
-				}, $expression.type[expression.property]);
+				}, $expression.type[expression.property].type);
 			case 'index':
 				var $expression = compile.call(this, expression.expression),
 					$index = compile.call(this, expression.index);

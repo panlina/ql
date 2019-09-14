@@ -1,27 +1,48 @@
 {
 	"posts": [{
-		"title": "string",
-		"body": "string"
+		"id": ":number",
+		"title": ":string",
+		"body": ":string",
+		"userId": ":number",
+		"user": "=users#(this.userId)",
+		"comments": "=p=this,::comments|postId=p.id"
 	}],
 	"comments": [{
-		"name": "string",
-		"email": "string",
-		"body": "string"
+		"id": ":number",
+		"name": ":string",
+		"email": ":string",
+		"body": ":string",
+		"postId": ":number",
+		"post": "=posts#(this.postId)"
 	}],
 	"albums": [{
-		"title": "string"
+		"id": ":number",
+		"title": ":string",
+		"userId": ":number",
+		"user": "=users#(this.userId)",
+		"photos":"=a=this,::photos|albumId=a.id"
 	}],
 	"photos": [{
-		"title": "string",
-		"url": "string",
-		"thumbnailUrl": "string"
+		"id": ":number",
+		"title": ":string",
+		"url": ":string",
+		"thumbnailUrl": ":string",
+		"albumId": ":number",
+		"album": "=albums#(this.albumId)"
 	}],
 	"users": [{
-		"name": "string",
-		"email": "string"
+		"id": ":number",
+		"name": ":string",
+		"email": ":string",
+		"posts": "=u=this,::posts|userId=u.id",
+		"albums": "=u=this,::albums|userId=u.id",
+		"todos": "=u=this,::todos|userId=u.id"
 	}],
 	"todos": [{
-		"title": "string",
-		"completed": "boolean"
+		"id": ":number",
+		"title": ":string",
+		"completed": ":boolean",
+		"userId": ":number",
+		"user": "=users#(this.userId)"
 	}]
 }
