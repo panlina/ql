@@ -3,7 +3,8 @@ function parse(type) {
 		return type;
 	if (type instanceof Array)
 		return [parse(type[0])];
-	return require('lodash.mapvalues')(type, value => {
+	return require('lodash.mapvalues')(type, (value, name) => {
+		if (name == '$ql') return value;
 		var type = value[0],
 			value = value.substr(1);
 		switch (type) {

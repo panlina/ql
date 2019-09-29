@@ -52,8 +52,9 @@ function compile(expression) {
 					$index = compile.call(this, expression.index);
 				return t(function (global) {
 					var id = $index.call(this, global);
+					var $id = require('./Type.id')($expression.type[0])
 					return $expression.call(this, global).find(
-						value => value.id == id
+						value => value[$id] == id
 					);
 				}, $expression.type[0]);
 			case 'unary':
