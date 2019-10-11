@@ -23,9 +23,9 @@ function compile(expression) {
 					return ancestor.call(this, global, depth).scope.resolve($identifier)[0];
 				}, value);
 				function resolve(expression) {
-					if (expression.depth == Infinity)
-						var [value, key] = global.scope.resolve(expression.identifier),
-							depth = Infinity;
+					if (expression.depth != null)
+						var [value, key] = ancestor.call(this, global, expression.depth).scope.resolve(expression.identifier),
+							depth = expression.depth;
 					else
 						var [value, [depth, key]] = this.resolve(expression.identifier);
 					return [value, [depth, key]];
