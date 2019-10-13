@@ -13,6 +13,7 @@
     "ohm-js": "^0.14.0"
   },
   "devDependencies": {
+    "lodash.transform": "^4.6.0",
     "mocha": "^6.2.0",
     "request": "^2.88.0"
   },

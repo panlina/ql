@@ -2,6 +2,9 @@ var assert = require('assert');
 var ql = require('..');
 var data, type = require('./type');
 type = require('lodash.mapvalues')(type, require('../Type.parse'));
+type = require('lodash.transform')(type, (result, value, key) => {
+	result[`${key}s`] = [value];
+});
 before(function () {
 	var fs = require('fs'), path = require('path');
 	var file = path.join(__dirname, 'data.json');
