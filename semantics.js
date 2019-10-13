@@ -5,6 +5,7 @@ var semantics = grammar.createSemantics().addOperation('parse', {
 	string: (open, x, close) => new Expression.Literal(x.sourceString),
 	identifier: (_, x) => x.sourceString,
 	ExpressionName: (global, identifier) => new Expression.Name(identifier.parse(), global.sourceString ? Infinity : null),
+	ExpressionThis: (_this, identifier) => new Expression.This(identifier.parse()),
 	ExpressionAtom: _default,
 	ExpressionAtom_parentheses: (open, expression, close) => expression.parse(),
 	ExpressionMember: _default,

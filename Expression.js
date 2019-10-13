@@ -19,6 +19,13 @@ class Name extends Expression {
 	}
 }
 
+class This extends Expression {
+	constructor(identifier) {
+		super('this');
+		this.identifier = identifier;
+	}
+}
+
 class Property extends Expression {
 	constructor(expression, property) {
 		super('property');
@@ -71,6 +78,7 @@ class Comma extends Expression {
 module.exports = Expression;
 module.exports.Literal = Literal;
 module.exports.Name = Name;
+module.exports.This = This;
 module.exports.Property = Property;
 module.exports.Index = Index;
 module.exports.Unary = Unary;

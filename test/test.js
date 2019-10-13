@@ -27,7 +27,7 @@ before(function () {
 });
 it('', function () {
 	var q = ql.parse("posts|!this.id>50&&(t=::posts#1.title,title<=t)");
-	var _function = ql.compile.call(new ql.Environment(new ql.Scope(local)), q);
+	var _function = ql.compile.call(new ql.Environment(Object.assign(new ql.Scope(local), { type: type })), q);
 	assert(require('../Type.equals')(_function.type, [type.post]));
 	assert.equal(
 		_function.call(new ql.Environment(new ql.Scope(data))).length,
@@ -36,7 +36,7 @@ it('', function () {
 });
 it('', function () {
 	var q = ql.parse("users|(posts|id>10)");
-	var _function = ql.compile.call(new ql.Environment(new ql.Scope(local)), q);
+	var _function = ql.compile.call(new ql.Environment(Object.assign(new ql.Scope(local), { type: type })), q);
 	assert(require('../Type.equals')(_function.type, [type.user]));
 	assert.equal(
 		_function.call(new ql.Environment(new ql.Scope(data))).length,

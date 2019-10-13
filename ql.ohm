@@ -27,9 +27,11 @@ ql {
 		| ExpressionAtom
 	ExpressionAtom =
 		"(" Expression ")"	-- parentheses
+		| ExpressionThis
 		| ExpressionName
 		| number
 		| string
+	ExpressionThis = "this" identifier
 	ExpressionName = "::"? identifier
 	identifier = &(letter|"_") (alnum|"_")+
 	number = digit+
