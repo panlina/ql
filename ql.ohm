@@ -19,7 +19,10 @@ ql {
 		ExpressionCompare ("<="|"="|">="|"<"|"!="|">") ExpressionAdd	-- compare
 		| ExpressionAdd
 	ExpressionAdd =
-		ExpressionAdd ("+"|"-") ExpressionMember	-- add
+		ExpressionAdd ("+"|"-") ExpressionCount	-- add
+		| ExpressionCount
+	ExpressionCount =
+		ExpressionCount "#"	-- count
 		| ExpressionMember
 	ExpressionMember =
 		ExpressionMember "." identifier	-- property

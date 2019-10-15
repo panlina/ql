@@ -11,6 +11,7 @@ var semantics = grammar.createSemantics().addOperation('parse', {
 	ExpressionMember: _default,
 	ExpressionMember_property: (expression, dot, property) => new Expression.Property(expression.parse(), property.parse()),
 	ExpressionMember_index: (expression, sharp, index) => new Expression.Index(expression.parse(), index.parse()),
+	ExpressionCount_count: (expression, sharp) => new Expression.Unary('#', expression.parse()),
 	ExpressionAdd: _default,
 	ExpressionAdd_add: binary,
 	ExpressionCompare: _default,

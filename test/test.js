@@ -26,11 +26,11 @@ before(function () {
 	});
 });
 it('', function () {
-	var q = ql.parse("posts|!this.id>50&&(t=::posts#1.title,title<=t)");
+	var q = ql.parse("(posts|!this.id>50&&(t=::posts#1.title,title<=t))#");
 	var _function = ql.compile.call(new ql.Environment(Object.assign(new ql.Scope(local), { type: type })), q);
-	assert(require('../Type.equals')(_function.type, [type.post]));
+	assert(require('../Type.equals')(_function.type, 'number'));
 	assert.equal(
-		_function.call(new ql.Environment(new ql.Scope(data))).length,
+		_function.call(new ql.Environment(new ql.Scope(data))),
 		data.posts.filter(post => !(post.id > 50) && post.title <= data.posts.find(post => post.id == 1).title).length
 	);
 });

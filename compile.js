@@ -140,6 +140,8 @@ function operate(operator, left, right) {
 			return left && right;
 		case '||':
 			return left || right;
+		case '#':
+			return left.length;
 	}
 }
 function operatetype(operator, left, right) {
@@ -158,6 +160,8 @@ function operatetype(operator, left, right) {
 		case '&&':
 		case '||':
 			return 'boolean';
+		case '#':
+			return 'number';
 	}
 }
 function truthy(value) {
