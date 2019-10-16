@@ -75,7 +75,7 @@ function compile(expression) {
 						$operator,
 						$operand.call(this, global)
 					);
-				}, operatetype(expression.operator, $operand.type));
+				}, require("./Type.operate")(expression.operator, $operand.type));
 			case 'binary':
 				var $left = compile.call(this, expression.left),
 					$right = compile.call(this, expression.right),
@@ -86,7 +86,7 @@ function compile(expression) {
 						$left.call(this, global),
 						$right.call(this, global)
 					);
-				}, operatetype(expression.operator, $left.type, $right.type));
+				}, require("./Type.operate")(expression.operator, $left.type, $right.type));
 			case 'filter':
 				var $expression = compile.call(this, expression.expression),
 					$filter = compile.call(this.push(new Scope({}, $expression.type[0])), expression.filter);
@@ -142,26 +142,6 @@ function operate(operator, left, right) {
 			return left || right;
 		case '#':
 			return left.length;
-	}
-}
-function operatetype(operator, left, right) {
-	switch (operator) {
-		case '+':
-			return left;
-		case '-':
-			return 'number';
-		case '<=':
-		case '=':
-		case '>=':
-		case '<':
-		case '!=':
-		case '>':
-		case '!':
-		case '&&':
-		case '||':
-			return 'boolean';
-		case '#':
-			return 'number';
 	}
 }
 function truthy(value) {
