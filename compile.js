@@ -37,13 +37,13 @@ function compile(expression) {
 				}
 			case 'this':
 				var type = global.scope.type[expression.identifier];
-				var depth = findDepth.call(this);
+				var depth = findDepth.call(this, type);
 				return compile.call(this, new Expression.Name('this', depth));
-				function findDepth() {
+				function findDepth(type) {
 					if (this.scope.this == type)
 						return 0;
 					if (this.parent)
-						return findDepth.call(this.parent) + 1;
+						return findDepth.call(this.parent, type) + 1;
 				}
 			case 'property':
 				var $expression = compile.call(this, expression.expression),
