@@ -1,5 +1,6 @@
 var Scope = require('./Scope');
 var Expression = require('./Expression');
+var Context = require('./Context');
 function compile(expression) {
 	var global = this;
 	var _function = compile.call(this, expression);
@@ -15,36 +16,17 @@ function compile(expression) {
 					return $value;
 				}, typeof $value);
 			case 'name':
-				var [value, [depth, key]] = resolve.call(this, expression);
+				var [value, [depth, key]] = Context.resolve.call(this, global, expression);
 				if (key == 'this' && value.value)
 					return compile.call(this, new Expression.Property(new Expression.Name('this', depth), expression.identifier));
 				var $identifier = expression.identifier;
 				return t(function (global) {
-					return ancestor.call(this, global, depth).scope.resolve($identifier)[0];
+					return Context.ancestor.call(this, global, depth).scope.resolve($identifier)[0];
 				}, value);
-				function resolve(expression) {
-					if (expression.depth != null)
-						var [value, key] = ancestor.call(this, global, expression.depth).scope.resolve(expression.identifier),
-							depth = expression.depth;
-					else
-						var [value, [depth, key]] = this.resolve(expression.identifier);
-					return [value, [depth, key]];
-				}
-				function ancestor(global, depth) {
-					return depth == Infinity ?
-						global :
-						this.ancestor(depth);
-				}
 			case 'this':
 				var type = global.scope.type[expression.identifier];
-				var depth = findDepth.call(this, type);
+				var depth = Context.findDepth.call(this, type);
 				return compile.call(this, new Expression.Name('this', depth));
-				function findDepth(type) {
-					if (this.scope.this == type)
-						return 0;
-					if (this.parent)
-						return findDepth.call(this.parent, type) + 1;
-				}
 			case 'property':
 				var $expression = compile.call(this, expression.expression),
 					$property = expression.property;
