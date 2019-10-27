@@ -19,10 +19,10 @@ class Environment {
 		if (this.parent)
 			yield* this.parent;
 	}
-	find(f) {
+	find(f, filter) {
 		var depth = 0;
 		for (var scope of this) {
-			var result = scope.find(f);
+			var result = scope.find(f, filter);
 			if (result) {
 				var [value, name, key] = result;
 				return [value, name, key, depth];
