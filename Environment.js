@@ -14,6 +14,22 @@ class Environment {
 			return [value, [depth + 1, key]];
 		}
 	}
+	*[Symbol.iterator]() {
+		yield this.scope;
+		if (this.parent)
+			yield* this.parent;
+	}
+	find(f) {
+		var depth = 0;
+		for (var scope of this) {
+			var result = scope.find(f);
+			if (result) {
+				var [value, name, key] = result;
+				return [value, name, key, depth];
+			}
+			depth++;
+		}
+	}
 	ancestor(depth) {
 		return depth ?
 			this.parent.ancestor(depth - 1) :

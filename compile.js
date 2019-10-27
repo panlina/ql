@@ -25,7 +25,7 @@ function compile(expression) {
 				}, value);
 			case 'this':
 				var type = global.scope.type[expression.identifier];
-				var depth = Context.findDepth.call(this, type);
+				var [, , , depth] = this.find((value, name, key) => key == 'local' && name == 'this' && value == type);
 				return compile.call(this, new Expression.Name('this', depth));
 			case 'property':
 				var $expression = compile.call(this, expression.expression),
