@@ -10,8 +10,11 @@ class Environment {
 			return [value, [0, key]];
 		}
 		if (this.parent) {
-			var [value, [depth, key]] = this.parent.resolve(name);
-			return [value, [depth + 1, key]];
+			var resolution = this.parent.resolve(name);
+			if (resolution) {
+				var [value, [depth, key]] = resolution;
+				return [value, [depth + 1, key]];
+			}
 		}
 	}
 	*[Symbol.iterator]() {
