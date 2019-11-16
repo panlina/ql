@@ -25,7 +25,7 @@ before(function () {
 		data = JSON.parse(fs.readFileSync(file));
 	});
 });
-it('', function () {
+it('(posts|!this.id>50&&(t=::posts#1.title,title<=t))#', function () {
 	var q = ql.parse("(posts|!this.id>50&&(t=::posts#1.title,title<=t))#");
 	var _function = ql.compile.call(new ql.Environment(Object.assign(new ql.Scope(local), { type: type })), q);
 	assert(require('../Type.equals')(_function.type, 'number'));
@@ -34,7 +34,7 @@ it('', function () {
 		data.posts.filter(post => !(post.id > 50) && post.title <= data.posts.find(post => post.id == 1).title).length
 	);
 });
-it('', function () {
+it('users|(posts|id>10)', function () {
 	var q = ql.parse("users|(posts|id>10)");
 	var _function = ql.compile.call(new ql.Environment(Object.assign(new ql.Scope(local), { type: type })), q);
 	assert(require('../Type.equals')(_function.type, [type.user]));
