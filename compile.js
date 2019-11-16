@@ -1,6 +1,7 @@
 var Scope = require('./Scope');
 var Expression = require('./Expression');
 var Context = require('./Context');
+var CompileError = require('./CompileError');
 function compile(expression) {
 	var global = this;
 	var _function = compile.call(this, expression);
@@ -16,7 +17,9 @@ function compile(expression) {
 					return $value;
 				}, typeof $value);
 			case 'name':
-				var [value, [depth, key]] = Context.resolve.call(this, global, expression);
+				var resolution = Context.resolve.call(this, global, expression);
+				if (!resolution) throw new CompileError.UndefinedName(expression);
+				var [value, [depth, key]] = resolution;
 				if (key == 'this' && value.value)
 					return compile.call(this, new Expression.Property(new Expression.Name('this', depth), expression.identifier));
 				var $identifier = expression.identifier;

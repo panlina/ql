@@ -43,3 +43,20 @@ it('users|(posts|id>10)', function () {
 		data.users.filter(user => data.posts.filter(post => post.userId == user.id && post.id > 10).length > 0).length
 	);
 });
+describe('compile error', function () {
+	var CompileError = require('../CompileError');
+	describe('undefined name', function () {
+		it('local', function () {
+			var q = ql.parse("u|(posts|id>10)");
+			assert.throws(() => {
+				ql.compile.call(new ql.Environment(Object.assign(new ql.Scope(local), { type: type })), q);
+			}, CompileError.UndefinedName);
+		});
+		it('this', function () {
+			var q = ql.parse('users|(p|id>10)');
+			assert.throws(() => {
+				ql.compile.call(new ql.Environment(Object.assign(new ql.Scope(local), { type: type })), q);
+			}, CompileError.UndefinedName);
+		});
+	});
+});
