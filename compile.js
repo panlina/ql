@@ -51,6 +51,10 @@ function compile(expression) {
 			case 'index':
 				var $expression = compile.call(this, expression.expression),
 					$index = compile.call(this, expression.index);
+				if (!($expression.type instanceof Array))
+					throw new CompileError.NonArrayIndex(expression);
+				if (typeof $index.type == 'object')
+					throw new CompileError.NonPrimitiveIndex(expression);
 				return t(function (global) {
 					var id = $index.call(this, global);
 					var $id = require('./Type.id')($expression.type[0])

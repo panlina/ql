@@ -77,4 +77,16 @@ describe('compile error', function () {
 			ql.compile.call(new ql.Environment(Object.assign(new ql.Scope(local), { type: type })), q);
 		}, CompileError.PropertyNotFound);
 	});
+	it('non-array index', function () {
+		var q = ql.parse('users#1#1');
+		assert.throws(() => {
+			ql.compile.call(new ql.Environment(Object.assign(new ql.Scope(local), { type: type })), q);
+		}, CompileError.NonArrayIndex);
+	});
+	it('non-primitive index', function () {
+		var q = ql.parse('users#(users#1)');
+		assert.throws(() => {
+			ql.compile.call(new ql.Environment(Object.assign(new ql.Scope(local), { type: type })), q);
+		}, CompileError.NonPrimitiveIndex);
+	});
 });

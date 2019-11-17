@@ -20,8 +20,18 @@ class PropertyNotFound extends CompileError {
 	constructor(expression) { super(expression); }
 	get message() { return `property '${this.expression.property}' is not found.`; }
 }
+class NonArrayIndex extends CompileError {
+	constructor(expression) { super(expression); }
+	get message() { return `cannot index non-array.`; }
+}
+class NonPrimitiveIndex extends CompileError {
+	constructor(expression) { super(expression); }
+	get message() { return `non-primitive cannot index.`; }
+}
 CompileError.UndefinedName = UndefinedName;
 CompileError.UnresolvedReference = UnresolvedReference;
 CompileError.NonObjectPropertyAccess = NonObjectPropertyAccess;
 CompileError.PropertyNotFound = PropertyNotFound;
+CompileError.NonArrayIndex = NonArrayIndex;
+CompileError.NonPrimitiveIndex = NonPrimitiveIndex;
 module.exports = CompileError;
