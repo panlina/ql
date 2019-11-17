@@ -59,4 +59,10 @@ describe('compile error', function () {
 			}, CompileError.UndefinedName);
 		});
 	});
+	it('unresolved name', function () {
+		var q = ql.parse('users|(this post)');
+		assert.throws(() => {
+			ql.compile.call(new ql.Environment(Object.assign(new ql.Scope(local), { type: type })), q);
+		}, CompileError.UnresolvedReference);
+	});
 });
