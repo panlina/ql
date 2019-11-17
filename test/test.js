@@ -65,4 +65,16 @@ describe('compile error', function () {
 			ql.compile.call(new ql.Environment(Object.assign(new ql.Scope(local), { type: type })), q);
 		}, CompileError.UnresolvedReference);
 	});
+	it('non-object property access', function () {
+		var q = ql.parse('0.id');
+		assert.throws(() => {
+			ql.compile.call(new ql.Environment(Object.assign(new ql.Scope(local), { type: type })), q);
+		}, CompileError.NonObjectPropertyAccess);
+	});
+	it('property not found', function () {
+		var q = ql.parse('users#1.a');
+		assert.throws(() => {
+			ql.compile.call(new ql.Environment(Object.assign(new ql.Scope(local), { type: type })), q);
+		}, CompileError.PropertyNotFound);
+	});
 });

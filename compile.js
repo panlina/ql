@@ -35,6 +35,10 @@ function compile(expression) {
 			case 'property':
 				var $expression = compile.call(this, expression.expression),
 					$property = expression.property;
+				if (!(typeof $expression.type == 'object' && !($expression.type instanceof Array)))
+					throw new CompileError.NonObjectPropertyAccess(expression);
+				if (!(expression.property in $expression.type))
+					throw new CompileError.PropertyNotFound(expression);
 				if ($expression.type[expression.property].value) {
 					var $value = compile.call(global.push(new Scope({}, $expression.type)), $expression.type[expression.property].value);
 					return t(function (global) {
