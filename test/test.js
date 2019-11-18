@@ -60,13 +60,13 @@ describe('compile error', function () {
 		});
 	});
 	it('unresolved name', function () {
-		var q = ql.parse('users|(this post)');
+		var q = ql.parse('users|this post');
 		assert.throws(() => {
 			ql.compile.call(new ql.Environment(Object.assign(new ql.Scope(local), { type: type })), q);
 		}, CompileError.UnresolvedReference);
 	});
 	it('non-object property access', function () {
-		var q = ql.parse('0.id');
+		var q = ql.parse('users#1.id.id');
 		assert.throws(() => {
 			ql.compile.call(new ql.Environment(Object.assign(new ql.Scope(local), { type: type })), q);
 		}, CompileError.NonObjectPropertyAccess);
