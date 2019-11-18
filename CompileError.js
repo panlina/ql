@@ -28,10 +28,15 @@ class NonPrimitiveIndex extends CompileError {
 	constructor(expression) { super(expression); }
 	get message() { return `non-primitive cannot index.`; }
 }
+class NonArrayFilter extends CompileError {
+	constructor(expression) { super(expression); }
+	get message() { return `cannot filter non-array.`; }
+}
 CompileError.UndefinedName = UndefinedName;
 CompileError.UnresolvedReference = UnresolvedReference;
 CompileError.NonObjectPropertyAccess = NonObjectPropertyAccess;
 CompileError.PropertyNotFound = PropertyNotFound;
 CompileError.NonArrayIndex = NonArrayIndex;
 CompileError.NonPrimitiveIndex = NonPrimitiveIndex;
+CompileError.NonArrayFilter = NonArrayFilter;
 module.exports = CompileError;

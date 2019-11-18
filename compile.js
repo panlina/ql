@@ -85,6 +85,8 @@ function compile(expression) {
 			case 'filter':
 				var $expression = compile.call(this, expression.expression),
 					$filter = compile.call(this.push(new Scope({}, $expression.type[0])), expression.filter);
+				if (!($expression.type instanceof Array))
+					throw new CompileError.NonArrayFilter(expression);
 				return t(function (global) {
 					return $expression.call(this, global).filter(
 						value => truthy(

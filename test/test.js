@@ -89,4 +89,10 @@ describe('compile error', function () {
 			ql.compile.call(new ql.Environment(Object.assign(new ql.Scope(local), { type: type })), q);
 		}, CompileError.NonPrimitiveIndex);
 	});
+	it('non-array filter', function () {
+		var q = ql.parse('users#1|0');
+		assert.throws(() => {
+			ql.compile.call(new ql.Environment(Object.assign(new ql.Scope(local), { type: type })), q);
+		}, CompileError.NonArrayFilter);
+	});
 });
