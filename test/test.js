@@ -95,4 +95,18 @@ describe('compile error', function () {
 			ql.compile.call(new ql.Environment(Object.assign(new ql.Scope(local), { type: type })), q);
 		}, CompileError.NonArrayFilter);
 	});
+	describe('operator', function () {
+		it('unary', function () {
+			var q = ql.parse('users#1#');
+			assert.throws(() => {
+				ql.compile.call(new ql.Environment(Object.assign(new ql.Scope(local), { type: type })), q);
+			}, { message: "operand of # must be array." });
+		});
+		it('binary', function () {
+			var q = ql.parse('users#1+1');
+			assert.throws(() => {
+				ql.compile.call(new ql.Environment(Object.assign(new ql.Scope(local), { type: type })), q);
+			}, { message: "operands of + must be numbers or strings." });
+		});
+	});
 });

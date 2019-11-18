@@ -65,23 +65,39 @@ function compile(expression) {
 			case 'unary':
 				var $operand = compile.call(this, expression.operand),
 					$operator = expression.operator;
+				try {
+					var type = require("./Type.operate")(expression.operator, $operand.type);
+				} catch (e) {
+					throw Object.assign(
+						new CompileError(expression),
+						{ message: e.message }
+					);
+				}
 				return t(function (global) {
 					return operate(
 						$operator,
 						$operand.call(this, global)
 					);
-				}, require("./Type.operate")(expression.operator, $operand.type));
+				}, type);
 			case 'binary':
 				var $left = compile.call(this, expression.left),
 					$right = compile.call(this, expression.right),
 					$operator = expression.operator;
+				try {
+					var type = require("./Type.operate")(expression.operator, $left.type, $right.type);
+				} catch (e) {
+					throw Object.assign(
+						new CompileError(expression),
+						{ message: e.message }
+					);
+				}
 				return t(function (global) {
 					return operate(
 						$operator,
 						$left.call(this, global),
 						$right.call(this, global)
 					);
-				}, require("./Type.operate")(expression.operator, $left.type, $right.type));
+				}, type);
 			case 'filter':
 				var $expression = compile.call(this, expression.expression),
 					$filter = compile.call(this.push(new Scope({}, $expression.type[0])), expression.filter);
