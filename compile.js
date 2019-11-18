@@ -20,7 +20,7 @@ function compile(expression) {
 				var resolution = Context.resolve.call(this, global, expression);
 				if (!resolution) throw new CompileError.UndefinedName(expression);
 				var [value, [depth, key]] = resolution;
-				if (key == 'this' && value.value)
+				if (key == 'this')
 					return compile.call(this, new Expression.Property(new Expression.Name('this', depth), expression.identifier));
 				var $identifier = expression.identifier;
 				return t(function (global) {
