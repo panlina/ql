@@ -1,5 +1,10 @@
 function operate(operator, left, right) {
 	switch (operator) {
+		case '*':
+		case '/':
+			if (left != 'number' || right != 'number')
+				throw new Error(`operands of ${operator} must be numbers.`);
+			return 'number';
 		case '+':
 			if (left != 'number' && left != 'string' || right != 'number' && right != 'string')
 				throw new Error(`operands of + must be numbers or strings.`);

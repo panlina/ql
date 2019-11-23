@@ -14,6 +14,8 @@ var semantics = grammar.createSemantics().addOperation('parse', {
 	ExpressionCount_count: (expression, sharp) => new Expression.Unary('#', expression.parse()),
 	ExpressionAdd: _default,
 	ExpressionAdd_add: binary,
+	ExpressionMultiply: _default,
+	ExpressionMultiply_multiply: binary,
 	ExpressionCompare: _default,
 	ExpressionCompare_compare: binary,
 	ExpressionNot: _default,

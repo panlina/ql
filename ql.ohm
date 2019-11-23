@@ -19,7 +19,10 @@ ql {
 		ExpressionCompare ("<="|"="|">="|"<"|"!="|">") ExpressionAdd	-- compare
 		| ExpressionAdd
 	ExpressionAdd =
-		ExpressionAdd ("+"|"-") ExpressionCount	-- add
+		ExpressionAdd ("+"|"-") ExpressionMultiply	-- add
+		| ExpressionMultiply
+	ExpressionMultiply =
+		ExpressionMultiply ("*"|"/") ExpressionCount	-- multiply
 		| ExpressionCount
 	ExpressionCount =
 		ExpressionCount "#"	-- count
