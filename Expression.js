@@ -42,17 +42,9 @@ class Index extends Expression {
 	}
 }
 
-class Unary extends Expression {
-	constructor(operator, operand) {
-		super('unary');
-		this.operator = operator;
-		this.operand = operand;
-	}
-}
-
-class Binary extends Expression {
+class Operation extends Expression {
 	constructor(operator, left, right) {
-		super('binary');
+		super('operation');
 		this.operator = operator;
 		this.left = left;
 		this.right = right;
@@ -81,7 +73,6 @@ module.exports.Name = Name;
 module.exports.This = This;
 module.exports.Property = Property;
 module.exports.Index = Index;
-module.exports.Unary = Unary;
-module.exports.Binary = Binary;
+module.exports.Operation = Operation;
 module.exports.Filter = Filter;
 module.exports.Comma = Comma;

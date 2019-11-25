@@ -62,11 +62,12 @@ function compile(expression) {
 						value => value[$id] == id
 					);
 				}, $expression.type[0]);
-			case 'unary':
-				var $operand = compile.call(this, expression.operand),
+			case 'operation':
+				var $left = expression.left && compile.call(this, expression.left),
+					$right = expression.right && compile.call(this, expression.right),
 					$operator = expression.operator;
 				try {
-					var type = require("./Type.operate")(expression.operator, $operand.type);
+					var type = require("./Type.operate")(expression.operator, $left && $left.type, $right && $right.type);
 				} catch (e) {
 					throw Object.assign(
 						new CompileError(expression),
@@ -76,26 +77,8 @@ function compile(expression) {
 				return t(function (global) {
 					return operate(
 						$operator,
-						$operand.call(this, global)
-					);
-				}, type);
-			case 'binary':
-				var $left = compile.call(this, expression.left),
-					$right = compile.call(this, expression.right),
-					$operator = expression.operator;
-				try {
-					var type = require("./Type.operate")(expression.operator, $left.type, $right.type);
-				} catch (e) {
-					throw Object.assign(
-						new CompileError(expression),
-						{ message: e.message }
-					);
-				}
-				return t(function (global) {
-					return operate(
-						$operator,
-						$left.call(this, global),
-						$right.call(this, global)
+						$left && $left.call(this, global),
+						$right && $right.call(this, global)
 					);
 				}, type);
 			case 'filter':
@@ -152,7 +135,7 @@ function operate(operator, left, right) {
 		case '>':
 			return left > right;
 		case '!':
-			return !left;
+			return !right;
 		case '&&':
 			return left && right;
 		case '||':

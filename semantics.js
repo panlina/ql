@@ -11,7 +11,7 @@ var semantics = grammar.createSemantics().addOperation('parse', {
 	ExpressionMember: _default,
 	ExpressionMember_property: (expression, dot, property) => new Expression.Property(expression.parse(), property.parse()),
 	ExpressionMember_index: (expression, sharp, index) => new Expression.Index(expression.parse(), index.parse()),
-	ExpressionCount_count: (expression, sharp) => new Expression.Unary('#', expression.parse()),
+	ExpressionCount_count: (expression, sharp) => new Expression.Operation('#', expression.parse(), undefined),
 	ExpressionAdd: _default,
 	ExpressionAdd_add: binary,
 	ExpressionMultiply: _default,
@@ -41,16 +41,26 @@ var semantics = grammar.createSemantics().addOperation('parse', {
 });
 function _default(expression) { return expression.parse(); }
 function binary(left, operator, right) {
-	return new Expression.Binary(
+	return new Expression.Operation(
 		operator.sourceString,
 		left.parse(),
 		right.parse()
 	);
 }
 function unary(operator, operand) {
-	return new Expression.Unary(
-		operator.sourceString,
-		operand.parse()
-	);
+	if (operator.isTerminal())
+		return new Expression.Operation(
+			operator.sourceString,
+			undefined,
+			operand.parse()
+		);
+	else {
+		[operator, operand] = [operand, operator];
+		return new Expression.Operation(
+			operator.sourceString,
+			operand.parse(),
+			undefined
+		);
+	}
 }
 module.exports = semantics;

@@ -19,39 +19,30 @@ function generate(expression) {
 			if (precedence[expression.index.type] >= precedence[expression.type])
 				index = `(${index})`;
 			return `${$expression}#${index}`;
-		case 'unary':
-			var operand = generate(expression.operand);
-			if (
-				precedence[expression.operand.type] > precedence[expression.type]
-				||
-				precedence[expression.operand.type] == precedence[expression.type]
-				&&
-				operator[expression.operand.operator] > operator[expression.operator]
-			)
-				operand = `(${operand})`;
-			if (expression.operator == '#')
-				return `${operand}${expression.operator}`;
-			return `${expression.operator}${operand}`;
-		case 'binary':
-			var left = generate(expression.left);
-			if (
-				precedence[expression.left.type] > precedence[expression.type]
-				||
-				precedence[expression.left.type] == precedence[expression.type]
-				&&
-				operator[expression.left.operator] > operator[expression.operator]
-			)
-				left = `(${left})`;
-			var right = generate(expression.right);
-			if (
-				precedence[expression.right.type] > precedence[expression.type]
-				||
-				precedence[expression.right.type] == precedence[expression.type]
-				&&
-				operator[expression.right.operator] >= operator[expression.operator]
-			)
-				right = `(${right})`;
-			return `${left}${expression.operator}${right}`;
+		case 'operation':
+			if (expression.left) {
+				var left = generate(expression.left);
+				if (
+					precedence[expression.left.type] > precedence[expression.type]
+					||
+					precedence[expression.left.type] == precedence[expression.type]
+					&&
+					operator[expression.left.operator] > operator[expression.operator]
+				)
+					left = `(${left})`;
+			}
+			if (expression.right) {
+				var right = generate(expression.right);
+				if (
+					precedence[expression.right.type] > precedence[expression.type]
+					||
+					precedence[expression.right.type] == precedence[expression.type]
+					&&
+					operator[expression.right.operator] >= operator[expression.operator]
+				)
+					right = `(${right})`;
+			}
+			return `${left || ''}${expression.operator}${right || ''}`;
 		case 'filter':
 			var $expression = generate(expression.expression);
 			if (precedence[expression.expression.type] > precedence[expression.type])
@@ -76,8 +67,7 @@ var precedence = {
 	this: 0,
 	property: 1,
 	index: 1,
-	unary: 2,
-	binary: 2,
+	operation: 2,
 	filter: 3,
 	comma: 4
 };
