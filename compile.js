@@ -119,9 +119,9 @@ function operate(operator, left, right) {
 		case '/':
 			return left / right;
 		case '+':
-			return left + right;
+			return left != undefined ? left + right : right;
 		case '-':
-			return left - right;
+			return left != undefined ? left - right : -right;
 		case '<=':
 			return left <= right;
 		case '=':

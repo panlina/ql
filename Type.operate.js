@@ -6,14 +6,22 @@ function operate(operator, left, right) {
 				throw new Error(`operands of ${operator} must be numbers.`);
 			return 'number';
 		case '+':
-			if (left != 'number' && left != 'string' || right != 'number' && right != 'string')
-				throw new Error(`operands of + must be numbers or strings.`);
-			if (left != right)
-				throw new Error(`operands of + must be both numbers or both strings.`);
+			if (left != undefined) {
+				if (left != 'number' && left != 'string' || right != 'number' && right != 'string')
+					throw new Error(`operands of + must be numbers or strings.`);
+				if (left != right)
+					throw new Error(`operands of + must be both numbers or both strings.`);
+			} else
+				if (right != 'number')
+					throw new Error(`operand of + must be number.`);
 			return left;
 		case '-':
-			if (left != 'number' || right != 'number')
-				throw new Error(`operands of - must be numbers.`);
+			if (left != undefined) {
+				if (left != 'number' || right != 'number')
+					throw new Error(`operands of - must be numbers.`);
+			} else
+				if (right != 'number')
+					throw new Error(`operand of - must be number.`);
 			return 'number';
 		case '<=':
 		case '>=':

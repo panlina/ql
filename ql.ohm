@@ -22,7 +22,10 @@ ql {
 		ExpressionAdd ("+"|"-") ExpressionMultiply	-- add
 		| ExpressionMultiply
 	ExpressionMultiply =
-		ExpressionMultiply ("*"|"/") ExpressionCount	-- multiply
+		ExpressionMultiply ("*"|"/") ExpressionAddUnary	-- multiply
+		| ExpressionAddUnary
+	ExpressionAddUnary =
+		("+"|"-") ExpressionAddUnary	-- add
 		| ExpressionCount
 	ExpressionCount =
 		ExpressionCount "#"	-- count

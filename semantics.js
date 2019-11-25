@@ -16,6 +16,8 @@ var semantics = grammar.createSemantics().addOperation('parse', {
 	ExpressionAdd_add: binary,
 	ExpressionMultiply: _default,
 	ExpressionMultiply_multiply: binary,
+	ExpressionAddUnary: _default,
+	ExpressionAddUnary_add: unary,
 	ExpressionCompare: _default,
 	ExpressionCompare_compare: binary,
 	ExpressionNot: _default,

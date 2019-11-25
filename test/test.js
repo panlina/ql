@@ -25,8 +25,8 @@ before(function () {
 		data = JSON.parse(fs.readFileSync(file));
 	});
 });
-it('(posts|!this.id>50&&(t=::posts#1.title,title<=t))#', function () {
-	var q = ql.parse("(posts|!this.id>50&&(t=::posts#1.title,title<=t))#");
+it('(posts|!-this.id<-50&&(t=::posts#1.title,title<=t))#', function () {
+	var q = ql.parse("(posts|!-this.id<-50&&(t=::posts#1.title,title<=t))#");
 	var _function = ql.compile.call(new ql.Environment(Object.assign(new ql.Scope(local), { type: type })), q);
 	assert(require('../Type.equals')(_function.type, 'number'));
 	assert.equal(
