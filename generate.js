@@ -27,7 +27,7 @@ function generate(expression) {
 					||
 					precedence[expression.left.type] == precedence[expression.type]
 					&&
-					operator[expression.left.operator] > operator[expression.operator]
+					operatorPrecedence(expression.left) > operatorPrecedence(expression)
 				)
 					left = `(${left})`;
 			}
@@ -38,11 +38,18 @@ function generate(expression) {
 					||
 					precedence[expression.right.type] == precedence[expression.type]
 					&&
-					operator[expression.right.operator] >= operator[expression.operator]
+					operatorPrecedence(expression.right) >= operatorPrecedence(expression)
 				)
 					right = `(${right})`;
 			}
 			return `${left || ''}${expression.operator}${right || ''}`;
+			function operatorPrecedence(expression) {
+				return require('./operator').resolve(
+					expression.operator,
+					!!expression.left,
+					!!expression.right
+				).precedence;
+			}
 		case 'filter':
 			var $expression = generate(expression.expression);
 			if (precedence[expression.expression.type] > precedence[expression.type])
@@ -70,21 +77,5 @@ var precedence = {
 	operation: 2,
 	filter: 3,
 	comma: 4
-};
-var operator = {
-	'*': 0,
-	'/': 0,
-	'+': 1,
-	'-': 1,
-	'<=': 2,
-	'=': 2,
-	'>=': 2,
-	'<': 2,
-	'!=': 2,
-	'>': 2,
-	'!': 3,
-	'&&': 4,
-	'||': 4,
-	'#': -1
 };
 module.exports = generate;
