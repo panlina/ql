@@ -18,6 +18,13 @@ function compile(expression) {
 				}, typeof $value);
 			case 'name':
 				var resolution = Context.resolve.call(this, global, expression);
+				if (!resolution)
+					if (expression.identifier in constant) {
+						var $identifier = expression.identifier;
+						return t(function (global) {
+							return runtime.constant[$identifier];
+						}, constant[expression.identifier]);
+					}
 				if (!resolution) throw new CompileError.UndefinedName(expression);
 				var [value, [depth, key]] = resolution;
 				if (key == 'this')
@@ -149,4 +156,14 @@ function truthy(value) {
 		value.length :
 		value;
 }
+var constant = {
+	false: 'boolean',
+	true: 'boolean'
+};
+var runtime = {
+	constant: {
+		false: false,
+		true: true
+	}
+};
 module.exports = compile;
