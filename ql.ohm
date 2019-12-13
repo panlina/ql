@@ -29,6 +29,9 @@ ql {
 		| ExpressionCount
 	ExpressionCount =
 		ExpressionCount "#"	-- count
+		| ExpressionCall
+	ExpressionCall =
+		ExpressionMember ExpressionCall	-- call
 		| ExpressionMember
 	ExpressionMember =
 		ExpressionMember "." identifier	-- property

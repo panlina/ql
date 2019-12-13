@@ -9,6 +9,7 @@ var semantics = grammar.createSemantics().addOperation('parse', {
 	ExpressionAtom: _default,
 	ExpressionAtom_parentheses: (open, expression, close) => expression.parse(),
 	ExpressionMember: _default,
+	ExpressionCall_call: (expression, argument) => new Expression.Call(expression.parse(), argument.parse()),
 	ExpressionMember_property: (expression, dot, property) => new Expression.Property(expression.parse(), property.parse()),
 	ExpressionMember_index: (expression, sharp, index) => new Expression.Index(expression.parse(), index.parse()),
 	ExpressionCount_count: (expression, sharp) => new Expression.Operation('#', expression.parse(), undefined),

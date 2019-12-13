@@ -25,13 +25,13 @@ before(function () {
 		data = JSON.parse(fs.readFileSync(file));
 	});
 });
-it('(posts|!-this.id<-50&&(t=::posts#1.title,title<=t))#', function () {
-	var q = ql.parse("(posts|!-this.id<-50&&(t=::posts#1.title,title<=t))#");
+it('(posts|!-this.id<-50&&(t=::posts#1.title,length title<=length t))#', function () {
+	var q = ql.parse("(posts|!-this.id<-50&&(t=::posts#1.title,length title<=length t))#");
 	var _function = ql.compile.call(new ql.Environment(Object.assign(new ql.Scope(local), { type: type })), q);
 	assert(require('../Type.equals')(_function.type, 'number'));
 	assert.equal(
 		_function.call(new ql.Environment(new ql.Scope(data))),
-		data.posts.filter(post => !(post.id > 50) && post.title <= data.posts.find(post => post.id == 1).title).length
+		data.posts.filter(post => !(post.id > 50) && post.title.length <= data.posts.find(post => post.id == 1).title.length).length
 	);
 });
 it('users|(posts|id>10)', function () {
@@ -88,6 +88,12 @@ describe('compile error', function () {
 		assert.throws(() => {
 			ql.compile.call(new ql.Environment(Object.assign(new ql.Scope(local), { type: type })), q);
 		}, CompileError.NonPrimitiveIndex);
+	});
+	it('wrong argument type', function () {
+		var q = ql.parse('length 0');
+		assert.throws(() => {
+			ql.compile.call(new ql.Environment(Object.assign(new ql.Scope(local), { type: type })), q);
+		}, CompileError.WrongArgumentType);
 	});
 	it('non-array filter', function () {
 		var q = ql.parse('users#1|0');

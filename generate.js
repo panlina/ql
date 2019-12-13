@@ -19,6 +19,14 @@ function generate(expression) {
 			if (precedence[expression.index.type] >= precedence[expression.type])
 				index = `(${index})`;
 			return `${$expression}#${index}`;
+		case 'call':
+			var $expression = generate(expression.expression);
+			if (precedence[expression.expression.type] > precedence[expression.type])
+				$expression = `(${$expression})`;
+			var argument = generate(expression.argument);
+			if (precedence[expression.argument.type] >= precedence[expression.type])
+				argument = `(${argument})`;
+			return `${$expression} ${argument}`;
 		case 'operation':
 			if (expression.left) {
 				var left = generate(expression.left);
@@ -74,8 +82,9 @@ var precedence = {
 	this: 0,
 	property: 1,
 	index: 1,
-	operation: 2,
-	filter: 3,
-	comma: 4
+	call: 2,
+	operation: 3,
+	filter: 4,
+	comma: 5
 };
 module.exports = generate;

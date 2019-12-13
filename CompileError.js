@@ -28,6 +28,10 @@ class NonPrimitiveIndex extends CompileError {
 	constructor(expression) { super(expression); }
 	get message() { return `non-primitive cannot index.`; }
 }
+class WrongArgumentType extends CompileError {
+	constructor(expression) { super(expression); }
+	get message() { return `wrong argument type.`; }
+}
 class NonArrayFilter extends CompileError {
 	constructor(expression) { super(expression); }
 	get message() { return `cannot filter non-array.`; }
@@ -38,5 +42,6 @@ CompileError.NonObjectPropertyAccess = NonObjectPropertyAccess;
 CompileError.PropertyNotFound = PropertyNotFound;
 CompileError.NonArrayIndex = NonArrayIndex;
 CompileError.NonPrimitiveIndex = NonPrimitiveIndex;
+CompileError.WrongArgumentType = WrongArgumentType;
 CompileError.NonArrayFilter = NonArrayFilter;
 module.exports = CompileError;

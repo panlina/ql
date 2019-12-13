@@ -42,6 +42,14 @@ class Index extends Expression {
 	}
 }
 
+class Call extends Expression {
+	constructor(expression, argument) {
+		super('call');
+		this.expression = expression;
+		this.argument = argument;
+	}
+}
+
 class Operation extends Expression {
 	constructor(operator, left, right) {
 		super('operation');
@@ -73,6 +81,7 @@ module.exports.Name = Name;
 module.exports.This = This;
 module.exports.Property = Property;
 module.exports.Index = Index;
+module.exports.Call = Call;
 module.exports.Operation = Operation;
 module.exports.Filter = Filter;
 module.exports.Comma = Comma;

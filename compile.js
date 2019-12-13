@@ -69,6 +69,14 @@ function compile(expression) {
 						value => value[$id] == id
 					);
 				}, $expression.type[0]);
+			case 'call':
+				var $expression = compile.call(this, expression.expression),
+					$argument = compile.call(this, expression.argument);
+				if (!require('./Type.equals')($argument.type, $expression.type.argument))
+					throw new CompileError.WrongArgumentType(expression);
+				return t(function (global) {
+					return $expression.call(this, global)($argument.call(this, global));
+				}, $expression.type.result);
 			case 'operation':
 				var $left = expression.left && compile.call(this, expression.left),
 					$right = expression.right && compile.call(this, expression.right),
@@ -158,12 +166,14 @@ function truthy(value) {
 }
 var constant = {
 	false: 'boolean',
-	true: 'boolean'
+	true: 'boolean',
+	length: new (require('./Type').Function)('string', 'number')
 };
 var runtime = {
 	constant: {
 		false: false,
-		true: true
+		true: true,
+		length: s => s.length
 	}
 };
 module.exports = compile;
