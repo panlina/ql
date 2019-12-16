@@ -42,7 +42,7 @@ function compile(expression) {
 			case 'property':
 				var $expression = compile.call(this, expression.expression),
 					$property = expression.property;
-				if (!(typeof $expression.type == 'object' && !($expression.type instanceof Array)))
+				if (!(typeof $expression.type == 'object' && !($expression.type instanceof Array || $expression.type instanceof require('./Type').Group)))
 					throw new CompileError.NonObjectPropertyAccess(expression);
 				if (!(expression.property in $expression.type))
 					throw new CompileError.PropertyNotFound(expression);
@@ -58,17 +58,22 @@ function compile(expression) {
 			case 'index':
 				var $expression = compile.call(this, expression.expression),
 					$index = compile.call(this, expression.index);
-				if (!($expression.type instanceof Array))
+				if (!($expression.type instanceof Array || $expression.type instanceof require('./Type').Group))
 					throw new CompileError.NonArrayIndex(expression);
 				if (typeof $index.type == 'object')
 					throw new CompileError.NonPrimitiveIndex(expression);
-				return t(function (global) {
-					var id = $index.call(this, global);
-					var $id = require('./Type.id')($expression.type[0])
-					return $expression.call(this, global).find(
-						value => value[$id] == id
-					);
-				}, $expression.type[0]);
+				return $expression.type instanceof require('./Type').Group ?
+					t(function (global) {
+						var id = $index.call(this, global);
+						return $expression.call(this, global)[id];
+					}, [$expression.type.value]) :
+					t(function (global) {
+						var id = $index.call(this, global);
+						var $id = require('./Type.id')($expression.type[0])
+						return $expression.call(this, global).find(
+							value => value[$id] == id
+						);
+					}, $expression.type[0]);
 			case 'call':
 				var $expression = compile.call(this, expression.expression),
 					$argument = compile.call(this, expression.argument);
@@ -98,16 +103,61 @@ function compile(expression) {
 				}, type);
 			case 'filter':
 				var $expression = compile.call(this, expression.expression),
-					$filter = compile.call(this.push(new Scope({}, $expression.type[0])), expression.filter);
-				if (!($expression.type instanceof Array))
-					throw new CompileError.NonArrayFilter(expression);
-				return t(function (global) {
-					return $expression.call(this, global).filter(
-						value => truthy(
-							$filter.call(this.push(new Scope({}, value)), global)
-						)
+					$filter = compile.call(
+						this.push(
+							new Scope({},
+								$expression.type instanceof require('./Type').Group ?
+									[$expression.type.value] :
+									$expression.type[0]
+							)
+						), expression.filter
 					);
-				}, $expression.type);
+				if (!($expression.type instanceof Array || $expression.type instanceof require('./Type').Group))
+					throw new CompileError.NonArrayFilter(expression);
+				return t(
+					$expression.type instanceof require('./Type').Group ?
+						function (global) {
+							return require('./filterObject')($expression.call(this, global),
+								value => truthy(
+									$filter.call(this.push(new Scope({}, value)), global)
+								)
+							);
+						} :
+						function (global) {
+							return $expression.call(this, global).filter(
+								value => truthy(
+									$filter.call(this.push(new Scope({}, value)), global)
+								)
+							);
+						},
+					$expression.type
+				);
+			case 'group':
+				var $expression = compile.call(this, expression.expression),
+					$grouper = compile.call(
+						this.push(
+							new Scope({},
+								$expression.type instanceof require('./Type').Group ?
+									[$expression.type.value] :
+									$expression.type[0]
+							)
+						), expression.grouper
+					);
+				if (!($expression.type instanceof Array || $expression.type instanceof require('./Type').Group))
+					throw new CompileError.NonArrayGroup(expression);
+				if (typeof $grouper.type != 'string')
+					throw new CompileError.NonPrimitiveGroup(expression);
+				return t(function (global) {
+					return require('lodash.groupby')(
+						$expression.call(this, global),
+						value => $grouper.call(this.push(new Scope({}, value)), global)
+					);
+				}, new (require('./Type').Group)(
+					$grouper.type,
+					$expression.type instanceof require('./Type').Group ?
+						[$expression.type.value] :
+						$expression.type[0]
+				));
 			case 'comma':
 				var $head = {
 					name: expression.head.name,
@@ -156,7 +206,7 @@ function operate(operator, left, right) {
 		case '|':
 			return left || right;
 		case '#':
-			return left.length;
+			return left instanceof Array ? left.length : Object.keys(left).length;
 	}
 }
 function truthy(value) {

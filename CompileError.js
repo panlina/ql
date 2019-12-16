@@ -36,6 +36,14 @@ class NonArrayFilter extends CompileError {
 	constructor(expression) { super(expression); }
 	get message() { return `cannot filter non-array.`; }
 }
+class NonArrayGroup extends CompileError {
+	constructor(expression) { super(expression); }
+	get message() { return `cannot group non-array.`; }
+}
+class NonPrimitiveGroup extends CompileError {
+	constructor(expression) { super(expression); }
+	get message() { return `cannot group by non-primitive.`; }
+}
 CompileError.UndefinedName = UndefinedName;
 CompileError.UnresolvedReference = UnresolvedReference;
 CompileError.NonObjectPropertyAccess = NonObjectPropertyAccess;
@@ -44,4 +52,6 @@ CompileError.NonArrayIndex = NonArrayIndex;
 CompileError.NonPrimitiveIndex = NonPrimitiveIndex;
 CompileError.WrongArgumentType = WrongArgumentType;
 CompileError.NonArrayFilter = NonArrayFilter;
+CompileError.NonArrayGroup = NonArrayGroup;
+CompileError.NonPrimitiveGroup = NonPrimitiveGroup;
 module.exports = CompileError;

@@ -43,6 +43,44 @@ it('users where (posts where id>10)', function () {
 		data.users.filter(user => data.posts.filter(post => post.userId == user.id && post.id > 10).length > 0).length
 	);
 });
+describe('group', function () {
+	it('(posts group userId)#1', function () {
+		var q = ql.parse("(posts group userId)#1");
+		var _function = ql.compile.call(new ql.Environment(Object.assign(new ql.Scope(local), { type: type })), q);
+		assert(require('../Type.equals')(_function.type, [type.post]));
+		assert.deepEqual(
+			_function.call(new ql.Environment(new ql.Scope(data))),
+			require('lodash.groupby')(data.posts, post => post.userId)[1]
+		);
+	});
+	it('posts group userId where this#=10', function () {
+		var q = ql.parse("(posts group userId) where (this#=10)");
+		var _function = ql.compile.call(new ql.Environment(Object.assign(new ql.Scope(local), { type: type })), q);
+		assert(require('../Type.equals')(_function.type, new (require('../Type').Group)('number', type.post)));
+		assert.deepEqual(
+			_function.call(new ql.Environment(new ql.Scope(data))),
+			require('../filterObject')(require('lodash.groupby')(data.posts, post => post.userId), value => value.length == 10)
+		);
+	});
+	it('(posts group userId)#', function () {
+		var q = ql.parse("(posts group userId)#");
+		var _function = ql.compile.call(new ql.Environment(Object.assign(new ql.Scope(local), { type: type })), q);
+		assert(require('../Type.equals')(_function.type, 'number'));
+		assert.deepEqual(
+			_function.call(new ql.Environment(new ql.Scope(data))),
+			Object.keys(require('lodash.groupby')(data.posts, post => post.userId)).length
+		);
+	});
+	it('posts group userId group this#', function () {
+		var q = ql.parse("posts group userId group this#");
+		var _function = ql.compile.call(new ql.Environment(Object.assign(new ql.Scope(local), { type: type })), q);
+		assert(require('../Type.equals')(_function.type, new (require('../Type').Group)('number', [type.post])));
+		assert.deepEqual(
+			_function.call(new ql.Environment(new ql.Scope(data))),
+			require('lodash.groupby')(require('lodash.groupby')(data.posts, post => post.userId), group => group.length)
+		);
+	});
+});
 describe('compile error', function () {
 	var CompileError = require('../CompileError');
 	describe('undefined name', function () {
@@ -100,6 +138,18 @@ describe('compile error', function () {
 		assert.throws(() => {
 			ql.compile.call(new ql.Environment(Object.assign(new ql.Scope(local), { type: type })), q);
 		}, CompileError.NonArrayFilter);
+	});
+	it('non-array group', function () {
+		var q = ql.parse('users#1 group 0');
+		assert.throws(() => {
+			ql.compile.call(new ql.Environment(Object.assign(new ql.Scope(local), { type: type })), q);
+		}, CompileError.NonArrayGroup);
+	});
+	it('non-primitive group', function () {
+		var q = ql.parse('users group posts');
+		assert.throws(() => {
+			ql.compile.call(new ql.Environment(Object.assign(new ql.Scope(local), { type: type })), q);
+		}, CompileError.NonPrimitiveGroup);
 	});
 	describe('operator', function () {
 		it('unary', function () {

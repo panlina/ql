@@ -42,7 +42,7 @@ function operate(operator, left, right) {
 		case '|':
 			return 'boolean';
 		case '#':
-			if (!(left instanceof Array))
+			if (!(left instanceof Array || left instanceof require('./Type').Group))
 				throw new Error(`operand of # must be array.`);
 			return 'number';
 	}

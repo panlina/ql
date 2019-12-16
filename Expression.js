@@ -67,6 +67,14 @@ class Filter extends Expression {
 	}
 }
 
+class Group extends Expression {
+	constructor(expression, grouper) {
+		super('group');
+		this.expression = expression;
+		this.grouper = grouper;
+	}
+}
+
 class Comma extends Expression {
 	constructor(head, body) {
 		super('comma');
@@ -84,4 +92,5 @@ module.exports.Index = Index;
 module.exports.Call = Call;
 module.exports.Operation = Operation;
 module.exports.Filter = Filter;
+module.exports.Group = Group;
 module.exports.Comma = Comma;
