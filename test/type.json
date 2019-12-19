@@ -5,7 +5,7 @@
 		"body": ":string",
 		"userId": ":number",
 		"user": "=users#(this.userId)",
-		"comments": "=::comments|postId=this post.id"
+		"comments": "=::comments where postId=this post.id"
 	},
 	"comment": {
 		"id": ":number",
@@ -20,7 +20,7 @@
 		"title": ":string",
 		"userId": ":number",
 		"user": "=users#(this.userId)",
-		"photos":"=::photos|albumId=this album.id"
+		"photos":"=::photos where albumId=this album.id"
 	},
 	"photo": {
 		"id": ":number",
@@ -34,9 +34,9 @@
 		"id": ":number",
 		"name": ":string",
 		"email": ":string",
-		"posts": "=::posts|userId=this user.id",
-		"albums": "=::albums|userId=this user.id",
-		"todos": "=::todos|userId=this user.id"
+		"posts": "=::posts where userId=this user.id",
+		"albums": "=::albums where userId=this user.id",
+		"todos": "=::todos where userId=this user.id"
 	},
 	"todo": {
 		"id": ":number",

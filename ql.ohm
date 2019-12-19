@@ -4,7 +4,7 @@ ql {
 		identifier "=" ExpressionFilter "," ExpressionComma	-- comma
 		| ExpressionFilter
 	ExpressionFilter =
-		ExpressionFilter "|" ExpressionOr	-- filter
+		ExpressionFilter "where" ExpressionOr	-- filter
 		| ExpressionOr
 	ExpressionOr =
 		ExpressionOr "||" ExpressionAnd	-- or
@@ -45,7 +45,7 @@ ql {
 		| string
 	ExpressionThis = "this" identifier
 	ExpressionName = "::"? identifier
-	identifier = &(letter|"_") (alnum|"_")+
+	identifier = ~"where" &(letter|"_") (alnum|"_")+
 	number = digit+
 	string = "\"" (~"\"" any)* "\""
 }

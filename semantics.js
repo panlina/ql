@@ -28,7 +28,7 @@ var semantics = grammar.createSemantics().addOperation('parse', {
 	ExpressionOr: _default,
 	ExpressionOr_or: binary,
 	ExpressionFilter: _default,
-	ExpressionFilter_filter: (expression, bar, filter) => new Expression.Filter(
+	ExpressionFilter_filter: (expression, where, filter) => new Expression.Filter(
 		expression.parse(),
 		filter.parse()
 	),

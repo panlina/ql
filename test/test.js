@@ -25,8 +25,8 @@ before(function () {
 		data = JSON.parse(fs.readFileSync(file));
 	});
 });
-it('(posts|!-this.id<-50&&(t=::posts#1.title,length title<=length t))#', function () {
-	var q = ql.parse("(posts|!-this.id<-50&&(t=::posts#1.title,length title<=length t))#");
+it('(posts where !-this.id<-50&&(t=::posts#1.title,length title<=length t))#', function () {
+	var q = ql.parse("(posts where !-this.id<-50&&(t=::posts#1.title,length title<=length t))#");
 	var _function = ql.compile.call(new ql.Environment(Object.assign(new ql.Scope(local), { type: type })), q);
 	assert(require('../Type.equals')(_function.type, 'number'));
 	assert.equal(
@@ -34,8 +34,8 @@ it('(posts|!-this.id<-50&&(t=::posts#1.title,length title<=length t))#', functio
 		data.posts.filter(post => !(post.id > 50) && post.title.length <= data.posts.find(post => post.id == 1).title.length).length
 	);
 });
-it('users|(posts|id>10)', function () {
-	var q = ql.parse("users|(posts|id>10)");
+it('users where (posts where id>10)', function () {
+	var q = ql.parse("users where (posts where id>10)");
 	var _function = ql.compile.call(new ql.Environment(Object.assign(new ql.Scope(local), { type: type })), q);
 	assert(require('../Type.equals')(_function.type, [type.user]));
 	assert.equal(
@@ -47,20 +47,20 @@ describe('compile error', function () {
 	var CompileError = require('../CompileError');
 	describe('undefined name', function () {
 		it('local', function () {
-			var q = ql.parse("u|(posts|id>10)");
+			var q = ql.parse("u where (posts where id>10)");
 			assert.throws(() => {
 				ql.compile.call(new ql.Environment(Object.assign(new ql.Scope(local), { type: type })), q);
 			}, CompileError.UndefinedName);
 		});
 		it('this', function () {
-			var q = ql.parse('users|(p|id>10)');
+			var q = ql.parse('users where (p where id>10)');
 			assert.throws(() => {
 				ql.compile.call(new ql.Environment(Object.assign(new ql.Scope(local), { type: type })), q);
 			}, CompileError.UndefinedName);
 		});
 	});
 	it('unresolved reference', function () {
-		var q = ql.parse('users|this post');
+		var q = ql.parse('users where this post');
 		assert.throws(() => {
 			ql.compile.call(new ql.Environment(Object.assign(new ql.Scope(local), { type: type })), q);
 		}, CompileError.UnresolvedReference);
@@ -96,7 +96,7 @@ describe('compile error', function () {
 		}, CompileError.WrongArgumentType);
 	});
 	it('non-array filter', function () {
-		var q = ql.parse('users#1|0');
+		var q = ql.parse('users#1 where 0');
 		assert.throws(() => {
 			ql.compile.call(new ql.Environment(Object.assign(new ql.Scope(local), { type: type })), q);
 		}, CompileError.NonArrayFilter);

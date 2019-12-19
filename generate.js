@@ -65,7 +65,7 @@ function generate(expression) {
 			var filter = generate(expression.filter);
 			if (precedence[expression.filter.type] >= precedence[expression.type])
 				filter = `(${filter})`;
-			return `${$expression}|${filter}`;
+			return `${$expression} where ${filter}`;
 		case 'comma':
 			var value = generate(expression.head.value);
 			if (precedence[expression.head.value.type] >= precedence[expression.type])
