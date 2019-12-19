@@ -151,9 +151,9 @@ function operate(operator, left, right) {
 			return left > right;
 		case '!':
 			return !right;
-		case '&&':
+		case '&':
 			return left && right;
-		case '||':
+		case '|':
 			return left || right;
 		case '#':
 			return left.length;

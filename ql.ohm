@@ -7,10 +7,10 @@ ql {
 		ExpressionFilter "where" ExpressionOr	-- filter
 		| ExpressionOr
 	ExpressionOr =
-		ExpressionOr "||" ExpressionAnd	-- or
+		ExpressionOr "|" ExpressionAnd	-- or
 		| ExpressionAnd
 	ExpressionAnd =
-		ExpressionAnd "&&" ExpressionNot	-- and
+		ExpressionAnd "&" ExpressionNot	-- and
 		| ExpressionNot
 	ExpressionNot =
 		"!" ExpressionNot	-- not

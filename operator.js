@@ -12,8 +12,8 @@ var operator = [
 	{ name: '!=', left: true, right: true, precedence: 3 },
 	{ name: '>', left: true, right: true, precedence: 3 },
 	{ name: '!', left: false, right: true, precedence: 4 },
-	{ name: '&&', left: true, right: true, precedence: 5 },
-	{ name: '||', left: true, right: true, precedence: 5 },
+	{ name: '&', left: true, right: true, precedence: 5 },
+	{ name: '|', left: true, right: true, precedence: 5 },
 	{ name: '#', left: true, right: false, precedence: -1 }
 ];
 var group = require('lodash.groupby')(operator, 'name');

@@ -38,8 +38,8 @@ function operate(operator, left, right) {
 				throw new Error(`operands of ${operator} must be of same type.`);
 			return 'boolean';
 		case '!':
-		case '&&':
-		case '||':
+		case '&':
+		case '|':
 			return 'boolean';
 		case '#':
 			if (!(left instanceof Array))
