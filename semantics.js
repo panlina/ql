@@ -12,7 +12,7 @@ var semantics = grammar.createSemantics().addOperation('parse', {
 	ExpressionCall_call: (expression, argument) => new Expression.Call(expression.parse(), argument.parse()),
 	ExpressionMember_property: (expression, dot, property) => new Expression.Property(expression.parse(), property.parse()),
 	ExpressionMember_index: (expression, sharp, index) => new Expression.Index(expression.parse(), index.parse()),
-	ExpressionCount_count: (expression, sharp) => new Expression.Operation('#', expression.parse(), undefined),
+	ExpressionCount_count: unary,
 	ExpressionAdd: _default,
 	ExpressionAdd_add: binary,
 	ExpressionMultiply: _default,
