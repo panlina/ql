@@ -1,7 +1,9 @@
+var fs = require('fs');
+var path = require('path');
 var assert = require('assert');
 var ql = require('..');
-var data, type = require('./type');
-type = require('lodash.mapvalues')(type, require('../Type.parse'));
+var data, type = ql.parse(fs.readFileSync(path.join(__dirname, 'type.ql'), 'utf8'), 'Declarations');
+type = require('../Type.compile')(type);
 var local = require('lodash.transform')(type, (result, value, key) => {
 	result[`${key}s`] = [value];
 });

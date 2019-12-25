@@ -48,4 +48,11 @@ ql {
 	identifier = ~"where" &(letter|"_") (alnum|"_")+
 	number = digit+
 	string = "\"" (~"\"" any)* "\""
+	Declarations = Declaration*
+	Declaration = identifier "{" DeclarationStatement* "}"
+	DeclarationStatement = DeclarationProperty | DeclarationId
+	DeclarationProperty = DeclarationPropertyType | DeclarationPropertyValue
+	DeclarationPropertyType = identifier ":" identifier ";"
+	DeclarationPropertyValue = identifier "=" Expression ";"
+	DeclarationId = "id" identifier ";"
 }

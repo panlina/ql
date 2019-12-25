@@ -1,5 +1,6 @@
 var grammar = require('./grammar');
 var Expression = require('./Expression');
+var Declaration = require('./Declaration');
 var semantics = grammar.createSemantics().addOperation('parse', {
 	number: x => new Expression.Literal(+x.sourceString),
 	string: (open, x, close) => new Expression.Literal(x.sourceString),
@@ -40,7 +41,14 @@ var semantics = grammar.createSemantics().addOperation('parse', {
 		},
 		body.parse()
 	),
-	Expression: _default
+	Expression: _default,
+	Declaration: (name, open, statement, close) => new Declaration(
+		name.parse(),
+		statement.children.map(p => p.parse())
+	),
+	DeclarationPropertyType: (identifier, colon, type, semicolon) => new Declaration.Statement.Property(identifier.parse(), { type: type.parse() }),
+	DeclarationPropertyValue: (identifier, equal, value, semicolon) => new Declaration.Statement.Property(identifier.parse(), { value: value.parse() }),
+	DeclarationId: (id, identifier, semicolon) => new Declaration.Statement.Id(identifier.parse())
 });
 function _default(expression) { return expression.parse(); }
 function binary(left, operator, right) {
