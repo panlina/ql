@@ -47,7 +47,9 @@ ql {
 	ExpressionName = "::"? identifier
 	identifier = ~"where" &(letter|"_") (alnum|"_")+
 	number = digit+
-	string = "\"" (~"\"" any)* "\""
+	string = "\"" char* "\""
+	char = ~("\""|"\\") any	-- literal
+		| "\\" ("\"" | "\\" | "b" | "f" | "n" | "r" | "t" | "v")	-- escaped
 	Declarations = Declaration*
 	Declaration = identifier "{" DeclarationStatement* "}"
 	DeclarationStatement = DeclarationProperty | DeclarationId

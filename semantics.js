@@ -3,7 +3,9 @@ var Expression = require('./Expression');
 var Declaration = require('./Declaration');
 var semantics = grammar.createSemantics().addOperation('parse', {
 	number: x => new Expression.Literal(+x.sourceString),
-	string: (open, x, close) => new Expression.Literal(x.sourceString),
+	string: (open, x, close) => new Expression.Literal(x.children.map(char => char.parse()).join('')),
+	char_literal: x => x.sourceString,
+	char_escaped: (backslash, x) => escape[x.sourceString],
 	identifier: (_, x) => x.sourceString,
 	ExpressionName: (global, identifier) => new Expression.Name(identifier.parse(), global.sourceString ? Infinity : null),
 	ExpressionThis: (_this, identifier) => new Expression.This(identifier.parse()),
@@ -74,4 +76,14 @@ function unary(operator, operand) {
 		);
 	}
 }
+var escape = {
+	'"': '"',
+	'\\': '\\',
+	b: '\b',
+	f: '\f',
+	n: '\n',
+	r: '\r',
+	t: '\t',
+	v: '\v'
+};
 module.exports = semantics;
