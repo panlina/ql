@@ -30,10 +30,14 @@ var semantics = grammar.createSemantics().addOperation('parse', {
 	ExpressionAnd_and: binary,
 	ExpressionOr: _default,
 	ExpressionOr_or: binary,
-	ExpressionFilter: _default,
-	ExpressionFilter_filter: (expression, where, filter) => new Expression.Filter(
+	ExpressionQuery: _default,
+	ExpressionQuery_filter: (expression, where, filter) => new Expression.Filter(
 		expression.parse(),
 		filter.parse()
+	),
+	ExpressionQuery_map: (expression, map, mapper) => new Expression.Map(
+		expression.parse(),
+		mapper.parse()
 	),
 	ExpressionComma: _default,
 	ExpressionComma_comma: (name, equal, value, comma, body) => new Expression.Comma(

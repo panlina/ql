@@ -36,6 +36,10 @@ class NonArrayFilter extends CompileError {
 	constructor(expression) { super(expression); }
 	get message() { return `cannot filter non-array.`; }
 }
+class NonArrayMap extends CompileError {
+	constructor(expression) { super(expression); }
+	get message() { return `cannot map non-array.`; }
+}
 CompileError.UndefinedName = UndefinedName;
 CompileError.UnresolvedReference = UnresolvedReference;
 CompileError.NonObjectPropertyAccess = NonObjectPropertyAccess;
@@ -44,4 +48,5 @@ CompileError.NonArrayIndex = NonArrayIndex;
 CompileError.NonPrimitiveIndex = NonPrimitiveIndex;
 CompileError.WrongArgumentType = WrongArgumentType;
 CompileError.NonArrayFilter = NonArrayFilter;
+CompileError.NonArrayMap = NonArrayMap;
 module.exports = CompileError;

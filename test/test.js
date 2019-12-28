@@ -45,6 +45,15 @@ it('users where (posts where id>10)', function () {
 		data.users.filter(user => data.posts.filter(post => post.userId == user.id && post.id > 10).length > 0).length
 	);
 });
+it('users map (albums map photos)', function () {
+	var q = ql.parse("users map (albums map photos)");
+	var _function = ql.compile.call(new ql.Environment(Object.assign(new ql.Scope(local), { type: type })), q);
+	assert(require('../Type.equals')(_function.type, [[[type.photo]]]));
+	assert.deepEqual(
+		_function.call(new ql.Environment(new ql.Scope(data))),
+		data.users.map(user => data.albums.filter(album => album.userId == user.id).map(album => data.photos.filter(photo => photo.albumId == album.id)))
+	);
+});
 describe('compile error', function () {
 	var CompileError = require('../CompileError');
 	describe('undefined name', function () {
@@ -102,6 +111,12 @@ describe('compile error', function () {
 		assert.throws(() => {
 			ql.compile.call(new ql.Environment(Object.assign(new ql.Scope(local), { type: type })), q);
 		}, CompileError.NonArrayFilter);
+	});
+	it('non-array map', function () {
+		var q = ql.parse('users#1 map 0');
+		assert.throws(() => {
+			ql.compile.call(new ql.Environment(Object.assign(new ql.Scope(local), { type: type })), q);
+		}, CompileError.NonArrayGroup);
 	});
 	describe('operator', function () {
 		it('unary', function () {

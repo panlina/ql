@@ -1,10 +1,11 @@
 ql {
 	Expression = ExpressionComma
 	ExpressionComma =
-		identifier "=" ExpressionFilter "," ExpressionComma	-- comma
-		| ExpressionFilter
-	ExpressionFilter =
-		ExpressionFilter "where" ExpressionOr	-- filter
+		identifier "=" ExpressionQuery "," ExpressionComma	-- comma
+		| ExpressionQuery
+	ExpressionQuery =
+		ExpressionQuery "where" ExpressionOr	-- filter
+		| ExpressionQuery "map" ExpressionOr	-- map
 		| ExpressionOr
 	ExpressionOr =
 		ExpressionOr "|" ExpressionAnd	-- or
@@ -45,7 +46,7 @@ ql {
 		| string
 	ExpressionThis = "this" identifier
 	ExpressionName = "::"? identifier
-	identifier = ~"where" &(letter|"_") (alnum|"_")+
+	identifier = ~("where"|"map") &(letter|"_") (alnum|"_")+
 	number = digit+
 	string = "\"" char* "\""
 	char = ~("\""|"\\") any	-- literal

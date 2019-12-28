@@ -67,6 +67,14 @@ class Filter extends Expression {
 	}
 }
 
+class Map extends Expression {
+	constructor(expression, mapper) {
+		super('map');
+		this.expression = expression;
+		this.mapper = mapper;
+	}
+}
+
 class Comma extends Expression {
 	constructor(head, body) {
 		super('comma');
@@ -84,4 +92,5 @@ module.exports.Index = Index;
 module.exports.Call = Call;
 module.exports.Operation = Operation;
 module.exports.Filter = Filter;
+module.exports.Map = Map;
 module.exports.Comma = Comma;

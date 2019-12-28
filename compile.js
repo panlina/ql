@@ -108,6 +108,16 @@ function compile(expression) {
 						)
 					);
 				}, $expression.type);
+			case 'map':
+				var $expression = compile.call(this, expression.expression),
+					$mapper = compile.call(this.push(new Scope({}, $expression.type[0])), expression.mapper);
+				if (!($expression.type instanceof Array))
+					throw new CompileError.NonArrayMap(expression);
+				return t(function (global) {
+					return $expression.call(this, global).map(
+						value => $mapper.call(this.push(new Scope({}, value)), global)
+					);
+				}, [$mapper.type]);
 			case 'comma':
 				var $head = {
 					name: expression.head.name,
