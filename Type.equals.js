@@ -11,7 +11,22 @@ function equals(t, s) {
 		t instanceof Array && s instanceof Array
 		&& equals(t[0], s[0])
 		||
-		t == s
+		typeof t == 'object' && typeof s == 'object'
+		&& (() => {
+			for (var key in t)
+				if (t[key].type)
+					if (
+						!(key in s)
+						||
+						!s[key].type
+						||
+						!equals(t[key].type, s[key].type)
+					)
+						return false;
+			if (Object.values(t).filter(v => v.type).length != Object.values(s).filter(v => v.type).length)
+				return false;
+			return true;
+		})()
 	);
 }
 module.exports = equals;
