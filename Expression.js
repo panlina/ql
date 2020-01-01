@@ -26,6 +26,13 @@ class This extends Expression {
 	}
 }
 
+class Object extends Expression {
+	constructor(property) {
+		super('object');
+		this.property = property;
+	}
+}
+
 class Property extends Expression {
 	constructor(expression, property) {
 		super('property');
@@ -87,6 +94,7 @@ module.exports = Expression;
 module.exports.Literal = Literal;
 module.exports.Name = Name;
 module.exports.This = This;
+module.exports.Object = Object;
 module.exports.Property = Property;
 module.exports.Index = Index;
 module.exports.Call = Call;

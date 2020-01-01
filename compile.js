@@ -39,6 +39,28 @@ function compile(expression) {
 				if (!resolution) throw new CompileError.UnresolvedReference(expression);
 				var [, , , depth] = resolution;
 				return compile.call(this, new Expression.Name('this', depth));
+			case 'object':
+				var $property = expression.property.map(
+					property => ({
+						name: property.name,
+						value: compile.call(this, property.value)
+					})
+				);
+				return t(function (global) {
+					return $property.reduce(
+						(o, p) => Object.assign(
+							o,
+							{ [p.name]: p.value.call(this, global) }
+						),
+						{}
+					);
+				}, $property.reduce(
+					(o, p) => Object.assign(
+						o,
+						{ [p.name]: { type: p.value.type } }
+					),
+					{}
+				));
 			case 'property':
 				var $expression = compile.call(this, expression.expression),
 					$property = expression.property;

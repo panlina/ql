@@ -38,8 +38,11 @@ ql {
 		ExpressionMember "." identifier	-- property
 		| ExpressionMember "#" ExpressionAtom	-- index
 		| ExpressionAtom
+	ExpressionObject = "{" ListOf<ExpressionObjectProperty, ","> "}"
+	ExpressionObjectProperty = identifier ":" Expression
 	ExpressionAtom =
 		"(" Expression ")"	-- parentheses
+		| ExpressionObject
 		| ExpressionThis
 		| ExpressionName
 		| number

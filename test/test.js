@@ -54,6 +54,35 @@ it('users map (albums map photos)', function () {
 		data.users.map(user => data.albums.filter(album => album.userId == user.id).map(album => data.photos.filter(photo => photo.albumId == album.id)))
 	);
 });
+describe('object', function () {
+	it('{a:"a",b:posts#}', function () {
+		var q = ql.parse('{a:"a",b:posts#}');
+		var _function = ql.compile.call(new ql.Environment(Object.assign(new ql.Scope(local), { type: type })), q);
+		assert(require('../Type.equals')(_function.type, { a: { type: 'string' }, b: { type: 'number' } }));
+		assert.deepEqual(
+			_function.call(new ql.Environment(new ql.Scope(data))),
+			{ a: "a", b: data.posts.length }
+		);
+	});
+	it('{a:"a",b:posts#}.b', function () {
+		var q = ql.parse('{a:"a",b:posts#}.b');
+		var _function = ql.compile.call(new ql.Environment(Object.assign(new ql.Scope(local), { type: type })), q);
+		assert(require('../Type.equals')(_function.type, 'number'));
+		assert.deepEqual(
+			_function.call(new ql.Environment(new ql.Scope(data))),
+			data.posts.length
+		);
+	});
+	it('users map {user:name,posts:posts#}', function () {
+		var q = ql.parse('users map {user:name,posts:posts#}');
+		var _function = ql.compile.call(new ql.Environment(Object.assign(new ql.Scope(local), { type: type })), q);
+		assert(require('../Type.equals')(_function.type, [{ user: { type: 'string' }, posts: { type: 'number' } }]));
+		assert.deepEqual(
+			_function.call(new ql.Environment(new ql.Scope(data))),
+			data.users.map(user => ({ user: user.name, posts: data.posts.filter(post => post.userId == user.id).length }))
+		);
+	});
+});
 describe('compile error', function () {
 	var CompileError = require('../CompileError');
 	describe('undefined name', function () {
