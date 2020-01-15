@@ -11,7 +11,7 @@ function equals(t, s) {
 		t instanceof Array && s instanceof Array
 		&& equals(t[0], s[0])
 		||
-		typeof t == 'object' && typeof s == 'object'
+		typeof t == 'object' && !(t instanceof Array) && typeof s == 'object' && !(s instanceof Array)
 		&& (() => {
 			for (var key in t)
 				if (t[key].type)
