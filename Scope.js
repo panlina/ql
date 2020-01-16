@@ -6,11 +6,12 @@ class Scope {
 	resolve(name) {
 		if (name in this.local)
 			return [this.local[name], 'local'];
-		if (this.this) {
+		if ('this' in this) {
 			if (name == 'this')
 				return [this.this, 'local'];
-			if (name in this.this)
-				return [this.this[name], 'this'];
+			if (typeof this.this == 'object' && !(this.this instanceof Array))
+				if (name in this.this)
+					return [this.this[name], 'this'];
 		}
 	}
 	*[Symbol.iterator]({ key, name } = {}) {
@@ -21,7 +22,7 @@ class Scope {
 			} else
 				for (let name in this.local)
 					yield [this.local[name], name, 'local'];
-		if (this.this) {
+		if ('this' in this) {
 			if (key != 'this')
 				if (name !== undefined) {
 					if (name == 'this')
@@ -29,12 +30,13 @@ class Scope {
 				} else
 					yield [this.this, 'this', 'local'];
 			if (key != 'local')
-				if (name !== undefined) {
-					if (name in this.this)
-						yield [this.this[name], name, 'this'];
-				} else
-					for (let name in this.this)
-						yield [this.this[name], name, 'this'];
+				if (typeof this.this == 'object' && !(this.this instanceof Array))
+					if (name !== undefined) {
+						if (name in this.this)
+							yield [this.this[name], name, 'this'];
+					} else
+						for (let name in this.this)
+							yield [this.this[name], name, 'this'];
 		}
 	}
 	find(f, filter) {
