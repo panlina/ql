@@ -61,6 +61,17 @@ function compile(expression) {
 					),
 					{}
 				));
+			case 'array':
+				var $element = expression.element.map(
+					element => compile.call(this, element)
+				);
+				if ($element.some(e => !require('./Type.equals')(e.type, $element[0].type)))
+					throw new CompileError.HeterogeneousArray(expression);
+				return t(function (global) {
+					return $element.map(
+						e => e.call(this, global)
+					);
+				}, [$element[0].type]);
 			case 'property':
 				var $expression = compile.call(this, expression.expression),
 					$property = expression.property;

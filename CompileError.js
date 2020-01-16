@@ -12,6 +12,10 @@ class UnresolvedReference extends CompileError {
 	constructor(expression) { super(expression); }
 	get message() { return `'this ${this.expression.identifier}' is not resolved.`; }
 }
+class HeterogeneousArray extends CompileError{
+	constructor(expression) { super(expression); }
+	get message() { return `array elements must be of same type.`;}
+}
 class NonObjectPropertyAccess extends CompileError {
 	constructor(expression) { super(expression); }
 	get message() { return `cannot access property '${this.expression.identifier}' of non-object.`; }
@@ -42,6 +46,7 @@ class NonArrayMap extends CompileError {
 }
 CompileError.UndefinedName = UndefinedName;
 CompileError.UnresolvedReference = UnresolvedReference;
+CompileError.HeterogeneousArray = HeterogeneousArray;
 CompileError.NonObjectPropertyAccess = NonObjectPropertyAccess;
 CompileError.PropertyNotFound = PropertyNotFound;
 CompileError.NonArrayIndex = NonArrayIndex;

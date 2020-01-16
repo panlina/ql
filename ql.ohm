@@ -40,9 +40,11 @@ ql {
 		| ExpressionAtom
 	ExpressionObject = "{" ListOf<ExpressionObjectProperty, ","> "}"
 	ExpressionObjectProperty = identifier ":" Expression
+	ExpressionArray = "[" ListOf<Expression, ","> "]"
 	ExpressionAtom =
 		"(" Expression ")"	-- parentheses
 		| ExpressionObject
+		| ExpressionArray
 		| ExpressionThis
 		| ExpressionName
 		| number

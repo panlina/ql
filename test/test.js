@@ -83,6 +83,15 @@ describe('object', function () {
 		);
 	});
 });
+it('[0,1] map this+1 where this>1', function () {
+	var q = ql.parse('[0,1] map this+1 where this>1');
+	var _function = ql.compile.call(new ql.Environment(Object.assign(new ql.Scope(local), { type: type })), q);
+	assert(require('../Type.equals')(_function.type, ['number']));
+	assert.deepEqual(
+		_function.call(new ql.Environment(new ql.Scope(data))),
+		[2]
+	);
+});
 describe('compile error', function () {
 	var CompileError = require('../CompileError');
 	describe('undefined name', function () {
@@ -104,6 +113,12 @@ describe('compile error', function () {
 		assert.throws(() => {
 			ql.compile.call(new ql.Environment(Object.assign(new ql.Scope(local), { type: type })), q);
 		}, CompileError.UnresolvedReference);
+	});
+	it('heterogeneous array', function () {
+		var q = ql.parse('[0,"abc"]');
+		assert.throws(() => {
+			ql.compile.call(new ql.Environment(Object.assign(new ql.Scope(local), { type: type })), q);
+		}, CompileError.HeterogeneousArray);
 	});
 	it('non-object property access', function () {
 		var q = ql.parse('users#1.id.id');
