@@ -44,6 +44,14 @@ class NonArrayMap extends CompileError {
 	constructor(expression) { super(expression); }
 	get message() { return `cannot map non-array.`; }
 }
+class NonArrayLimit extends CompileError {
+	constructor(expression) { super(expression); }
+	get message() { return `cannot limit non-array.`; }
+}
+class InvalidLimiter extends CompileError {
+	constructor(expression) { super(expression); }
+	get message() { return `limiter must be array of start followed by length, both constants.`; }
+}
 CompileError.UndefinedName = UndefinedName;
 CompileError.UnresolvedReference = UnresolvedReference;
 CompileError.HeterogeneousArray = HeterogeneousArray;
@@ -54,4 +62,6 @@ CompileError.NonPrimitiveIndex = NonPrimitiveIndex;
 CompileError.WrongArgumentType = WrongArgumentType;
 CompileError.NonArrayFilter = NonArrayFilter;
 CompileError.NonArrayMap = NonArrayMap;
+CompileError.NonArrayLimit = NonArrayLimit;
+CompileError.InvalidLimiter = InvalidLimiter;
 module.exports = CompileError;

@@ -92,6 +92,15 @@ it('[0,1] map this+1 where this>1', function () {
 		[2]
 	);
 });
+it('[0,1,2,3] limit [1,2]', function () {
+	var q = ql.parse('[0,1,2,3] limit [1,2]');
+	var _function = ql.compile.call(new ql.Environment(Object.assign(new ql.Scope(local), { type: type })), q);
+	assert(require('../Type.equals')(_function.type, ['number']));
+	assert.deepEqual(
+		_function.call(new ql.Environment(new ql.Scope(data))),
+		[1, 2]
+	);
+});
 describe('compile error', function () {
 	var CompileError = require('../CompileError');
 	describe('undefined name', function () {
@@ -161,6 +170,18 @@ describe('compile error', function () {
 		assert.throws(() => {
 			ql.compile.call(new ql.Environment(Object.assign(new ql.Scope(local), { type: type })), q);
 		}, CompileError.NonArrayGroup);
+	});
+	it('non-array limit', function () {
+		var q = ql.parse('users#1 limit [0,0]');
+		assert.throws(() => {
+			ql.compile.call(new ql.Environment(Object.assign(new ql.Scope(local), { type: type })), q);
+		}, CompileError.NonArrayLimit);
+	});
+	it('invalid limiter', function () {
+		var q = ql.parse('users limit "0"');
+		assert.throws(() => {
+			ql.compile.call(new ql.Environment(Object.assign(new ql.Scope(local), { type: type })), q);
+		}, CompileError.InvalidLimiter);
 	});
 	describe('operator', function () {
 		it('unary', function () {

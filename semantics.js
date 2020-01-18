@@ -42,6 +42,10 @@ var semantics = grammar.createSemantics().addOperation('parse', {
 		expression.parse(),
 		mapper.parse()
 	),
+	ExpressionQuery_limit: (expression, limit, limiter) => new Expression.Limit(
+		expression.parse(),
+		limiter.parse()
+	),
 	ExpressionComma: _default,
 	ExpressionComma_comma: (name, equal, value, comma, body) => new Expression.Comma(
 		{

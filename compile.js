@@ -151,6 +151,24 @@ function compile(expression) {
 						value => $mapper.call(this.push(new Scope({}, value)), global)
 					);
 				}, [$mapper.type]);
+			case 'limit':
+				var $expression = compile.call(this, expression.expression),
+					$limiter = compile.call(this, expression.limiter);
+				if (!($expression.type instanceof Array))
+					throw new CompileError.NonArrayLimit(expression);
+				if (!(
+					expression.limiter.type == 'array' &&
+					expression.limiter.element.length == 2 &&
+					expression.limiter.element[0].type == 'literal' &&
+					typeof expression.limiter.element[0].value == 'number' &&
+					expression.limiter.element[1].type == 'literal' &&
+					typeof expression.limiter.element[1].value == 'number'
+				))
+					throw new CompileError.InvalidLimiter(expression);
+				return t(function (global) {
+					var limiter = $limiter.call(this, global);
+					return $expression.call(this, global).slice(limiter[0], limiter[0] + limiter[1]);
+				}, $expression.type);
 			case 'comma':
 				var $head = {
 					name: expression.head.name,
