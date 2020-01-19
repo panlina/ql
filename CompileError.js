@@ -52,6 +52,14 @@ class InvalidLimiter extends CompileError {
 	constructor(expression) { super(expression); }
 	get message() { return `limiter must be array of start followed by length, both constants.`; }
 }
+class NonArrayOrder extends CompileError {
+	constructor(expression) { super(expression); }
+	get message() { return `cannot order non-array.`; }
+}
+class NonPrimitiveOrder extends CompileError {
+	constructor(expression) { super(expression); }
+	get message() { return `non-primitive cannot order.`; }
+}
 CompileError.UndefinedName = UndefinedName;
 CompileError.UnresolvedReference = UnresolvedReference;
 CompileError.HeterogeneousArray = HeterogeneousArray;
@@ -64,4 +72,6 @@ CompileError.NonArrayFilter = NonArrayFilter;
 CompileError.NonArrayMap = NonArrayMap;
 CompileError.NonArrayLimit = NonArrayLimit;
 CompileError.InvalidLimiter = InvalidLimiter;
+CompileError.NonArrayOrder = NonArrayOrder;
+CompileError.NonPrimitiveOrder = NonPrimitiveOrder;
 module.exports = CompileError;

@@ -97,6 +97,14 @@ class Limit extends Expression {
 	}
 }
 
+class Order extends Expression {
+	constructor(expression, orderer) {
+		super('order');
+		this.expression = expression;
+		this.orderer = orderer;
+	}
+}
+
 class Comma extends Expression {
 	constructor(head, body) {
 		super('comma');
@@ -118,4 +126,5 @@ module.exports.Operation = Operation;
 module.exports.Filter = Filter;
 module.exports.Map = Map;
 module.exports.Limit = Limit;
+module.exports.Order = Order;
 module.exports.Comma = Comma;

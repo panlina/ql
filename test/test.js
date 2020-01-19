@@ -101,6 +101,15 @@ it('[0,1,2,3] limit [1,2]', function () {
 		[1, 2]
 	);
 });
+it('albums order title', function () {
+	var q = ql.parse('albums order title');
+	var _function = ql.compile.call(new ql.Environment(Object.assign(new ql.Scope(local), { type: type })), q);
+	assert(require('../Type.equals')(_function.type, [type.album]));
+	assert.deepEqual(
+		_function.call(new ql.Environment(new ql.Scope(data))),
+		data.albums.sort((a, b) => a.title < b.title ? -1 : a.title > b.title ? 1 : 0)
+	);
+});
 describe('compile error', function () {
 	var CompileError = require('../CompileError');
 	describe('undefined name', function () {
@@ -182,6 +191,18 @@ describe('compile error', function () {
 		assert.throws(() => {
 			ql.compile.call(new ql.Environment(Object.assign(new ql.Scope(local), { type: type })), q);
 		}, CompileError.InvalidLimiter);
+	});
+	it('non-array order', function () {
+		var q = ql.parse('users#1 order 0');
+		assert.throws(() => {
+			ql.compile.call(new ql.Environment(Object.assign(new ql.Scope(local), { type: type })), q);
+		}, CompileError.NonArrayOrder);
+	});
+	it('non-primitive order', function () {
+		var q = ql.parse('users order users#1');
+		assert.throws(() => {
+			ql.compile.call(new ql.Environment(Object.assign(new ql.Scope(local), { type: type })), q);
+		}, CompileError.NonPrimitiveOrder);
 	});
 	describe('operator', function () {
 		it('unary', function () {

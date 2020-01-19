@@ -169,6 +169,22 @@ function compile(expression) {
 					var limiter = $limiter.call(this, global);
 					return $expression.call(this, global).slice(limiter[0], limiter[0] + limiter[1]);
 				}, $expression.type);
+			case 'order':
+				var $expression = compile.call(this, expression.expression),
+					$orderer = compile.call(this.push(new Scope({}, $expression.type[0])), expression.orderer);
+				if (!($expression.type instanceof Array))
+					throw new CompileError.NonArrayOrder(expression);
+				if (typeof $orderer.type == 'object')
+					throw new CompileError.NonPrimitiveOrder(expression);
+				return t(function (global) {
+					return $expression.call(this, global).sort(
+						(a, b) => {
+							var a = $orderer.call(this.push(new Scope({}, a)), global);
+							var b = $orderer.call(this.push(new Scope({}, b)), global);
+							return a < b ? -1 : a > b ? 1 : 0;
+						}
+					);
+				}, $expression.type);
 			case 'comma':
 				var $head = {
 					name: expression.head.name,
