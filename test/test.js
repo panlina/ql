@@ -178,7 +178,7 @@ describe('compile error', function () {
 		var q = ql.parse('users#1 map 0');
 		assert.throws(() => {
 			ql.compile.call(new ql.Environment(Object.assign(new ql.Scope(local), { type: type })), q);
-		}, CompileError.NonArrayGroup);
+		}, CompileError.NonArrayMap);
 	});
 	it('non-array limit', function () {
 		var q = ql.parse('users#1 limit [0,0]');
