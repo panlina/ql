@@ -105,6 +105,14 @@ class Order extends Expression {
 	}
 }
 
+class Group extends Expression {
+	constructor(expression, grouper) {
+		super('group');
+		this.expression = expression;
+		this.grouper = grouper;
+	}
+}
+
 class Comma extends Expression {
 	constructor(head, body) {
 		super('comma');
@@ -127,4 +135,5 @@ module.exports.Filter = Filter;
 module.exports.Map = Map;
 module.exports.Limit = Limit;
 module.exports.Order = Order;
+module.exports.Group = Group;
 module.exports.Comma = Comma;

@@ -50,6 +50,10 @@ var semantics = grammar.createSemantics().addOperation('parse', {
 		expression.parse(),
 		orderer.parse()
 	),
+	ExpressionQuery_group: (expression, group, grouper) => new Expression.Group(
+		expression.parse(),
+		grouper.parse()
+	),
 	ExpressionComma: _default,
 	ExpressionComma_comma: (name, equal, value, comma, body) => new Expression.Comma(
 		{

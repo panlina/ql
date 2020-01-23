@@ -110,6 +110,26 @@ it('albums order title', function () {
 		data.albums.sort((a, b) => a.title < b.title ? -1 : a.title > b.title ? 1 : 0)
 	);
 });
+describe('group', function () {
+	it('posts group userId', function () {
+		var q = ql.parse("posts group userId");
+		var _function = ql.compile.call(new ql.Environment(Object.assign(new ql.Scope(local), { type: type })), q);
+		assert(require('../Type.equals')(_function.type, [{ key: { type: 'number' }, value: { type: [type.post] } }]));
+		assert.deepEqual(
+			_function.call(new ql.Environment(new ql.Scope(data))),
+			Object.entries(require('lodash.groupby')(data.posts, post => post.userId)).map(([key, value]) => ({ key: key, value: value }))
+		);
+	});
+	it('posts group userId map {user:key,posts:value#}', function () {
+		var q = ql.parse("posts group userId map {user:key,posts:value#}");
+		var _function = ql.compile.call(new ql.Environment(Object.assign(new ql.Scope(local), { type: type })), q);
+		assert(require('../Type.equals')(_function.type, [{ user: { type: 'number' }, posts: { type: 'number' } }]));
+		assert.deepEqual(
+			_function.call(new ql.Environment(new ql.Scope(data))),
+			Object.entries(require('lodash.groupby')(data.posts, post => post.userId)).map(([key, value]) => ({ key: key, value: value })).map(({ key: key, value: value }) => ({ user: key, posts: value.length }))
+		);
+	});
+});
 describe('compile error', function () {
 	var CompileError = require('../CompileError');
 	describe('undefined name', function () {
@@ -203,6 +223,18 @@ describe('compile error', function () {
 		assert.throws(() => {
 			ql.compile.call(new ql.Environment(Object.assign(new ql.Scope(local), { type: type })), q);
 		}, CompileError.NonPrimitiveOrder);
+	});
+	it('non-array group', function () {
+		var q = ql.parse('users#1 group 0');
+		assert.throws(() => {
+			ql.compile.call(new ql.Environment(Object.assign(new ql.Scope(local), { type: type })), q);
+		}, CompileError.NonArrayGroup);
+	});
+	it('non-primitive group', function () {
+		var q = ql.parse('users group posts');
+		assert.throws(() => {
+			ql.compile.call(new ql.Environment(Object.assign(new ql.Scope(local), { type: type })), q);
+		}, CompileError.NonPrimitiveGroup);
 	});
 	describe('operator', function () {
 		it('unary', function () {

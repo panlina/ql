@@ -185,6 +185,29 @@ function compile(expression) {
 						}
 					);
 				}, $expression.type);
+			case 'group':
+				var $expression = compile.call(this, expression.expression),
+					$grouper = compile.call(
+						this.push(
+							new Scope({}, $expression.type[0])
+						),
+						expression.grouper
+					);
+				if (!($expression.type instanceof Array))
+					throw new CompileError.NonArrayGroup(expression);
+				if (typeof $grouper.type != 'string')
+					throw new CompileError.NonPrimitiveGroup(expression);
+				return t(function (global) {
+					return Object.entries(
+						require('lodash.groupby')(
+							$expression.call(this, global),
+							value => $grouper.call(this.push(new Scope({}, value)), global)
+						)
+					).map(([key, value]) => ({ key: key, value: value }));
+				}, [{
+					key: { type: $grouper.type },
+					value: { type: $expression.type }
+				}]);
 			case 'comma':
 				var $head = {
 					name: expression.head.name,

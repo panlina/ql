@@ -60,6 +60,14 @@ class NonPrimitiveOrder extends CompileError {
 	constructor(expression) { super(expression); }
 	get message() { return `non-primitive cannot order.`; }
 }
+class NonArrayGroup extends CompileError {
+	constructor(expression) { super(expression); }
+	get message() { return `cannot group non-array.`; }
+}
+class NonPrimitiveGroup extends CompileError {
+	constructor(expression) { super(expression); }
+	get message() { return `cannot group by non-primitive.`; }
+}
 CompileError.UndefinedName = UndefinedName;
 CompileError.UnresolvedReference = UnresolvedReference;
 CompileError.HeterogeneousArray = HeterogeneousArray;
@@ -74,4 +82,6 @@ CompileError.NonArrayLimit = NonArrayLimit;
 CompileError.InvalidLimiter = InvalidLimiter;
 CompileError.NonArrayOrder = NonArrayOrder;
 CompileError.NonPrimitiveOrder = NonPrimitiveOrder;
+CompileError.NonArrayGroup = NonArrayGroup;
+CompileError.NonPrimitiveGroup = NonPrimitiveGroup;
 module.exports = CompileError;

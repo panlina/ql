@@ -8,6 +8,7 @@ ql {
 		| ExpressionQuery "map" ExpressionOr	-- map
 		| ExpressionQuery "limit" ExpressionOr 	-- limit
 		| ExpressionQuery "order" ExpressionOr 	-- order
+		| ExpressionQuery "group" ExpressionOr	-- group
 		| ExpressionOr
 	ExpressionOr =
 		ExpressionOr "|" ExpressionAnd	-- or
@@ -53,7 +54,7 @@ ql {
 		| string
 	ExpressionThis = "this" identifier
 	ExpressionName = "::"? identifier
-	identifier = ~("where"|"map"|"limit"|"order") &(letter|"_") (alnum|"_")+
+	identifier = ~("where"|"map"|"limit"|"order"|"group") &(letter|"_") (alnum|"_")+
 	number = digit+
 	string = "\"" char* "\""
 	char = ~("\""|"\\") any	-- literal
