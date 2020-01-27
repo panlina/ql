@@ -54,7 +54,10 @@ function generate(expression) {
 				)
 					right = `(${right})`;
 			}
-			return `${left || ''}${expression.operator}${right || ''}`;
+			var operator = expression.operator;
+			if (operator == 'in')
+				operator = ` ${operator} `;
+			return `${left || ''}${operator}${right || ''}`;
 			function operatorPrecedence(expression) {
 				return require('./operator').resolve(
 					expression.operator,

@@ -249,6 +249,8 @@ function operate(operator, left, right) {
 			return left != right;
 		case '>':
 			return left > right;
+		case 'in':
+			return right.includes(left);
 		case '!':
 			return !right;
 		case '&':

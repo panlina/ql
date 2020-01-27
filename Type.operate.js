@@ -37,6 +37,14 @@ function operate(operator, left, right) {
 			if (left != right)
 				throw new Error(`operands of ${operator} must be of same type.`);
 			return 'boolean';
+		case 'in':
+			if (typeof left != 'string')
+				throw new Error(`left operand of in must be primitive.`);
+			if (!(right instanceof Array))
+				throw new Error(`right operand of in must be array.`);
+			if (left != right[0])
+				throw new Error(`left operand of in must be of same type of element of right operand.`);
+			return 'boolean';
 		case '!':
 		case '&':
 		case '|':

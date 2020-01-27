@@ -18,9 +18,9 @@ ql {
 		| ExpressionNot
 	ExpressionNot =
 		"!" ExpressionNot	-- not
-		| ExpressionCompare
-	ExpressionCompare =
-		ExpressionCompare ("<="|"="|">="|"<"|"!="|">") ExpressionAdd	-- compare
+		| ExpressionRelation
+	ExpressionRelation =
+		ExpressionRelation ("<="|"="|">="|"<"|"!="|">"|"in") ExpressionAdd	-- relation
 		| ExpressionAdd
 	ExpressionAdd =
 		ExpressionAdd ("+"|"-") ExpressionMultiply	-- add
@@ -54,7 +54,7 @@ ql {
 		| string
 	ExpressionThis = "this" identifier
 	ExpressionName = "::"? identifier
-	identifier = ~("where"|"map"|"limit"|"order"|"group") &(letter|"_") (alnum|"_")+
+	identifier = ~("where"|"map"|"limit"|"order"|"group"|"in") &(letter|"_") (alnum|"_")+
 	number = digit+
 	string = "\"" char* "\""
 	char = ~("\""|"\\") any	-- literal
