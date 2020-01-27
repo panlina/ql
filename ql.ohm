@@ -54,7 +54,7 @@ ql {
 		| string
 	ExpressionThis = "this" identifier
 	ExpressionName = "::"? identifier
-	identifier = ~("where"|"map"|"limit"|"order"|"group"|"in") &(letter|"_") (alnum|"_")+
+	identifier = ~(("where"|"map"|"limit"|"order"|"group"|"in") ~(alnum|"_")) &(letter|"_") (alnum|"_")+
 	number = digit+
 	string = "\"" char* "\""
 	char = ~("\""|"\\") any	-- literal
