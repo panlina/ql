@@ -6,6 +6,10 @@ function generate(expression) {
 			return `${expression.global ? "::" : ''}${expression.identifier}`;
 		case 'this':
 			return `this ${expression.identifier}`;
+		case 'object':
+			return `{${expression.property.map(property => `${property.name}:${generate(property.value)}`).join(',')}}`;
+		case 'array':
+			return `[${expression.element.map(element => generate(element)).join(',')}]`;
 		case 'property':
 			var $expression = generate(expression.expression);
 			if (precedence[expression.expression.type] > precedence[expression.type])
@@ -66,6 +70,38 @@ function generate(expression) {
 			if (precedence[expression.filter.type] >= precedence[expression.type])
 				filter = `(${filter})`;
 			return `${$expression} where ${filter}`;
+		case 'map':
+			var $expression = generate(expression.expression);
+			if (precedence[expression.expression.type] > precedence[expression.type])
+				$expression = `(${$expression})`;
+			var mapper = generate(expression.mapper);
+			if (precedence[expression.mapper.type] >= precedence[expression.type])
+				mapper = `(${mapper})`;
+			return `${$expression} map ${mapper}`;
+		case 'limit':
+			var $expression = generate(expression.expression);
+			if (precedence[expression.expression.type] > precedence[expression.type])
+				$expression = `(${$expression})`;
+			var limiter = generate(expression.limiter);
+			if (precedence[expression.limiter.type] >= precedence[expression.type])
+				limiter = `(${limiter})`;
+			return `${$expression} limit ${limiter}`;
+		case 'order':
+			var $expression = generate(expression.expression);
+			if (precedence[expression.expression.type] > precedence[expression.type])
+				$expression = `(${$expression})`;
+			var orderer = generate(expression.orderer);
+			if (precedence[expression.orderer.type] >= precedence[expression.type])
+				orderer = `(${orderer})`;
+			return `${$expression} order ${orderer}`;
+		case 'group':
+			var $expression = generate(expression.expression);
+			if (precedence[expression.expression.type] > precedence[expression.type])
+				$expression = `(${$expression})`;
+			var grouper = generate(expression.grouper);
+			if (precedence[expression.grouper.type] >= precedence[expression.type])
+				grouper = `(${grouper})`;
+			return `${$expression} group ${grouper}`;
 		case 'comma':
 			var value = generate(expression.head.value);
 			if (precedence[expression.head.value.type] >= precedence[expression.type])
@@ -85,6 +121,10 @@ var precedence = {
 	call: 2,
 	operation: 3,
 	filter: 4,
+	map: 4,
+	limit: 4,
+	order: 4,
+	group: 4,
 	comma: 5
 };
 module.exports = generate;
