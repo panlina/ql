@@ -4,11 +4,13 @@ ql {
 		identifier "=" ExpressionQuery "," ExpressionComma	-- comma
 		| ExpressionQuery
 	ExpressionQuery =
-		ExpressionQuery "where" ExpressionOr	-- filter
-		| ExpressionQuery "map" ExpressionOr	-- map
-		| ExpressionQuery "limit" ExpressionOr 	-- limit
-		| ExpressionQuery "order" ExpressionOr 	-- order
-		| ExpressionQuery "group" ExpressionOr	-- group
+		ExpressionQuery "where" ExpressionConditional	-- filter
+		| ExpressionQuery "map" ExpressionConditional	-- map
+		| ExpressionQuery "limit" ExpressionConditional 	-- limit
+		| ExpressionQuery "order" ExpressionConditional 	-- order
+		| ExpressionQuery "group" ExpressionConditional	-- group
+		| ExpressionConditional
+	ExpressionConditional = ExpressionConditional "?" ExpressionConditional ":" ExpressionConditional	-- conditional
 		| ExpressionOr
 	ExpressionOr =
 		ExpressionOr "|" ExpressionAnd	-- or

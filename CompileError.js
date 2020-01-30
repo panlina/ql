@@ -36,6 +36,10 @@ class WrongArgumentType extends CompileError {
 	constructor(expression) { super(expression); }
 	get message() { return `wrong argument type.`; }
 }
+class NonEqualConditionalType extends CompileError {
+	constructor(expression) { super(expression); }
+	get message() { return `true and false must be of same type.`; }
+}
 class NonArrayFilter extends CompileError {
 	constructor(expression) { super(expression); }
 	get message() { return `cannot filter non-array.`; }
@@ -76,6 +80,7 @@ CompileError.PropertyNotFound = PropertyNotFound;
 CompileError.NonArrayIndex = NonArrayIndex;
 CompileError.NonPrimitiveIndex = NonPrimitiveIndex;
 CompileError.WrongArgumentType = WrongArgumentType;
+CompileError.NonEqualConditionalType = NonEqualConditionalType;
 CompileError.NonArrayFilter = NonArrayFilter;
 CompileError.NonArrayMap = NonArrayMap;
 CompileError.NonArrayLimit = NonArrayLimit;

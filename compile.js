@@ -129,6 +129,17 @@ function compile(expression) {
 						$right && $right.call(this, global)
 					);
 				}, type);
+			case 'conditional':
+				var $condition = compile.call(this, expression.condition),
+					$true = compile.call(this, expression.true),
+					$false = compile.call(this, expression.false);
+				if ($true.type != $false.type)
+					throw new CompileError.NonEqualConditionalType(expression);
+				return t(function (global) {
+					return truthy($condition.call(this, global)) ?
+						$true.call(this, global) :
+						$false.call(this, global);
+				}, $true.type);
 			case 'filter':
 				var $expression = compile.call(this, expression.expression),
 					$filter = compile.call(this.push(new Scope({}, $expression.type[0])), expression.filter);

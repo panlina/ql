@@ -83,6 +83,15 @@ describe('object', function () {
 		);
 	});
 });
+it('[0,0] map 0<1|1<2?"a":"b"', function () {
+	var q = ql.parse('[0,0] map 0<1|1<2?"a":"b"');
+	var _function = ql.compile.call(new ql.Environment(Object.assign(new ql.Scope(local), { type: type })), q);
+	assert(require('../Type.equals')(_function.type, ['string']));
+	assert.deepEqual(
+		_function.call(new ql.Environment(new ql.Scope(data))),
+		[0, 0].map(() => 0 < 1 || 1 < 2 ? "a" : "b")
+	);
+});
 it('[0,1] map this+1 where this>1', function () {
 	var q = ql.parse('[0,1] map this+1 where this>1');
 	var _function = ql.compile.call(new ql.Environment(Object.assign(new ql.Scope(local), { type: type })), q);
@@ -187,6 +196,12 @@ describe('compile error', function () {
 		assert.throws(() => {
 			ql.compile.call(new ql.Environment(Object.assign(new ql.Scope(local), { type: type })), q);
 		}, CompileError.WrongArgumentType);
+	});
+	it('non-equal conditional type', function () {
+		var q = ql.parse('0?0:"a"');
+		assert.throws(() => {
+			ql.compile.call(new ql.Environment(Object.assign(new ql.Scope(local), { type: type })), q);
+		}, CompileError.NonEqualConditionalType);
 	});
 	it('non-array filter', function () {
 		var q = ql.parse('users#1 where 0');

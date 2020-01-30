@@ -33,6 +33,12 @@ var semantics = grammar.createSemantics().addOperation('parse', {
 	ExpressionAnd_and: binary,
 	ExpressionOr: _default,
 	ExpressionOr_or: binary,
+	ExpressionConditional: _default,
+	ExpressionConditional_conditional: (condition, question, _true, colon, _false) => new Expression.Conditional(
+		condition.parse(),
+		_true.parse(),
+		_false.parse()
+	),
 	ExpressionQuery: _default,
 	ExpressionQuery_filter: (expression, where, filter) => new Expression.Filter(
 		expression.parse(),

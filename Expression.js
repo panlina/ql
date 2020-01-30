@@ -73,6 +73,15 @@ class Operation extends Expression {
 	}
 }
 
+class Conditional extends Expression {
+	constructor(condition, _true, _false) {
+		super('conditional');
+		this.condition = condition;
+		this.true = _true;
+		this.false = _false;
+	}
+}
+
 class Filter extends Expression {
 	constructor(expression, filter) {
 		super('filter');
@@ -131,6 +140,7 @@ module.exports.Property = Property;
 module.exports.Index = Index;
 module.exports.Call = Call;
 module.exports.Operation = Operation;
+module.exports.Conditional = Conditional;
 module.exports.Filter = Filter;
 module.exports.Map = Map;
 module.exports.Limit = Limit;
