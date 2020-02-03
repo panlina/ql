@@ -60,6 +60,9 @@ var semantics = grammar.createSemantics().addOperation('parse', {
 		expression.parse(),
 		grouper.parse()
 	),
+	ExpressionQuery_distinct: (distinct, expression) => new Expression.Distinct(
+		expression.parse()
+	),
 	ExpressionComma: _default,
 	ExpressionComma_comma: (name, equal, value, comma, body) => new Expression.Comma(
 		{

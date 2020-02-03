@@ -139,6 +139,15 @@ describe('group', function () {
 		);
 	});
 });
+it('distinct', function () {
+	var q = ql.parse('distinct [{a:0,b:1},{a:0,b:1},{a:1,b:2}]');
+	var _function = ql.compile.call(new ql.Environment(Object.assign(new ql.Scope(local), { type: type })), q);
+	assert(require('../Type.equals')(_function.type, [{ a: { type: 'number' }, b: { type: 'number' } }]));
+	assert.deepEqual(
+		_function.call(new ql.Environment(new ql.Scope(data))),
+		require('lodash.uniqwith')([{ a: 0, b: 1 }, { a: 0, b: 1 }, { a: 1, b: 2 }], require('lodash.isequal'))
+	);
+});
 describe('compile error', function () {
 	var CompileError = require('../CompileError');
 	describe('undefined name', function () {
@@ -250,6 +259,12 @@ describe('compile error', function () {
 		assert.throws(() => {
 			ql.compile.call(new ql.Environment(Object.assign(new ql.Scope(local), { type: type })), q);
 		}, CompileError.NonPrimitiveGroup);
+	});
+	it('non-array distinct', function () {
+		var q = ql.parse('distinct users#1');
+		assert.throws(() => {
+			ql.compile.call(new ql.Environment(Object.assign(new ql.Scope(local), { type: type })), q);
+		}, CompileError.NonArrayDistinct);
 	});
 	describe('operator', function () {
 		it('unary', function () {

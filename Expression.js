@@ -122,6 +122,13 @@ class Group extends Expression {
 	}
 }
 
+class Distinct extends Expression {
+	constructor(expression) {
+		super('distinct');
+		this.expression = expression;
+	}
+}
+
 class Comma extends Expression {
 	constructor(head, body) {
 		super('comma');
@@ -146,4 +153,5 @@ module.exports.Map = Map;
 module.exports.Limit = Limit;
 module.exports.Order = Order;
 module.exports.Group = Group;
+module.exports.Distinct = Distinct;
 module.exports.Comma = Comma;

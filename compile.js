@@ -219,6 +219,16 @@ function compile(expression) {
 					key: { type: $grouper.type },
 					value: { type: $expression.type }
 				}]);
+			case 'distinct':
+				var $expression = compile.call(this, expression.expression);
+				if (!($expression.type instanceof Array))
+					throw new CompileError.NonArrayDistinct(expression);
+				return t(function (global) {
+					return require('lodash.uniqwith')(
+						$expression.call(this, global),
+						require('lodash.isequal')
+					);
+				}, $expression.type);
 			case 'comma':
 				var $head = {
 					name: expression.head.name,

@@ -72,6 +72,10 @@ class NonPrimitiveGroup extends CompileError {
 	constructor(expression) { super(expression); }
 	get message() { return `cannot group by non-primitive.`; }
 }
+class NonArrayDistinct extends CompileError {
+	constructor(expression) { super(expression); }
+	get message() { return `cannot distinct non-array.`; }
+}
 CompileError.UndefinedName = UndefinedName;
 CompileError.UnresolvedReference = UnresolvedReference;
 CompileError.HeterogeneousArray = HeterogeneousArray;
@@ -89,4 +93,5 @@ CompileError.NonArrayOrder = NonArrayOrder;
 CompileError.NonPrimitiveOrder = NonPrimitiveOrder;
 CompileError.NonArrayGroup = NonArrayGroup;
 CompileError.NonPrimitiveGroup = NonPrimitiveGroup;
+CompileError.NonArrayDistinct = NonArrayDistinct;
 module.exports = CompileError;
