@@ -107,10 +107,11 @@ class Limit extends Expression {
 }
 
 class Order extends Expression {
-	constructor(expression, orderer) {
+	constructor(expression, orderer, direction) {
 		super('order');
 		this.expression = expression;
 		this.orderer = orderer;
+		this.direction = direction;
 	}
 }
 

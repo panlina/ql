@@ -52,9 +52,10 @@ var semantics = grammar.createSemantics().addOperation('parse', {
 		expression.parse(),
 		limiter.parse()
 	),
-	ExpressionQuery_order: (expression, order, orderer) => new Expression.Order(
+	ExpressionQuery_order: (expression, order, orderer, direction) => new Expression.Order(
 		expression.parse(),
-		orderer.parse()
+		orderer.parse(),
+		{ asc: false, desc: true }[direction.sourceString]
 	),
 	ExpressionQuery_group: (expression, group, grouper) => new Expression.Group(
 		expression.parse(),

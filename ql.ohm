@@ -7,7 +7,7 @@ ql {
 		ExpressionQuery "where" ExpressionConditional	-- filter
 		| ExpressionQuery "map" ExpressionConditional	-- map
 		| ExpressionQuery "limit" ExpressionConditional 	-- limit
-		| ExpressionQuery "order" ExpressionConditional 	-- order
+		| ExpressionQuery "order" ExpressionConditional ("asc"|"desc")?	-- order
 		| ExpressionQuery "group" ExpressionConditional	-- group
 		| "distinct" ExpressionConditional	-- distinct
 		| ExpressionConditional
@@ -57,7 +57,7 @@ ql {
 		| string
 	ExpressionThis = "this" identifier
 	ExpressionName = "::"? identifier
-	identifier = ~(("where"|"map"|"limit"|"order"|"group"|"distinct"|"in") ~(alnum|"_")) &(letter|"_") (alnum|"_")+
+	identifier = ~(("where"|"map"|"limit"|"order"|"asc"|"desc"|"group"|"distinct"|"in") ~(alnum|"_")) &(letter|"_") (alnum|"_")+
 	number = digit+
 	string = "\"" char* "\""
 	char = ~("\""|"\\") any	-- literal

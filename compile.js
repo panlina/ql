@@ -187,12 +187,15 @@ function compile(expression) {
 					throw new CompileError.NonArrayOrder(expression);
 				if (typeof $orderer.type == 'object')
 					throw new CompileError.NonPrimitiveOrder(expression);
+				var $sorter = expression.direction ?
+					(a, b) => a < b ? 1 : a > b ? -1 : 0 :
+					(a, b) => a < b ? -1 : a > b ? 1 : 0;
 				return t(function (global) {
 					return $expression.call(this, global).sort(
 						(a, b) => {
 							var a = $orderer.call(this.push(new Scope({}, a)), global);
 							var b = $orderer.call(this.push(new Scope({}, b)), global);
-							return a < b ? -1 : a > b ? 1 : 0;
+							return $sorter(a, b);
 						}
 					);
 				}, $expression.type);
