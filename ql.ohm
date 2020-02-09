@@ -58,7 +58,7 @@ ql {
 	ExpressionThis = "this" identifier
 	ExpressionName = "::"? identifier
 	identifier = ~(("where"|"map"|"limit"|"order"|"asc"|"desc"|"group"|"distinct"|"in") ~(alnum|"_")) &(letter|"_") (alnum|"_")+
-	number = digit+
+	number = digit+ ("." digit+)?
 	string = "\"" char* "\""
 	char = ~("\""|"\\") any	-- literal
 		| "\\" ("\"" | "\\" | "b" | "f" | "n" | "r" | "t" | "v")	-- escaped

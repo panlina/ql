@@ -83,6 +83,15 @@ describe('object', function () {
 		);
 	});
 });
+it('1.1+2.2', function () {
+	var q = ql.parse("1.1+2.2");
+	var _function = ql.compile.call(new ql.Environment(Object.assign(new ql.Scope(local), { type: type })), q);
+	assert(require('../Type.equals')(_function.type, 'number'));
+	assert.equal(
+		_function.call(new ql.Environment(new ql.Scope(data))),
+		1.1 + 2.2
+	);
+});
 it('[0,0] map 0<1|1<2?"a":"b"', function () {
 	var q = ql.parse('[0,0] map 0<1|1<2?"a":"b"');
 	var _function = ql.compile.call(new ql.Environment(Object.assign(new ql.Scope(local), { type: type })), q);

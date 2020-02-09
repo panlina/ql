@@ -2,7 +2,7 @@ var grammar = require('./grammar');
 var Expression = require('./Expression');
 var Declaration = require('./Declaration');
 var semantics = grammar.createSemantics().addOperation('parse', {
-	number: x => new Expression.Literal(+x.sourceString),
+	number: (integer, dot, decimal) => new Expression.Literal(+(integer.sourceString + dot.sourceString)),
 	string: (open, x, close) => new Expression.Literal(x.children.map(char => char.parse()).join('')),
 	char_literal: x => x.sourceString,
 	char_escaped: (backslash, x) => escape[x.sourceString],
