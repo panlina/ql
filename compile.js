@@ -72,6 +72,15 @@ function compile(expression) {
 						e => e.call(this, global)
 					);
 				}, [$element[0].type]);
+			case 'tuple':
+				var $element = expression.element.map(
+					element => compile.call(this, element)
+				);
+				return t(function (global) {
+					return $element.map(
+						e => e.call(this, global)
+					);
+				}, new (require('./Type').Tuple)($element.map(e => e.type)));
 			case 'property':
 				var $expression = compile.call(this, expression.expression),
 					$property = expression.property;

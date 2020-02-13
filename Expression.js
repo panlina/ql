@@ -40,6 +40,13 @@ class Array extends Expression {
 	}
 }
 
+class Tuple extends Expression {
+	constructor(element) {
+		super('tuple');
+		this.element = element;
+	}
+}
+
 class Property extends Expression {
 	constructor(expression, property) {
 		super('property');
@@ -144,6 +151,7 @@ module.exports.Name = Name;
 module.exports.This = This;
 module.exports.Object = Object;
 module.exports.Array = Array;
+module.exports.Tuple = Tuple;
 module.exports.Property = Property;
 module.exports.Index = Index;
 module.exports.Call = Call;

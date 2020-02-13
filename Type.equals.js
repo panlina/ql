@@ -1,4 +1,5 @@
 var Function = require('./Type').Function;
+var Tuple = require('./Type').Tuple;
 function equals(t, s) {
 	return (
 		typeof t == 'string' && typeof s == 'string'
@@ -11,7 +12,11 @@ function equals(t, s) {
 		t instanceof Array && s instanceof Array
 		&& equals(t[0], s[0])
 		||
-		typeof t == 'object' && !(t instanceof Array) && typeof s == 'object' && !(s instanceof Array)
+		t instanceof Tuple && s instanceof Tuple
+		&& t.element.length == s.element.length
+		&& t.element.every((t, i) => equals(t, s.element[i]))
+		||
+		typeof t == 'object' && !(t instanceof Array) && !(t instanceof Tuple) && typeof s == 'object' && !(s instanceof Array) && !(s instanceof Tuple)
 		&& (() => {
 			for (var key in t)
 				if (t[key].type)

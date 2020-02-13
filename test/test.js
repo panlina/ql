@@ -83,6 +83,15 @@ describe('object', function () {
 		);
 	});
 });
+it('{"a",posts#}', function () {
+	var q = ql.parse('{"a",posts#}');
+	var _function = ql.compile.call(new ql.Environment(Object.assign(new ql.Scope(local), { type: type })), q);
+	assert(require('../Type.equals')(_function.type, new (require('../Type').Tuple)(['string', 'number'])));
+	assert.deepEqual(
+		_function.call(new ql.Environment(new ql.Scope(data))),
+		["a", data.posts.length]
+	);
+});
 it('1.1+2.2', function () {
 	var q = ql.parse("1.1+2.2");
 	var _function = ql.compile.call(new ql.Environment(Object.assign(new ql.Scope(local), { type: type })), q);

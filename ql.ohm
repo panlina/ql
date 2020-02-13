@@ -47,10 +47,12 @@ ql {
 	ExpressionObject = "{" ListOf<ExpressionObjectProperty, ","> "}"
 	ExpressionObjectProperty = identifier ":" Expression
 	ExpressionArray = "[" ListOf<Expression, ","> "]"
+	ExpressionTuple = "{" ListOf<Expression, ","> "}"
 	ExpressionAtom =
 		"(" Expression ")"	-- parentheses
 		| ExpressionObject
 		| ExpressionArray
+		| ExpressionTuple
 		| ExpressionThis
 		| ExpressionName
 		| number
