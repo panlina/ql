@@ -181,6 +181,12 @@ describe('compile error', function () {
 				ql.compile.call(new ql.Environment(Object.assign(new ql.Scope(local), { type: type })), q);
 			}, CompileError.UndefinedName);
 		});
+		it('type', function () {
+			var q = ql.parse('users where this p');
+			assert.throws(() => {
+				ql.compile.call(new ql.Environment(Object.assign(new ql.Scope(local), { type: type })), q);
+			}, CompileError.UndefinedName);
+		});
 	});
 	it('unresolved reference', function () {
 		var q = ql.parse('users where this post');

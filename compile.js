@@ -35,6 +35,7 @@ function compile(expression) {
 				}, value);
 			case 'this':
 				var type = global.scope.type[expression.identifier];
+				if (!type) throw new CompileError.UndefinedName(expression);
 				var resolution = this.find(value => value == type, { key: 'local', name: 'this' });
 				if (!resolution) throw new CompileError.UnresolvedReference(expression);
 				var [, , , depth] = resolution;
