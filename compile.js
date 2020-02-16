@@ -4,6 +4,9 @@ var Context = require('./Context');
 var CompileError = require('./CompileError');
 function compile(expression) {
 	var global = this;
+	var table = require('lodash.transform')(global.scope.type, (result, value, key) => {
+		result[global.scope.table ? global.scope.table(key) : key] = [value];
+	});
 	var _function = compile.call(this, expression);
 	return t(function () {
 		var global = this;
@@ -18,13 +21,20 @@ function compile(expression) {
 				}, typeof $value);
 			case 'name':
 				var resolution = Context.resolve.call(this, global, expression);
-				if (!resolution)
+				if (!resolution) {
+					if (expression.identifier in table) {
+						var $identifier = expression.identifier;
+						return t(function (global) {
+							return global.scope.table[$identifier];
+						}, table[expression.identifier]);
+					}
 					if (expression.identifier in constant) {
 						var $identifier = expression.identifier;
 						return t(function (global) {
 							return runtime.constant[$identifier];
 						}, constant[expression.identifier]);
 					}
+				}
 				if (!resolution) throw new CompileError.UndefinedName(expression);
 				var [value, [depth, key]] = resolution;
 				if (key == 'this')
