@@ -92,6 +92,20 @@ function compile(expression) {
 						e => e.call(this, global)
 					);
 				}, new (require('./Type').Tuple)($element.map(e => e.type)));
+			case 'id':
+				var type = global.scope.type[expression.identifier];
+				if (!type) throw new CompileError.UndefinedName(expression);
+				var $property = require('./Type.id')(type),
+					$id = compile.call(this, expression.id);
+				if (typeof $id.type == 'object')
+					throw new CompileError.NonPrimitiveId(expression);
+				var $table = global.scope.table ? global.scope.table(expression.identifier) : expression.identifier;
+				return t(function (global) {
+					var id = $id.call(this, global);
+					return global.scope.table[$table].find(
+						value => value[$property] == id
+					);
+				}, type);
 			case 'property':
 				var $expression = compile.call(this, expression.expression),
 					$property = expression.property;
@@ -108,20 +122,6 @@ function compile(expression) {
 				return t(function (global) {
 					return $expression.call(this, global)[$property];
 				}, $expression.type[expression.property].type);
-			case 'index':
-				var $expression = compile.call(this, expression.expression),
-					$index = compile.call(this, expression.index);
-				if (!($expression.type instanceof Array))
-					throw new CompileError.NonArrayIndex(expression);
-				if (typeof $index.type == 'object')
-					throw new CompileError.NonPrimitiveIndex(expression);
-				return t(function (global) {
-					var id = $index.call(this, global);
-					var $id = require('./Type.id')($expression.type[0])
-					return $expression.call(this, global).find(
-						value => value[$id] == id
-					);
-				}, $expression.type[0]);
 			case 'call':
 				var $expression = compile.call(this, expression.expression),
 					$argument = compile.call(this, expression.argument);

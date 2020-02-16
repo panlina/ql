@@ -3,7 +3,7 @@ post {
 	title: string;
 	body: string;
 	userId: number;
-	user = users#(this.userId);
+	user = user#(this.userId);
 	comments = ::comments where postId=this post.id;
 }
 comment {
@@ -12,13 +12,13 @@ comment {
 	email: string;
 	body: string;
 	postId: number;
-	post = posts#(this.postId);
+	post = post#(this.postId);
 }
 album {
 	id: number;
 	title: string;
 	userId: number;
-	user = users#(this.userId);
+	user = user#(this.userId);
 	photos = ::photos where albumId=this album.id;
 }
 photo {
@@ -27,7 +27,7 @@ photo {
 	url: string;
 	thumbnailUrl: string;
 	albumId: number;
-	album = albums#(this.albumId);
+	album = album#(this.albumId);
 }
 user {
 	id: number;
@@ -42,5 +42,5 @@ todo {
 	title: string;
 	completed: boolean;
 	userId: number;
-	user = users#(this.userId);
+	user = user#(this.userId);
 }

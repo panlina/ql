@@ -24,8 +24,8 @@ before(function () {
 		data = JSON.parse(fs.readFileSync(file));
 	});
 });
-it('(posts where !-this.id<-50&(t=::posts#1.title,length title<=length t))#', function () {
-	var q = ql.parse("(posts where !-this.id<-50&(t=::posts#1.title,length title<=length t))#");
+it('(posts where !-this.id<-50&(t=post#1.title,length title<=length t))#', function () {
+	var q = ql.parse("(posts where !-this.id<-50&(t=post#1.title,length title<=length t))#");
 	var _function = ql.compile.call(new ql.Environment(Object.assign(new ql.Scope({}), { type: type, table: type => `${type}s` })), q);
 	assert(require('../Type.equals')(_function.type, 'number'));
 	assert.equal(
@@ -178,11 +178,19 @@ describe('compile error', function () {
 				ql.compile.call(new ql.Environment(Object.assign(new ql.Scope({}), { type: type, table: type => `${type}s` })), q);
 			}, CompileError.UndefinedName);
 		});
-		it('type', function () {
-			var q = ql.parse('users where this p');
-			assert.throws(() => {
-				ql.compile.call(new ql.Environment(Object.assign(new ql.Scope({}), { type: type, table: type => `${type}s` })), q);
-			}, CompileError.UndefinedName);
+		describe('type', function () {
+			it('this', function () {
+				var q = ql.parse('users where this p');
+				assert.throws(() => {
+					ql.compile.call(new ql.Environment(Object.assign(new ql.Scope({}), { type: type, table: type => `${type}s` })), q);
+				}, CompileError.UndefinedName);
+			});
+			it('id', function () {
+				var q = ql.parse('u#1');
+				assert.throws(() => {
+					ql.compile.call(new ql.Environment(Object.assign(new ql.Scope({}), { type: type, table: type => `${type}s` })), q);
+				}, CompileError.UndefinedName);
+			});
 		});
 	});
 	it('unresolved reference', function () {
@@ -197,29 +205,23 @@ describe('compile error', function () {
 			ql.compile.call(new ql.Environment(Object.assign(new ql.Scope({}), { type: type, table: type => `${type}s` })), q);
 		}, CompileError.HeterogeneousArray);
 	});
+	it('non-primitive id', function () {
+		var q = ql.parse('user#(user#1)');
+		assert.throws(() => {
+			ql.compile.call(new ql.Environment(Object.assign(new ql.Scope({}), { type: type, table: type => `${type}s` })), q);
+		}, CompileError.NonPrimitiveId);
+	});
 	it('non-object property access', function () {
-		var q = ql.parse('users#1.id.id');
+		var q = ql.parse('user#1.id.id');
 		assert.throws(() => {
 			ql.compile.call(new ql.Environment(Object.assign(new ql.Scope({}), { type: type, table: type => `${type}s` })), q);
 		}, CompileError.NonObjectPropertyAccess);
 	});
 	it('property not found', function () {
-		var q = ql.parse('users#1.a');
+		var q = ql.parse('user#1.a');
 		assert.throws(() => {
 			ql.compile.call(new ql.Environment(Object.assign(new ql.Scope({}), { type: type, table: type => `${type}s` })), q);
 		}, CompileError.PropertyNotFound);
-	});
-	it('non-array index', function () {
-		var q = ql.parse('users#1#1');
-		assert.throws(() => {
-			ql.compile.call(new ql.Environment(Object.assign(new ql.Scope({}), { type: type, table: type => `${type}s` })), q);
-		}, CompileError.NonArrayIndex);
-	});
-	it('non-primitive index', function () {
-		var q = ql.parse('users#(users#1)');
-		assert.throws(() => {
-			ql.compile.call(new ql.Environment(Object.assign(new ql.Scope({}), { type: type, table: type => `${type}s` })), q);
-		}, CompileError.NonPrimitiveIndex);
 	});
 	it('wrong argument type', function () {
 		var q = ql.parse('length 0');
@@ -234,19 +236,19 @@ describe('compile error', function () {
 		}, CompileError.NonEqualConditionalType);
 	});
 	it('non-array filter', function () {
-		var q = ql.parse('users#1 where 0');
+		var q = ql.parse('user#1 where 0');
 		assert.throws(() => {
 			ql.compile.call(new ql.Environment(Object.assign(new ql.Scope({}), { type: type, table: type => `${type}s` })), q);
 		}, CompileError.NonArrayFilter);
 	});
 	it('non-array map', function () {
-		var q = ql.parse('users#1 map 0');
+		var q = ql.parse('user#1 map 0');
 		assert.throws(() => {
 			ql.compile.call(new ql.Environment(Object.assign(new ql.Scope({}), { type: type, table: type => `${type}s` })), q);
 		}, CompileError.NonArrayMap);
 	});
 	it('non-array limit', function () {
-		var q = ql.parse('users#1 limit [0,0]');
+		var q = ql.parse('user#1 limit [0,0]');
 		assert.throws(() => {
 			ql.compile.call(new ql.Environment(Object.assign(new ql.Scope({}), { type: type, table: type => `${type}s` })), q);
 		}, CompileError.NonArrayLimit);
@@ -258,19 +260,19 @@ describe('compile error', function () {
 		}, CompileError.InvalidLimiter);
 	});
 	it('non-array order', function () {
-		var q = ql.parse('users#1 order 0');
+		var q = ql.parse('user#1 order 0');
 		assert.throws(() => {
 			ql.compile.call(new ql.Environment(Object.assign(new ql.Scope({}), { type: type, table: type => `${type}s` })), q);
 		}, CompileError.NonArrayOrder);
 	});
 	it('non-primitive order', function () {
-		var q = ql.parse('users order users#1');
+		var q = ql.parse('users order user#1');
 		assert.throws(() => {
 			ql.compile.call(new ql.Environment(Object.assign(new ql.Scope({}), { type: type, table: type => `${type}s` })), q);
 		}, CompileError.NonPrimitiveOrder);
 	});
 	it('non-array group', function () {
-		var q = ql.parse('users#1 group 0');
+		var q = ql.parse('user#1 group 0');
 		assert.throws(() => {
 			ql.compile.call(new ql.Environment(Object.assign(new ql.Scope({}), { type: type, table: type => `${type}s` })), q);
 		}, CompileError.NonArrayGroup);
@@ -282,20 +284,20 @@ describe('compile error', function () {
 		}, CompileError.NonPrimitiveGroup);
 	});
 	it('non-array distinct', function () {
-		var q = ql.parse('distinct users#1');
+		var q = ql.parse('distinct user#1');
 		assert.throws(() => {
 			ql.compile.call(new ql.Environment(Object.assign(new ql.Scope({}), { type: type, table: type => `${type}s` })), q);
 		}, CompileError.NonArrayDistinct);
 	});
 	describe('operator', function () {
 		it('unary', function () {
-			var q = ql.parse('users#1#');
+			var q = ql.parse('user#1#');
 			assert.throws(() => {
 				ql.compile.call(new ql.Environment(Object.assign(new ql.Scope({}), { type: type, table: type => `${type}s` })), q);
 			}, { message: "operand of # must be array." });
 		});
 		it('binary', function () {
-			var q = ql.parse('users#1+1');
+			var q = ql.parse('user#1+1');
 			assert.throws(() => {
 				ql.compile.call(new ql.Environment(Object.assign(new ql.Scope({}), { type: type, table: type => `${type}s` })), q);
 			}, { message: "operands of + must be numbers or strings." });

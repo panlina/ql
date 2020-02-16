@@ -16,6 +16,10 @@ class HeterogeneousArray extends CompileError{
 	constructor(expression) { super(expression); }
 	get message() { return `array elements must be of same type.`;}
 }
+class NonPrimitiveId extends CompileError {
+	constructor(expression) { super(expression); }
+	get message() { return `non-primitive id.`; }
+}
 class NonObjectPropertyAccess extends CompileError {
 	constructor(expression) { super(expression); }
 	get message() { return `cannot access property '${this.expression.identifier}' of non-object.`; }
@@ -23,14 +27,6 @@ class NonObjectPropertyAccess extends CompileError {
 class PropertyNotFound extends CompileError {
 	constructor(expression) { super(expression); }
 	get message() { return `property '${this.expression.property}' is not found.`; }
-}
-class NonArrayIndex extends CompileError {
-	constructor(expression) { super(expression); }
-	get message() { return `cannot index non-array.`; }
-}
-class NonPrimitiveIndex extends CompileError {
-	constructor(expression) { super(expression); }
-	get message() { return `non-primitive cannot index.`; }
 }
 class WrongArgumentType extends CompileError {
 	constructor(expression) { super(expression); }
@@ -79,10 +75,9 @@ class NonArrayDistinct extends CompileError {
 CompileError.UndefinedName = UndefinedName;
 CompileError.UnresolvedReference = UnresolvedReference;
 CompileError.HeterogeneousArray = HeterogeneousArray;
+CompileError.NonPrimitiveId = NonPrimitiveId;
 CompileError.NonObjectPropertyAccess = NonObjectPropertyAccess;
 CompileError.PropertyNotFound = PropertyNotFound;
-CompileError.NonArrayIndex = NonArrayIndex;
-CompileError.NonPrimitiveIndex = NonPrimitiveIndex;
 CompileError.WrongArgumentType = WrongArgumentType;
 CompileError.NonEqualConditionalType = NonEqualConditionalType;
 CompileError.NonArrayFilter = NonArrayFilter;

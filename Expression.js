@@ -47,19 +47,19 @@ class Tuple extends Expression {
 	}
 }
 
+class Id extends Expression {
+	constructor(identifier, id) {
+		super('id');
+		this.identifier = identifier;
+		this.id = id;
+	}
+}
+
 class Property extends Expression {
 	constructor(expression, property) {
 		super('property');
 		this.expression = expression;
 		this.property = property;
-	}
-}
-
-class Index extends Expression {
-	constructor(expression, index) {
-		super('index');
-		this.expression = expression;
-		this.index = index;
 	}
 }
 
@@ -152,8 +152,8 @@ module.exports.This = This;
 module.exports.Object = Object;
 module.exports.Array = Array;
 module.exports.Tuple = Tuple;
+module.exports.Id = Id;
 module.exports.Property = Property;
-module.exports.Index = Index;
 module.exports.Call = Call;
 module.exports.Operation = Operation;
 module.exports.Conditional = Conditional;
