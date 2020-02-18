@@ -28,6 +28,14 @@ class PropertyNotFound extends CompileError {
 	constructor(expression) { super(expression); }
 	get message() { return `property '${this.expression.property}' is not found.`; }
 }
+class NonArrayIndex extends CompileError {
+	constructor(expression) { super(expression); }
+	get message() { return `cannot index non-array.`; }
+}
+class NonPrimitiveIndex extends CompileError {
+	constructor(expression) { super(expression); }
+	get message() { return `non-primitive cannot index.`; }
+}
 class WrongArgumentType extends CompileError {
 	constructor(expression) { super(expression); }
 	get message() { return `wrong argument type.`; }
@@ -78,6 +86,8 @@ CompileError.HeterogeneousArray = HeterogeneousArray;
 CompileError.NonPrimitiveId = NonPrimitiveId;
 CompileError.NonObjectPropertyAccess = NonObjectPropertyAccess;
 CompileError.PropertyNotFound = PropertyNotFound;
+CompileError.NonArrayIndex = NonArrayIndex;
+CompileError.NonPrimitiveIndex = NonPrimitiveIndex;
 CompileError.WrongArgumentType = WrongArgumentType;
 CompileError.NonEqualConditionalType = NonEqualConditionalType;
 CompileError.NonArrayFilter = NonArrayFilter;

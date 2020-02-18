@@ -63,6 +63,14 @@ class Property extends Expression {
 	}
 }
 
+class Element extends Expression {
+	constructor(expression, index) {
+		super('element');
+		this.expression = expression;
+		this.index = index;
+	}
+}
+
 class Call extends Expression {
 	constructor(expression, argument) {
 		super('call');
@@ -154,6 +162,7 @@ module.exports.Array = Array;
 module.exports.Tuple = Tuple;
 module.exports.Id = Id;
 module.exports.Property = Property;
+module.exports.Element = Element;
 module.exports.Call = Call;
 module.exports.Operation = Operation;
 module.exports.Conditional = Conditional;

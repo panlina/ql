@@ -42,6 +42,7 @@ ql {
 		| ExpressionMember
 	ExpressionMember =
 		ExpressionMember "." identifier	-- property
+		| ExpressionMember "@" ExpressionId	-- element
 		| ExpressionId
 	ExpressionId =
 		identifier "#" ExpressionAtom	-- id

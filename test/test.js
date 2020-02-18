@@ -89,6 +89,15 @@ it('{"a",posts#}', function () {
 		["a", data.posts.length]
 	);
 });
+it('posts@0.title', function () {
+	var q = ql.parse('posts@0.title');
+	var _function = ql.compile.call(new ql.Environment(Object.assign(new ql.Scope({}), { type: type, table: type => `${type}s` })), q);
+	assert(require('../Type.equals')(_function.type, 'string'));
+	assert.equal(
+		_function.call(new ql.Environment(Object.assign(new ql.Scope({}), { table: data }))),
+		data.posts[0].title
+	);
+});
 it('1.1+2.2', function () {
 	var q = ql.parse("1.1+2.2");
 	var _function = ql.compile.call(new ql.Environment(Object.assign(new ql.Scope({}), { type: type, table: type => `${type}s` })), q);
@@ -223,6 +232,18 @@ describe('compile error', function () {
 			ql.compile.call(new ql.Environment(Object.assign(new ql.Scope({}), { type: type, table: type => `${type}s` })), q);
 		}, CompileError.PropertyNotFound);
 	});
+	it('non-array index', function () {
+		var q = ql.parse('user#1@0');
+		assert.throws(() => {
+			ql.compile.call(new ql.Environment(Object.assign(new ql.Scope({}), { type: type, table: type => `${type}s` })), q);
+		}, CompileError.NonArrayIndex);
+	});
+	it('non-primitive index', function () {
+		var q = ql.parse('users@(user#1)');
+		assert.throws(() => {
+			ql.compile.call(new ql.Environment(Object.assign(new ql.Scope({}), { type: type, table: type => `${type}s` })), q);
+		}, CompileError.NonPrimitiveIndex);
+	});
 	it('wrong argument type', function () {
 		var q = ql.parse('length 0');
 		assert.throws(() => {
@@ -304,9 +325,9 @@ describe('compile error', function () {
 		});
 	});
 	describe('generate', function () {
-		it("(length (123+user#456.number)).x", function () {
-			var q = ql.parse("(length (123+user#456.number)).x");
-			assert.equal(ql.generate(q), "(length (123+user#456.number)).x");
+		it("(length (123+user#456.number)).x@789", function () {
+			var q = ql.parse("(length (123+user#456.number)).x@789");
+			assert.equal(ql.generate(q), "(length (123+user#456.number)).x@789");
 		});
 		it("[{a:0,b:a=0,a in b},1] map (this+1 limit [0,10])", function () {
 			var q = ql.parse('[{a:0,b:a=0,a in b},1] map (this+1 limit [0,10])');

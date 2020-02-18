@@ -122,6 +122,16 @@ function compile(expression) {
 				return t(function (global) {
 					return $expression.call(this, global)[$property];
 				}, $expression.type[expression.property].type);
+			case 'element':
+				var $expression = compile.call(this, expression.expression),
+					$index = compile.call(this, expression.index);
+				if (!($expression.type instanceof Array))
+					throw new CompileError.NonArrayIndex(expression);
+				if (typeof $index.type == 'object')
+					throw new CompileError.NonPrimitiveIndex(expression);
+				return t(function (global) {
+					return $expression.call(this, global)[$index.call(this, global)];
+				}, $expression.type[0]);
 			case 'call':
 				var $expression = compile.call(this, expression.expression),
 					$argument = compile.call(this, expression.argument);

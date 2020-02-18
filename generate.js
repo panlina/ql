@@ -29,6 +29,14 @@ function generate(expression) {
 			if (precedence[expression.expression.type] > precedence[expression.type])
 				$expression = `(${$expression})`;
 			return `${$expression}.${expression.property}`;
+		case 'element':
+			var $expression = generate(expression.expression);
+			if (precedence[expression.expression.type] > precedence[expression.type])
+				$expression = `(${$expression})`;
+			var $index = generate(expression.index);
+			if (precedence[expression.index.type] >= precedence[expression.type])
+				$index = `(${$index})`;
+			return `${$expression}@${$index}`;
 		case 'call':
 			var $expression = generate(expression.expression);
 			if (precedence[expression.expression.type] > precedence[expression.type])
@@ -145,6 +153,7 @@ var precedence = {
 	this: 0,
 	id: 1,
 	property: 2,
+	element: 2,
 	call: 3,
 	operation: 4,
 	conditional: 5,
