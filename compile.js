@@ -125,13 +125,16 @@ function compile(expression) {
 			case 'element':
 				var $expression = compile.call(this, expression.expression),
 					$index = compile.call(this, expression.index);
-				if (!($expression.type instanceof Array))
-					throw new CompileError.NonArrayIndex(expression);
+				if (!($expression.type instanceof Array || $expression.type instanceof require('./Type').Tuple))
+					throw new CompileError.NonArrayOrTupleIndex(expression);
 				if (typeof $index.type == 'object')
 					throw new CompileError.NonPrimitiveIndex(expression);
+				if ($expression.type instanceof require('./Type').Tuple)
+					if (expression.index.type != 'literal')
+						throw new CompileError.NonLiteralTupleIndex(expression);
 				return t(function (global) {
 					return $expression.call(this, global)[$index.call(this, global)];
-				}, $expression.type[0]);
+				}, $expression.type instanceof Array ? $expression.type[0] : $expression.type.element[expression.index.value]);
 			case 'call':
 				var $expression = compile.call(this, expression.expression),
 					$argument = compile.call(this, expression.argument);

@@ -98,6 +98,15 @@ it('posts@0.title', function () {
 		data.posts[0].title
 	);
 });
+it('{post#1,user#1}@0', function () {
+	var q = ql.parse('{post#1,user#1}@0');
+	var _function = ql.compile.call(new ql.Environment(Object.assign(new ql.Scope({}), { type: type, table: type => `${type}s` })), q);
+	assert(require('../Type.equals')(_function.type, type.post));
+	assert.equal(
+		_function.call(new ql.Environment(Object.assign(new ql.Scope({}), { table: data }))),
+		data.posts.find(post => post.id == 1)
+	);
+});
 it('1.1+2.2', function () {
 	var q = ql.parse("1.1+2.2");
 	var _function = ql.compile.call(new ql.Environment(Object.assign(new ql.Scope({}), { type: type, table: type => `${type}s` })), q);
@@ -232,17 +241,23 @@ describe('compile error', function () {
 			ql.compile.call(new ql.Environment(Object.assign(new ql.Scope({}), { type: type, table: type => `${type}s` })), q);
 		}, CompileError.PropertyNotFound);
 	});
-	it('non-array index', function () {
+	it('non-array-or-tuple index', function () {
 		var q = ql.parse('user#1@0');
 		assert.throws(() => {
 			ql.compile.call(new ql.Environment(Object.assign(new ql.Scope({}), { type: type, table: type => `${type}s` })), q);
-		}, CompileError.NonArrayIndex);
+		}, CompileError.NonArrayOrTupleIndex);
 	});
 	it('non-primitive index', function () {
 		var q = ql.parse('users@(user#1)');
 		assert.throws(() => {
 			ql.compile.call(new ql.Environment(Object.assign(new ql.Scope({}), { type: type, table: type => `${type}s` })), q);
 		}, CompileError.NonPrimitiveIndex);
+	});
+	it('non-literal tuple index', function () {
+		var q = ql.parse('{post#1,user#1}@(0+0)');
+		assert.throws(() => {
+			ql.compile.call(new ql.Environment(Object.assign(new ql.Scope({}), { type: type, table: type => `${type}s` })), q);
+		}, CompileError.NonLiteralTupleIndex);
 	});
 	it('wrong argument type', function () {
 		var q = ql.parse('length 0');
