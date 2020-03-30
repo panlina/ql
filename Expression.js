@@ -153,6 +153,13 @@ class Comma extends Expression {
 	}
 }
 
+class Placeholder extends Expression {
+	constructor(name) {
+		super('placeholder');
+		this.name = name;
+	}
+}
+
 module.exports = Expression;
 module.exports.Literal = Literal;
 module.exports.Name = Name;
@@ -173,3 +180,4 @@ module.exports.Order = Order;
 module.exports.Group = Group;
 module.exports.Distinct = Distinct;
 module.exports.Comma = Comma;
+module.exports.Placeholder = Placeholder;

@@ -15,6 +15,7 @@ var semantics = grammar.createSemantics().addOperation('parse', {
 	ExpressionTuple: (open, element, close) => new Expression.Tuple(element.asIteration().parse()),
 	ExpressionAtom: _default,
 	ExpressionAtom_parentheses: (open, expression, close) => expression.parse(),
+	ExpressionAtom_placeholder: (open, name, close) => new Expression.Placeholder(name.parse()),
 	ExpressionId_id: (identifier, sharp, id) => new Expression.Id(identifier.parse(), id.parse()),
 	ExpressionMember: _default,
 	ExpressionCall_call: (expression, argument) => new Expression.Call(expression.parse(), argument.parse()),

@@ -53,6 +53,7 @@ ql {
 	ExpressionTuple = "{" ListOf<Expression, ","> "}"
 	ExpressionAtom =
 		"(" Expression ")"	-- parentheses
+		| "%" identifier "%"	-- placeholder
 		| ExpressionObject
 		| ExpressionArray
 		| ExpressionTuple

@@ -145,6 +145,8 @@ function generate(expression) {
 			if (precedence[expression.body.type] > precedence[expression.type])
 				body = `(${body})`;
 			return `${expression.head.name}=${value},${body}`;
+		case 'placeholder':
+			return `%${expression.name}%`;
 	}
 }
 var precedence = {

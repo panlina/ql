@@ -354,3 +354,7 @@ describe('compile error', function () {
 		});
 	});
 });
+it("placeholder", function () {
+	var q = ql.parse("%a%+%b%");
+	assert.equal(ql.generate(q), "%a%+%b%");
+});
