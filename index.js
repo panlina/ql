@@ -1,3 +1,4 @@
+exports = module.exports = require('./ql');
 exports.parse = require('./parse');
 exports.compile = require('./compile');
 exports.generate = require('./generate');

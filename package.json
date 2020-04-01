@@ -15,7 +15,8 @@
     "lodash.mapvalues": "^4.6.0",
     "lodash.transform": "^4.6.0",
     "lodash.uniqwith": "^4.5.0",
-    "ohm-js": "^0.14.0"
+    "ohm-js": "^0.14.0",
+    "traverse": "^0.6.6"
   },
   "devDependencies": {
     "mocha": "^6.2.0",
