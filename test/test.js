@@ -358,8 +358,15 @@ it("placeholder", function () {
 	var q = ql.parse("%a%+%b%");
 	assert.equal(ql.generate(q), "%a%+%b%");
 });
-it("quasiquote", function () {
-	var n = new ql.Expression.Literal(0);
-	var q = ql`{a:${n},b:${n}+1}`;
-	assert.equal(ql.generate(q), "{a:0,b:0+1}");
+describe("quasiquote", function () {
+	it("non-root", function () {
+		var n = new ql.Expression.Literal(0);
+		var q = ql`{a:${n},b:${n}+1}`;
+		assert.equal(ql.generate(q), "{a:0,b:0+1}");
+	});
+	it("root", function () {
+		var n = new ql.Expression.Literal(0);
+		var q = ql`${n}`;
+		assert.equal(ql.generate(q), "0");
+	});
 });
