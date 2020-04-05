@@ -13,36 +13,25 @@ var semantics = grammar.createSemantics().addOperation('parse', {
 	ExpressionObject: (open, property, close) => new Expression.Object(property.asIteration().parse()),
 	ExpressionArray: (open, element, close) => new Expression.Array(element.asIteration().parse()),
 	ExpressionTuple: (open, element, close) => new Expression.Tuple(element.asIteration().parse()),
-	ExpressionAtom: _default,
 	ExpressionAtom_parentheses: (open, expression, close) => expression.parse(),
 	ExpressionAtom_placeholder: (open, name, close) => new Expression.Placeholder(name.parse()),
 	ExpressionId_id: (identifier, sharp, id) => new Expression.Id(identifier.parse(), id.parse()),
-	ExpressionMember: _default,
 	ExpressionCall_call: (expression, argument) => new Expression.Call(expression.parse(), argument.parse()),
 	ExpressionMember_property: (expression, dot, property) => new Expression.Property(expression.parse(), property.parse()),
 	ExpressionMember_element: (expression, at, index) => new Expression.Element(expression.parse(), index.parse()),
 	ExpressionCount_count: unary,
-	ExpressionAdd: _default,
 	ExpressionAdd_add: binary,
-	ExpressionMultiply: _default,
 	ExpressionMultiply_multiply: binary,
-	ExpressionAddUnary: _default,
 	ExpressionAddUnary_add: unary,
-	ExpressionRelation: _default,
 	ExpressionRelation_relation: binary,
-	ExpressionNot: _default,
 	ExpressionNot_not: unary,
-	ExpressionAnd: _default,
 	ExpressionAnd_and: binary,
-	ExpressionOr: _default,
 	ExpressionOr_or: binary,
-	ExpressionConditional: _default,
 	ExpressionConditional_conditional: (condition, question, _true, colon, _false) => new Expression.Conditional(
 		condition.parse(),
 		_true.parse(),
 		_false.parse()
 	),
-	ExpressionQuery: _default,
 	ExpressionQuery_filter: (expression, where, filter) => new Expression.Filter(
 		expression.parse(),
 		filter.parse()
@@ -67,7 +56,6 @@ var semantics = grammar.createSemantics().addOperation('parse', {
 	ExpressionQuery_distinct: (distinct, expression) => new Expression.Distinct(
 		expression.parse()
 	),
-	ExpressionComma: _default,
 	ExpressionComma_comma: (name, equal, value, comma, body) => new Expression.Comma(
 		{
 			name: name.parse(),
@@ -75,7 +63,6 @@ var semantics = grammar.createSemantics().addOperation('parse', {
 		},
 		body.parse()
 	),
-	Expression: _default,
 	Declaration: (name, open, statement, close) => new Declaration(
 		name.parse(),
 		statement.children.map(p => p.parse())
@@ -84,7 +71,6 @@ var semantics = grammar.createSemantics().addOperation('parse', {
 	DeclarationPropertyValue: (identifier, equal, value, semicolon) => new Declaration.Statement.Property(identifier.parse(), { value: value.parse() }),
 	DeclarationId: (id, identifier, semicolon) => new Declaration.Statement.Id(identifier.parse())
 });
-function _default(expression) { return expression.parse(); }
 function binary(left, operator, right) {
 	return new Expression.Operation(
 		operator.sourceString,
