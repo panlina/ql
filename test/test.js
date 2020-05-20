@@ -339,19 +339,19 @@ describe('compile error', function () {
 			}, { message: "operands of + must be numbers or strings." });
 		});
 	});
-	describe('generate', function () {
-		it("(length (123+user#456.number)).x@789", function () {
-			var q = ql`(length (123+user#456.number)).x@789`;
-			assert.equal(ql.generate(q), "(length (123+user#456.number)).x@789");
-		});
-		it("[{a:0,b:a=0,a in b},1] map (this+1 limit [0,10])", function () {
-			var q = ql`[{a:0,b:a=0,a in b},1] map (this+1 limit [0,10])`;
-			assert.equal(ql.generate(q), "[{a:0,b:a=0,a in b},1] map (this+1 limit [0,10])");
-		});
-		it("distinct ([{0,(a=0,a in b)},1] order 0?0?1:2:1+a#(a#2) desc)", function () {
-			var q = ql`distinct ([{0,(a=0,a in b)},1] order 0?0?1:2:1+a#(a#2) desc)`;
-			assert.equal(ql.generate(q), "distinct ([{0,(a=0,a in b)},1] order 0?0?1:2:1+a#(a#2) desc)");
-		});
+});
+describe('generate', function () {
+	it("(length (123+user#456.number)).x@789", function () {
+		var q = ql`(length (123+user#456.number)).x@789`;
+		assert.equal(ql.generate(q), "(length (123+user#456.number)).x@789");
+	});
+	it("[{a:0,b:a=0,a in b},1] map (this+1 limit [0,10])", function () {
+		var q = ql`[{a:0,b:a=0,a in b},1] map (this+1 limit [0,10])`;
+		assert.equal(ql.generate(q), "[{a:0,b:a=0,a in b},1] map (this+1 limit [0,10])");
+	});
+	it("distinct ([{0,(a=0,a in b)},1] order 0?0?1:2:1+a#(a#2) desc)", function () {
+		var q = ql`distinct ([{0,(a=0,a in b)},1] order 0?0?1:2:1+a#(a#2) desc)`;
+		assert.equal(ql.generate(q), "distinct ([{0,(a=0,a in b)},1] order 0?0?1:2:1+a#(a#2) desc)");
 	});
 });
 it("placeholder", function () {
