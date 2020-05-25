@@ -116,7 +116,7 @@ function compile(expression) {
 				if ($expression.type[expression.property].value) {
 					var $value = compile.call(global.push(new Scope({}, $expression.type)), $expression.type[expression.property].value);
 					return t(function (global) {
-						return $value.call(global.push(new Scope({}, $expression.call(this, global))), global)
+						return $value.call(global.push(new Scope({}, $expression.call(this, global))), global);
 					}, $value.type);
 				}
 				return t(function (global) {
