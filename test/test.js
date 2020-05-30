@@ -2,6 +2,7 @@ var fs = require('fs');
 var path = require('path');
 var assert = require('assert');
 var ql = require('..');
+var TYPE = ql.TYPE;
 var intepretation = require('../Intepretation.function');
 var data, type = ql.parse(fs.readFileSync(path.join(__dirname, 'type.ql'), 'utf8'), 'Declarations');
 type = require('../Type.compile')(type);
@@ -28,7 +29,7 @@ before(function () {
 it('(posts where !-this.id<-50&(t=post#1.title,length title<=length t))#', function () {
 	var q = ql`(posts where !-this.id<-50&(t=post#1.title,length title<=length t))#`;
 	var _function = ql.compile.call(new ql.Environment(Object.assign(new ql.Scope({}), { type: type, table: type => `${type}s` })), q, intepretation);
-	assert(require('../Type.equals')(_function.type, 'number'));
+	assert(require('../Type.equals')(_function[TYPE], 'number'));
 	assert.equal(
 		_function.call(new ql.Environment(Object.assign(new ql.Scope({}), { table: data }))),
 		data.posts.filter(post => !(post.id > 50) && post.title.length <= data.posts.find(post => post.id == 1).title.length).length
@@ -37,7 +38,7 @@ it('(posts where !-this.id<-50&(t=post#1.title,length title<=length t))#', funct
 it('users where (posts where id>10)', function () {
 	var q = ql`users where (posts where id>10)`;
 	var _function = ql.compile.call(new ql.Environment(Object.assign(new ql.Scope({}), { type: type, table: type => `${type}s` })), q, intepretation);
-	assert(require('../Type.equals')(_function.type, [type.user]));
+	assert(require('../Type.equals')(_function[TYPE], [type.user]));
 	assert.equal(
 		_function.call(new ql.Environment(Object.assign(new ql.Scope({}), { table: data }))).length,
 		data.users.filter(user => data.posts.filter(post => post.userId == user.id && post.id > 10).length > 0).length
@@ -46,7 +47,7 @@ it('users where (posts where id>10)', function () {
 it('users map (albums map photos)', function () {
 	var q = ql`users map (albums map photos)`;
 	var _function = ql.compile.call(new ql.Environment(Object.assign(new ql.Scope({}), { type: type, table: type => `${type}s` })), q, intepretation);
-	assert(require('../Type.equals')(_function.type, [[[type.photo]]]));
+	assert(require('../Type.equals')(_function[TYPE], [[[type.photo]]]));
 	assert.deepEqual(
 		_function.call(new ql.Environment(Object.assign(new ql.Scope({}), { table: data }))),
 		data.users.map(user => data.albums.filter(album => album.userId == user.id).map(album => data.photos.filter(photo => photo.albumId == album.id)))
@@ -56,7 +57,7 @@ describe('object', function () {
 	it('{a:"a",b:posts#}', function () {
 		var q = ql`{a:"a",b:posts#}`;
 		var _function = ql.compile.call(new ql.Environment(Object.assign(new ql.Scope({}), { type: type, table: type => `${type}s` })), q, intepretation);
-		assert(require('../Type.equals')(_function.type, { a: { type: 'string' }, b: { type: 'number' } }));
+		assert(require('../Type.equals')(_function[TYPE], { a: { type: 'string' }, b: { type: 'number' } }));
 		assert.deepEqual(
 			_function.call(new ql.Environment(Object.assign(new ql.Scope({}), { table: data }))),
 			{ a: "a", b: data.posts.length }
@@ -65,7 +66,7 @@ describe('object', function () {
 	it('{a:"a",b:posts#}.b', function () {
 		var q = ql`{a:"a",b:posts#}.b`;
 		var _function = ql.compile.call(new ql.Environment(Object.assign(new ql.Scope({}), { type: type, table: type => `${type}s` })), q, intepretation);
-		assert(require('../Type.equals')(_function.type, 'number'));
+		assert(require('../Type.equals')(_function[TYPE], 'number'));
 		assert.deepEqual(
 			_function.call(new ql.Environment(Object.assign(new ql.Scope({}), { table: data }))),
 			data.posts.length
@@ -74,7 +75,7 @@ describe('object', function () {
 	it('users map {user:name,posts:posts#}', function () {
 		var q = ql`users map {user:name,posts:posts#}`;
 		var _function = ql.compile.call(new ql.Environment(Object.assign(new ql.Scope({}), { type: type, table: type => `${type}s` })), q, intepretation);
-		assert(require('../Type.equals')(_function.type, [{ user: { type: 'string' }, posts: { type: 'number' } }]));
+		assert(require('../Type.equals')(_function[TYPE], [{ user: { type: 'string' }, posts: { type: 'number' } }]));
 		assert.deepEqual(
 			_function.call(new ql.Environment(Object.assign(new ql.Scope({}), { table: data }))),
 			data.users.map(user => ({ user: user.name, posts: data.posts.filter(post => post.userId == user.id).length }))
@@ -84,7 +85,7 @@ describe('object', function () {
 it('{"a",posts#}', function () {
 	var q = ql`{"a",posts#}`;
 	var _function = ql.compile.call(new ql.Environment(Object.assign(new ql.Scope({}), { type: type, table: type => `${type}s` })), q, intepretation);
-	assert(require('../Type.equals')(_function.type, new (require('../Type').Tuple)(['string', 'number'])));
+	assert(require('../Type.equals')(_function[TYPE], new (require('../Type').Tuple)(['string', 'number'])));
 	assert.deepEqual(
 		_function.call(new ql.Environment(Object.assign(new ql.Scope({}), { table: data }))),
 		["a", data.posts.length]
@@ -93,7 +94,7 @@ it('{"a",posts#}', function () {
 it('posts@0.title', function () {
 	var q = ql`posts@0.title`;
 	var _function = ql.compile.call(new ql.Environment(Object.assign(new ql.Scope({}), { type: type, table: type => `${type}s` })), q, intepretation);
-	assert(require('../Type.equals')(_function.type, 'string'));
+	assert(require('../Type.equals')(_function[TYPE], 'string'));
 	assert.equal(
 		_function.call(new ql.Environment(Object.assign(new ql.Scope({}), { table: data }))),
 		data.posts[0].title
@@ -102,7 +103,7 @@ it('posts@0.title', function () {
 it('{post#1,user#1}@0', function () {
 	var q = ql`{post#1,user#1}@0`;
 	var _function = ql.compile.call(new ql.Environment(Object.assign(new ql.Scope({}), { type: type, table: type => `${type}s` })), q, intepretation);
-	assert(require('../Type.equals')(_function.type, type.post));
+	assert(require('../Type.equals')(_function[TYPE], type.post));
 	assert.equal(
 		_function.call(new ql.Environment(Object.assign(new ql.Scope({}), { table: data }))),
 		data.posts.find(post => post.id == 1)
@@ -111,7 +112,7 @@ it('{post#1,user#1}@0', function () {
 it('1.1+2.2', function () {
 	var q = ql`1.1+2.2`;
 	var _function = ql.compile.call(new ql.Environment(Object.assign(new ql.Scope({}), { type: type, table: type => `${type}s` })), q, intepretation);
-	assert(require('../Type.equals')(_function.type, 'number'));
+	assert(require('../Type.equals')(_function[TYPE], 'number'));
 	assert.equal(
 		_function.call(new ql.Environment(Object.assign(new ql.Scope({}), { table: data }))),
 		1.1 + 2.2
@@ -120,7 +121,7 @@ it('1.1+2.2', function () {
 it('[0,0] map 0<1|1<2?"a":"b"', function () {
 	var q = ql`[0,0] map 0<1|1<2?"a":"b"`;
 	var _function = ql.compile.call(new ql.Environment(Object.assign(new ql.Scope({}), { type: type, table: type => `${type}s` })), q, intepretation);
-	assert(require('../Type.equals')(_function.type, ['string']));
+	assert(require('../Type.equals')(_function[TYPE], ['string']));
 	assert.deepEqual(
 		_function.call(new ql.Environment(Object.assign(new ql.Scope({}), { table: data }))),
 		[0, 0].map(() => 0 < 1 || 1 < 2 ? "a" : "b")
@@ -129,7 +130,7 @@ it('[0,0] map 0<1|1<2?"a":"b"', function () {
 it('[0,1] map this+1 where this>1', function () {
 	var q = ql`[0,1] map this+1 where this>1`;
 	var _function = ql.compile.call(new ql.Environment(Object.assign(new ql.Scope({}), { type: type, table: type => `${type}s` })), q, intepretation);
-	assert(require('../Type.equals')(_function.type, ['number']));
+	assert(require('../Type.equals')(_function[TYPE], ['number']));
 	assert.deepEqual(
 		_function.call(new ql.Environment(Object.assign(new ql.Scope({}), { table: data }))),
 		[2]
@@ -138,7 +139,7 @@ it('[0,1] map this+1 where this>1', function () {
 it('[0,1,2,3] limit [1,2]', function () {
 	var q = ql`[0,1,2,3] limit [1,2]`;
 	var _function = ql.compile.call(new ql.Environment(Object.assign(new ql.Scope({}), { type: type, table: type => `${type}s` })), q, intepretation);
-	assert(require('../Type.equals')(_function.type, ['number']));
+	assert(require('../Type.equals')(_function[TYPE], ['number']));
 	assert.deepEqual(
 		_function.call(new ql.Environment(Object.assign(new ql.Scope({}), { table: data }))),
 		[1, 2]
@@ -147,7 +148,7 @@ it('[0,1,2,3] limit [1,2]', function () {
 it('albums order title', function () {
 	var q = ql`albums order title`;
 	var _function = ql.compile.call(new ql.Environment(Object.assign(new ql.Scope({}), { type: type, table: type => `${type}s` })), q, intepretation);
-	assert(require('../Type.equals')(_function.type, [type.album]));
+	assert(require('../Type.equals')(_function[TYPE], [type.album]));
 	assert.deepEqual(
 		_function.call(new ql.Environment(Object.assign(new ql.Scope({}), { table: data }))),
 		data.albums.sort((a, b) => a.title < b.title ? -1 : a.title > b.title ? 1 : 0)
@@ -157,7 +158,7 @@ describe('group', function () {
 	it('posts group userId', function () {
 		var q = ql`posts group userId`;
 		var _function = ql.compile.call(new ql.Environment(Object.assign(new ql.Scope({}), { type: type, table: type => `${type}s` })), q, intepretation);
-		assert(require('../Type.equals')(_function.type, [{ key: { type: 'number' }, value: { type: [type.post] } }]));
+		assert(require('../Type.equals')(_function[TYPE], [{ key: { type: 'number' }, value: { type: [type.post] } }]));
 		assert.deepEqual(
 			_function.call(new ql.Environment(Object.assign(new ql.Scope({}), { table: data }))),
 			Object.entries(require('lodash.groupby')(data.posts, post => post.userId)).map(([key, value]) => ({ key: key, value: value }))
@@ -166,7 +167,7 @@ describe('group', function () {
 	it('posts group userId map {user:key,posts:value#}', function () {
 		var q = ql`posts group userId map {user:key,posts:value#}`;
 		var _function = ql.compile.call(new ql.Environment(Object.assign(new ql.Scope({}), { type: type, table: type => `${type}s` })), q, intepretation);
-		assert(require('../Type.equals')(_function.type, [{ user: { type: 'number' }, posts: { type: 'number' } }]));
+		assert(require('../Type.equals')(_function[TYPE], [{ user: { type: 'number' }, posts: { type: 'number' } }]));
 		assert.deepEqual(
 			_function.call(new ql.Environment(Object.assign(new ql.Scope({}), { table: data }))),
 			Object.entries(require('lodash.groupby')(data.posts, post => post.userId)).map(([key, value]) => ({ key: key, value: value })).map(({ key: key, value: value }) => ({ user: key, posts: value.length }))
@@ -176,7 +177,7 @@ describe('group', function () {
 it('distinct', function () {
 	var q = ql`distinct [{a:0,b:1},{a:0,b:1},{a:1,b:2}]`;
 	var _function = ql.compile.call(new ql.Environment(Object.assign(new ql.Scope({}), { type: type, table: type => `${type}s` })), q, intepretation);
-	assert(require('../Type.equals')(_function.type, [{ a: { type: 'number' }, b: { type: 'number' } }]));
+	assert(require('../Type.equals')(_function[TYPE], [{ a: { type: 'number' }, b: { type: 'number' } }]));
 	assert.deepEqual(
 		_function.call(new ql.Environment(Object.assign(new ql.Scope({}), { table: data }))),
 		require('lodash.uniqwith')([{ a: 0, b: 1 }, { a: 0, b: 1 }, { a: 1, b: 2 }], require('lodash.isequal'))

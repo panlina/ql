@@ -2,13 +2,14 @@ var Scope = require('./Scope');
 var Expression = require('./Expression');
 var Context = require('./Context');
 var CompileError = require('./CompileError');
+var TYPE = require('./Symbol').TYPE;
 function compile(expression, intepretation) {
 	var global = this;
 	var table = require('lodash.transform')(global.scope.type, (result, value, key) => {
 		result[global.scope.table ? global.scope.table(key) : key] = [value];
 	});
 	var _function = compile.call(this, expression);
-	return t(intepretation.post(_function), _function.type);
+	return t(intepretation.post(_function), _function[TYPE]);
 	function compile(expression) {
 		switch (expression.type) {
 			case 'literal':
@@ -63,7 +64,7 @@ function compile(expression, intepretation) {
 					$property.reduce(
 						(o, p) => Object.assign(
 							o,
-							{ [p.name]: { type: p.value.type } }
+							{ [p.name]: { type: p.value[TYPE] } }
 						),
 						{}
 					)
@@ -72,11 +73,11 @@ function compile(expression, intepretation) {
 				var $element = expression.element.map(
 					element => compile.call(this, element)
 				);
-				if ($element.some(e => !require('./Type.equals')(e.type, $element[0].type)))
+				if ($element.some(e => !require('./Type.equals')(e[TYPE], $element[0][TYPE])))
 					throw new CompileError.HeterogeneousArray(expression);
 				return t(
 					intepretation.expression.array($element),
-					[$element[0].type]
+					[$element[0][TYPE]]
 				);
 			case 'tuple':
 				var $element = expression.element.map(
@@ -84,14 +85,14 @@ function compile(expression, intepretation) {
 				);
 				return t(
 					intepretation.expression.tuple($element),
-					new (require('./Type').Tuple)($element.map(e => e.type))
+					new (require('./Type').Tuple)($element.map(e => e[TYPE]))
 				);
 			case 'id':
 				var type = global.scope.type[expression.identifier];
 				if (!type) throw new CompileError.UndefinedName(expression);
 				var $property = require('./Type.id')(type),
 					$id = compile.call(this, expression.id);
-				if (typeof $id.type == 'object')
+				if (typeof $id[TYPE] == 'object')
 					throw new CompileError.NonPrimitiveId(expression);
 				var $table = global.scope.table ? global.scope.table(expression.identifier) : expression.identifier;
 				return t(
@@ -101,50 +102,50 @@ function compile(expression, intepretation) {
 			case 'property':
 				var $expression = compile.call(this, expression.expression),
 					$property = expression.property;
-				if (!(typeof $expression.type == 'object' && !($expression.type instanceof Array)))
+				if (!(typeof $expression[TYPE] == 'object' && !($expression[TYPE] instanceof Array)))
 					throw new CompileError.NonObjectPropertyAccess(expression);
-				if (!(expression.property in $expression.type))
+				if (!(expression.property in $expression[TYPE]))
 					throw new CompileError.PropertyNotFound(expression);
-				if ($expression.type[expression.property].value) {
-					var $value = compile.call(global.push(new Scope({}, $expression.type)), $expression.type[expression.property].value);
+				if ($expression[TYPE][expression.property].value) {
+					var $value = compile.call(global.push(new Scope({}, $expression[TYPE])), $expression[TYPE][expression.property].value);
 					return t(
 						intepretation.expression.property.property($value, $expression),
-						$value.type
+						$value[TYPE]
 					);
 				}
 				return t(
 					intepretation.expression.property.field($expression, $property),
-					$expression.type[expression.property].type
+					$expression[TYPE][expression.property].type
 				);
 			case 'element':
 				var $expression = compile.call(this, expression.expression),
 					$index = compile.call(this, expression.index);
-				if (!($expression.type instanceof Array || $expression.type instanceof require('./Type').Tuple))
+				if (!($expression[TYPE] instanceof Array || $expression[TYPE] instanceof require('./Type').Tuple))
 					throw new CompileError.NonArrayOrTupleIndex(expression);
-				if (typeof $index.type == 'object')
+				if (typeof $index[TYPE] == 'object')
 					throw new CompileError.NonPrimitiveIndex(expression);
-				if ($expression.type instanceof require('./Type').Tuple)
+				if ($expression[TYPE] instanceof require('./Type').Tuple)
 					if (expression.index.type != 'literal')
 						throw new CompileError.NonLiteralTupleIndex(expression);
 				return t(
 					intepretation.expression.element($expression, $index),
-					$expression.type instanceof Array ? $expression.type[0] : $expression.type.element[expression.index.value]
+					$expression[TYPE] instanceof Array ? $expression[TYPE][0] : $expression[TYPE].element[expression.index.value]
 				);
 			case 'call':
 				var $expression = compile.call(this, expression.expression),
 					$argument = compile.call(this, expression.argument);
-				if (!require('./Type.equals')($argument.type, $expression.type.argument))
+				if (!require('./Type.equals')($argument[TYPE], $expression[TYPE].argument))
 					throw new CompileError.WrongArgumentType(expression);
 				return t(
 					intepretation.expression.call($expression, $argument),
-					$expression.type.result
+					$expression[TYPE].result
 				);
 			case 'operation':
 				var $left = expression.left && compile.call(this, expression.left),
 					$right = expression.right && compile.call(this, expression.right),
 					$operator = expression.operator;
 				try {
-					var type = require("./Type.operate")(expression.operator, $left && $left.type, $right && $right.type);
+					var type = require("./Type.operate")(expression.operator, $left && $left[TYPE], $right && $right[TYPE]);
 				} catch (e) {
 					throw Object.assign(
 						new CompileError(expression),
@@ -159,34 +160,34 @@ function compile(expression, intepretation) {
 				var $condition = compile.call(this, expression.condition),
 					$true = compile.call(this, expression.true),
 					$false = compile.call(this, expression.false);
-				if ($true.type != $false.type)
+				if ($true[TYPE] != $false[TYPE])
 					throw new CompileError.NonEqualConditionalType(expression);
 				return t(
 					intepretation.expression.conditional($condition, $true, $false),
-					$true.type
+					$true[TYPE]
 				);
 			case 'filter':
 				var $expression = compile.call(this, expression.expression),
-					$filter = compile.call(this.push(new Scope({}, $expression.type[0])), expression.filter);
-				if (!($expression.type instanceof Array))
+					$filter = compile.call(this.push(new Scope({}, $expression[TYPE][0])), expression.filter);
+				if (!($expression[TYPE] instanceof Array))
 					throw new CompileError.NonArrayFilter(expression);
 				return t(
 					intepretation.expression.filter($expression, $filter),
-					$expression.type
+					$expression[TYPE]
 				);
 			case 'map':
 				var $expression = compile.call(this, expression.expression),
-					$mapper = compile.call(this.push(new Scope({}, $expression.type[0])), expression.mapper);
-				if (!($expression.type instanceof Array))
+					$mapper = compile.call(this.push(new Scope({}, $expression[TYPE][0])), expression.mapper);
+				if (!($expression[TYPE] instanceof Array))
 					throw new CompileError.NonArrayMap(expression);
 				return t(
 					intepretation.expression.map($expression, $mapper),
-					[$mapper.type]
+					[$mapper[TYPE]]
 				);
 			case 'limit':
 				var $expression = compile.call(this, expression.expression),
 					$limiter = compile.call(this, expression.limiter);
-				if (!($expression.type instanceof Array))
+				if (!($expression[TYPE] instanceof Array))
 					throw new CompileError.NonArrayLimit(expression);
 				if (!(
 					expression.limiter.type == 'array' &&
@@ -199,60 +200,60 @@ function compile(expression, intepretation) {
 					throw new CompileError.InvalidLimiter(expression);
 				return t(
 					intepretation.expression.limit($expression, $limiter),
-					$expression.type
+					$expression[TYPE]
 				);
 			case 'order':
 				var $expression = compile.call(this, expression.expression),
-					$orderer = compile.call(this.push(new Scope({}, $expression.type[0])), expression.orderer);
-				if (!($expression.type instanceof Array))
+					$orderer = compile.call(this.push(new Scope({}, $expression[TYPE][0])), expression.orderer);
+				if (!($expression[TYPE] instanceof Array))
 					throw new CompileError.NonArrayOrder(expression);
-				if (typeof $orderer.type == 'object')
+				if (typeof $orderer[TYPE] == 'object')
 					throw new CompileError.NonPrimitiveOrder(expression);
 				return t(
 					intepretation.expression.order($expression, $orderer),
-					$expression.type
+					$expression[TYPE]
 				);
 			case 'group':
 				var $expression = compile.call(this, expression.expression),
 					$grouper = compile.call(
 						this.push(
-							new Scope({}, $expression.type[0])
+							new Scope({}, $expression[TYPE][0])
 						),
 						expression.grouper
 					);
-				if (!($expression.type instanceof Array))
+				if (!($expression[TYPE] instanceof Array))
 					throw new CompileError.NonArrayGroup(expression);
-				if (typeof $grouper.type != 'string')
+				if (typeof $grouper[TYPE] != 'string')
 					throw new CompileError.NonPrimitiveGroup(expression);
 				return t(
 					intepretation.expression.group($expression, $grouper),
 					[{
-						key: { type: $grouper.type },
-						value: { type: $expression.type }
+						key: { type: $grouper[TYPE] },
+						value: { type: $expression[TYPE] }
 					}]
 				);
 			case 'distinct':
 				var $expression = compile.call(this, expression.expression);
-				if (!($expression.type instanceof Array))
+				if (!($expression[TYPE] instanceof Array))
 					throw new CompileError.NonArrayDistinct(expression);
 				return t(
 					intepretation.expression.distinct($expression),
-					$expression.type
+					$expression[TYPE]
 				);
 			case 'comma':
 				var $head = {
 					name: expression.head.name,
 					value: compile.call(this, expression.head.value)
 				},
-					$body = compile.call(this.push(new Scope({ [$head.name]: $head.value.type })), expression.body);
+					$body = compile.call(this.push(new Scope({ [$head.name]: $head.value[TYPE] })), expression.body);
 				return t(
 					intepretation.expression.comma($head, $body),
-					$body.type
+					$body[TYPE]
 				);
 		}
 	}
 	function t(_function, type) {
-		_function.type = type;
+		_function[TYPE] = type;
 		return _function;
 	}
 }

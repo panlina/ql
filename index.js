@@ -5,3 +5,4 @@ exports.generate = require('./generate');
 exports.Environment = require('./Environment');
 exports.Scope = require('./Scope');
 exports.Expression = require('./Expression');
+exports.TYPE = require('./Symbol').TYPE;

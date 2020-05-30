@@ -1,0 +1,1 @@
+exports.TYPE = Symbol('type');
