@@ -6,3 +6,4 @@ exports.Environment = require('./Environment');
 exports.Scope = require('./Scope');
 exports.Expression = require('./Expression');
 exports.TYPE = require('./Symbol').TYPE;
+exports.QL = require('./Symbol').QL;
