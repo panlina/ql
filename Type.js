@@ -4,7 +4,7 @@ class Function {
 		this.result = result;
 	}
 }
-class Tuple{
+class Tuple {
 	constructor(element) {
 		this.element = element;
 	}
