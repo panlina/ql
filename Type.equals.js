@@ -16,7 +16,9 @@ function equals(t, s) {
 		&& t.element.length == s.element.length
 		&& t.element.every((t, i) => equals(t, s.element[i]))
 		||
-		typeof t == 'object' && !(t instanceof Array) && !(t instanceof Tuple) && typeof s == 'object' && !(s instanceof Array) && !(s instanceof Tuple)
+		typeof t == 'object' && !(t instanceof Array) && !(t instanceof Tuple) && !(t instanceof Function)
+		&&
+		typeof s == 'object' && !(s instanceof Array) && !(s instanceof Tuple) && !(s instanceof Function)
 		&& (() => {
 			for (var key in t)
 				if (t[key].type)
