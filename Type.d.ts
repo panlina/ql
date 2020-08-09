@@ -2,7 +2,10 @@ import * as Expression from "./Expression";
 type Type =
 	'string' | 'number' | 'boolean' |
 	Type[] |
-	{ [key: string]: { type: Type } | { value: Expression } } |
+	{
+		$ql?: { id?: string },
+		[key: string]: { type: Type } | { value: Expression }
+	} |
 	Function |
 	Tuple;
 export = Type;
