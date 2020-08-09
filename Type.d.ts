@@ -2,13 +2,14 @@ import * as Expression from "./Expression";
 type Type =
 	'string' | 'number' | 'boolean' |
 	Type[] |
-	{
-		$ql?: { id?: string },
-		[key: string]: { type: Type } | { value: Expression }
-	} |
+	Object |
 	Function |
 	Tuple;
 export = Type;
+export type Object = {
+	$ql?: { id?: string; };
+	[key: string]: { type: Type; } | { value: Expression; };
+};
 export class Function {
 	constructor(argument: Type, result: Type);
 	argument: Type;
