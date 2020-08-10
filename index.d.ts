@@ -6,3 +6,4 @@ export * as Scope from './Scope';
 export * as Environment from './Environment';
 export * as Context from './Context';
 export * as parse from './parse';
+export * as generate from './generate';
