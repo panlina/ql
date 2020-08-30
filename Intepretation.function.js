@@ -65,17 +65,15 @@ module.exports = {
 				);
 			};
 		},
-		property: {
-			property($value, $expression) {
-				return function (global) {
-					return $value.call(global.push(new Scope({}, $expression.call(this, global))), global);
-				};
-			},
-			field($expression, $property) {
-				return function (global) {
-					return $expression.call(this, global)[$property];
-				};
-			}
+		property($value, $expression) {
+			return function (global) {
+				return $value.call(global.push(new Scope({}, $expression.call(this, global))), global);
+			};
+		},
+		field($expression, $property) {
+			return function (global) {
+				return $expression.call(this, global)[$property];
+			};
 		},
 		element($expression, $index) {
 			return function (global) {

@@ -109,12 +109,12 @@ function compile(expression, intepretation) {
 				if ($expression[TYPE][expression.property].value) {
 					var $value = compile.call(global.push(new Scope({}, $expression[TYPE])), $expression[TYPE][expression.property].value);
 					return t(
-						intepretation.expression.property.property($value, $expression),
+						intepretation.expression.property($value, $expression),
 						$value[TYPE]
 					);
 				}
 				return t(
-					intepretation.expression.property.field($expression, $property),
+					intepretation.expression.field($expression, $property),
 					$expression[TYPE][expression.property].type
 				);
 			case 'element':
