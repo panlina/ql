@@ -65,11 +65,6 @@ module.exports = {
 				);
 			};
 		},
-		property($value, $expression) {
-			return function (global) {
-				return $value.call(global.push(new Scope({}, $expression.call(this, global))), global);
-			};
-		},
 		field($expression, $property) {
 			return function (global) {
 				return $expression.call(this, global)[$property];
@@ -155,11 +150,15 @@ module.exports = {
 				);
 			};
 		},
-		comma($head, $body) {
+		bind($value, scope, environment = 0) {
 			return function (global) {
-				return $body.call(
-					this.push(new Scope({ [$head.name]: $head.value.call(this, global) })),
-					global
+				return $value.call(
+					Context.ancestor.call(this, global, environment).push(
+						new Scope(
+							require('lodash.mapvalues')(scope.local, value => value.call(this, global)),
+							scope.this ? scope.this.call(this, global) : undefined
+						)
+					), global
 				);
 			};
 		}

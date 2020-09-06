@@ -109,7 +109,7 @@ function compile(expression, intepretation) {
 				if ($expression[TYPE][expression.property].value) {
 					var $value = compile.call(global.push(new Scope({}, $expression[TYPE])), $expression[TYPE][expression.property].value);
 					return t(
-						intepretation.expression.property($value, $expression),
+						intepretation.expression.bind($value, new Scope({}, $expression), Infinity),
 						$value[TYPE]
 					);
 				}
@@ -247,7 +247,7 @@ function compile(expression, intepretation) {
 				},
 					$body = compile.call(this.push(new Scope({ [$head.name]: $head.value[TYPE] })), expression.body);
 				return t(
-					intepretation.expression.comma($head, $body),
+					intepretation.expression.bind($body, new Scope({ [$head.name]: $head.value })),
 					$body[TYPE]
 				);
 		}
