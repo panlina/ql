@@ -8,6 +8,7 @@ function compile(expression, intepretation) {
 	var table = require('lodash.transform')(global.scope.type, (result, value, key) => {
 		result[global.scope.table ? global.scope.table(key) : key] = [value];
 	});
+	intepretation.pre(global, compile);
 	var _function = compile.call(this, expression);
 	return t(intepretation.post(_function), _function[TYPE]);
 	function compile(expression) {
