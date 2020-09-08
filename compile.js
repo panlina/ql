@@ -205,13 +205,14 @@ function compile(expression, intepretation) {
 				);
 			case 'order':
 				var $expression = compile.call(this, expression.expression),
-					$orderer = compile.call(this.push(new Scope({}, $expression[TYPE][0])), expression.orderer);
+					$orderer = compile.call(this.push(new Scope({}, $expression[TYPE][0])), expression.orderer),
+					$direction = expression.direction;
 				if (!($expression[TYPE] instanceof Array))
 					throw new CompileError.NonArrayOrder(expression);
 				if (typeof $orderer[TYPE] == 'object')
 					throw new CompileError.NonPrimitiveOrder(expression);
 				return t(
-					intepretation.expression.order($expression, $orderer),
+					intepretation.expression.order($expression, $orderer, $direction),
 					$expression[TYPE]
 				);
 			case 'group':
