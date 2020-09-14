@@ -108,7 +108,12 @@ function compile(expression, intepretation) {
 				if (!(expression.property in $expression[TYPE]))
 					throw new CompileError.PropertyNotFound(expression);
 				if ($expression[TYPE][expression.property].value) {
-					var $value = compile.call(global.push(new Scope({}, $expression[TYPE])), $expression[TYPE][expression.property].value);
+					var $value = compile.call(
+						global.push(
+							new Scope({}, $expression[TYPE])
+						),
+						$expression[TYPE][expression.property].value
+					);
 					return t(
 						intepretation.expression.bind($value, new Scope({}, $expression), Infinity),
 						$value[TYPE]
@@ -169,7 +174,12 @@ function compile(expression, intepretation) {
 				);
 			case 'filter':
 				var $expression = compile.call(this, expression.expression),
-					$filter = compile.call(this.push(new Scope({}, $expression[TYPE][0])), expression.filter);
+					$filter = compile.call(
+						this.push(
+							new Scope({}, $expression[TYPE][0])
+						),
+						expression.filter
+					);
 				if (!($expression[TYPE] instanceof Array))
 					throw new CompileError.NonArrayFilter(expression);
 				return t(
@@ -178,7 +188,12 @@ function compile(expression, intepretation) {
 				);
 			case 'map':
 				var $expression = compile.call(this, expression.expression),
-					$mapper = compile.call(this.push(new Scope({}, $expression[TYPE][0])), expression.mapper);
+					$mapper = compile.call(
+						this.push(
+							new Scope({}, $expression[TYPE][0])
+						),
+						expression.mapper
+					);
 				if (!($expression[TYPE] instanceof Array))
 					throw new CompileError.NonArrayMap(expression);
 				return t(
@@ -205,7 +220,12 @@ function compile(expression, intepretation) {
 				);
 			case 'order':
 				var $expression = compile.call(this, expression.expression),
-					$orderer = compile.call(this.push(new Scope({}, $expression[TYPE][0])), expression.orderer),
+					$orderer = compile.call(
+						this.push(
+							new Scope({}, $expression[TYPE][0])
+						),
+						expression.orderer
+					),
 					$direction = expression.direction;
 				if (!($expression[TYPE] instanceof Array))
 					throw new CompileError.NonArrayOrder(expression);
@@ -247,7 +267,12 @@ function compile(expression, intepretation) {
 					name: expression.head.name,
 					value: compile.call(this, expression.head.value)
 				},
-					$body = compile.call(this.push(new Scope({ [$head.name]: $head.value[TYPE] })), expression.body);
+					$body = compile.call(
+						this.push(
+							new Scope({ [$head.name]: $head.value[TYPE] })
+						),
+						expression.body
+					);
 				return t(
 					intepretation.expression.bind($body, new Scope({ [$head.name]: $head.value })),
 					$body[TYPE]
