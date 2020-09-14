@@ -9,8 +9,8 @@ function compile(expression, intepretation) {
 		result[global.scope.table ? global.scope.table(key) : key] = [value];
 	});
 	intepretation.pre(global, compile);
-	var _function = compile.call(this, expression);
-	return t(intepretation.post(_function), _function[TYPE]);
+	var $expression = compile.call(this, expression);
+	return t(intepretation.post($expression), $expression[TYPE]);
 	function compile(expression) {
 		switch (expression.type) {
 			case 'literal':
@@ -279,9 +279,9 @@ function compile(expression, intepretation) {
 				);
 		}
 	}
-	function t(_function, type) {
-		_function[TYPE] = type;
-		return _function;
+	function t($expression, type) {
+		$expression[TYPE] = type;
+		return $expression;
 	}
 }
 module.exports = compile;
