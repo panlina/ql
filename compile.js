@@ -3,6 +3,7 @@ var Expression = require('./Expression');
 var Context = require('./Context');
 var CompileError = require('./CompileError');
 var TYPE = require('./Symbol').TYPE;
+var QL = require('./Symbol').QL;
 function compile(expression, intepretation) {
 	var global = this;
 	var table = require('lodash.transform')(global.scope.type, (result, value, key) => {
@@ -278,9 +279,15 @@ function compile(expression, intepretation) {
 					$body[TYPE]
 				);
 		}
+		function t($expression, type) {
+			$expression[TYPE] = type;
+			$expression[QL] = expression;
+			return $expression;
+		}
 	}
 	function t($expression, type) {
 		$expression[TYPE] = type;
+		$expression[QL] = expression;
 		return $expression;
 	}
 }
