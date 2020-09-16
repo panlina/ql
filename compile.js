@@ -44,7 +44,7 @@ function compile(expression, intepretation) {
 					return compile.call(this, new Expression.Property(new Expression.Name('this', depth), expression.identifier));
 				var $identifier = expression.identifier;
 				return t(
-					intepretation.expression.name.name($identifier, resolution, Context),
+					intepretation.expression.name.name($identifier, resolution),
 					value
 				);
 			case 'this':
