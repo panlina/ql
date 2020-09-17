@@ -9,7 +9,7 @@ interface Intepretation<T> {
 		name: {
 			table($identifier: string): T;
 			constant($identifier: string): T;
-			name($identifier: string, resolution: [Type, [number, Scope.Key]]): T;
+			name(this: Environment<Type>, $identifier: string, resolution: [Type, [number, Scope.Key]]): T;
 		},
 		object($property: { name: string, value: T }[]): T;
 		array($element: T[]): T;

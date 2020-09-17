@@ -44,7 +44,8 @@ function compile(expression, intepretation) {
 					return compile.call(this, new Expression.Property(new Expression.Name('this', depth), expression.identifier));
 				var $identifier = expression.identifier;
 				return t(
-					intepretation.expression.name.name($identifier, resolution),
+					// It's an exception to pass current environment to an expression intepreter. Its purpose is to make it possible for the intepretation to get the target environment, since `resolution` only provides `depth`.
+					intepretation.expression.name.name.call(this, $identifier, resolution),
 					value
 				);
 			case 'this':
