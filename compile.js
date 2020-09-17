@@ -203,10 +203,6 @@ function compile(expression, intepretation) {
 					[$mapper[TYPE]]
 				);
 			case 'limit':
-				var $expression = compile.call(this, expression.expression),
-					$limiter = compile.call(this, expression.limiter);
-				if (!($expression[TYPE] instanceof Array))
-					throw new CompileError.NonArrayLimit(expression);
 				if (!(
 					expression.limiter.type == 'array' &&
 					expression.limiter.element.length == 2 &&
@@ -216,8 +212,13 @@ function compile(expression, intepretation) {
 					typeof expression.limiter.element[1].value == 'number'
 				))
 					throw new CompileError.InvalidLimiter(expression);
+				var $expression = compile.call(this, expression.expression),
+					[start, length] = expression.limiter.element,
+					[$start, $length] = [compile.call(this, start), compile.call(this, length)];
+				if (!($expression[TYPE] instanceof Array))
+					throw new CompileError.NonArrayLimit(expression);
 				return t(
-					intepretation.expression.limit($expression, $limiter),
+					intepretation.expression.limit($expression, [$start, $length]),
 					$expression[TYPE]
 				);
 			case 'order':

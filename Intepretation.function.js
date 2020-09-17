@@ -112,10 +112,10 @@ module.exports = {
 				);
 			};
 		},
-		limit($expression, $limiter) {
+		limit($expression, [$start, $length]) {
 			return function (global) {
-				var limiter = $limiter.call(this, global);
-				return $expression.call(this, global).slice(limiter[0], limiter[0] + limiter[1]);
+				var [start, length] = [$start.call(this, global), $length.call(this, global)];
+				return $expression.call(this, global).slice(start, start + length);
 			};
 		},
 		order($expression, $orderer, $direction) {

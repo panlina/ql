@@ -23,7 +23,7 @@ interface Intepretation<T> {
 		conditional($condition: T, $true: T, $false: T): T;
 		filter($expression: T, $filter: T): T;
 		map($expression: T, $mapper: T): T;
-		limit($expression: T, $limiter: T): T;
+		limit($expression: T, $limiter: [T, T]): T;
 		order($expression: T, $orderer: T, $direction?: boolean): T;
 		group($expression: T, $grouper: T): T;
 		distinct($expression: T): T;
