@@ -279,6 +279,8 @@ function compile(expression, intepretation) {
 					intepretation.expression.bind($body, new Scope({ [$head.name]: $head.value })),
 					$body[TYPE]
 				);
+			default:
+				return intepretation.expression['*'](expression);
 		}
 		function t($expression, type) {
 			$expression[TYPE] = type;

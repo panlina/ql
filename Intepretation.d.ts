@@ -1,6 +1,7 @@
 import Scope from './Scope';
 import Environment from './Environment';
 import Type from './Type';
+import Expression from './Expression';
 interface Intepretation<T> {
 	pre(global: Environment<Type>): void;
 	post(T): T;
@@ -26,6 +27,7 @@ interface Intepretation<T> {
 		order($expression: T, $orderer: T, $direction?: boolean): T;
 		group($expression: T, $grouper: T): T;
 		distinct($expression: T): T;
+		['*'](expression: Expression): T;
 		bind($value: T, scope: Scope<T>, environment: number = 0): T;
 	};
 	constant: {
