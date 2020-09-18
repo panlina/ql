@@ -4,20 +4,20 @@ var Context = require('./Context');
 var CompileError = require('./CompileError');
 var TYPE = require('./Symbol').TYPE;
 var QL = require('./Symbol').QL;
-function compile(expression, intepretation) {
+function compile(expression, interpretation) {
 	var global = this;
 	var table = require('lodash.transform')(global.scope.type, (result, value, key) => {
 		result[global.scope.table ? global.scope.table(key) : key] = [value];
 	});
-	intepretation.pre(global, compile);
+	interpretation.pre(global, compile);
 	var $expression = compile.call(this, expression);
-	return t(intepretation.post($expression), $expression[TYPE]);
+	return t(interpretation.post($expression), $expression[TYPE]);
 	function compile(expression) {
 		switch (expression.type) {
 			case 'literal':
 				var $value = expression.value;
 				return t(
-					intepretation.expression.literal($value),
+					interpretation.expression.literal($value),
 					typeof $value
 				);
 			case 'name':
@@ -26,15 +26,15 @@ function compile(expression, intepretation) {
 					if (expression.identifier in table) {
 						var $identifier = expression.identifier;
 						return t(
-							intepretation.expression.name.table($identifier),
+							interpretation.expression.name.table($identifier),
 							table[expression.identifier]
 						);
 					}
-					if (expression.identifier in intepretation.constant) {
+					if (expression.identifier in interpretation.constant) {
 						var $identifier = expression.identifier;
 						return t(
-							intepretation.expression.name.constant($identifier),
-							intepretation.constant[expression.identifier]
+							interpretation.expression.name.constant($identifier),
+							interpretation.constant[expression.identifier]
 						);
 					}
 				}
@@ -44,8 +44,8 @@ function compile(expression, intepretation) {
 					return compile.call(this, new Expression.Property(new Expression.Name('this', depth), expression.identifier));
 				var $identifier = expression.identifier;
 				return t(
-					// It's an exception to pass current environment to an expression intepreter. Its purpose is to make it possible for the intepretation to get the target environment, since `resolution` only provides `depth`.
-					intepretation.expression.name.name.call(this, $identifier, resolution),
+					// It's an exception to pass current environment to an expression interpreter. Its purpose is to make it possible for the interpretation to get the target environment, since `resolution` only provides `depth`.
+					interpretation.expression.name.name.call(this, $identifier, resolution),
 					value
 				);
 			case 'this':
@@ -63,7 +63,7 @@ function compile(expression, intepretation) {
 					})
 				);
 				return t(
-					intepretation.expression.object($property),
+					interpretation.expression.object($property),
 					$property.reduce(
 						(o, p) => Object.assign(
 							o,
@@ -79,7 +79,7 @@ function compile(expression, intepretation) {
 				if ($element.some(e => !require('./Type.equals')(e[TYPE], $element[0][TYPE])))
 					throw new CompileError.HeterogeneousArray(expression);
 				return t(
-					intepretation.expression.array($element),
+					interpretation.expression.array($element),
 					[$element[0][TYPE]]
 				);
 			case 'tuple':
@@ -87,7 +87,7 @@ function compile(expression, intepretation) {
 					element => compile.call(this, element)
 				);
 				return t(
-					intepretation.expression.tuple($element),
+					interpretation.expression.tuple($element),
 					new (require('./Type').Tuple)($element.map(e => e[TYPE]))
 				);
 			case 'id':
@@ -99,7 +99,7 @@ function compile(expression, intepretation) {
 					throw new CompileError.NonPrimitiveId(expression);
 				var $table = global.scope.table ? global.scope.table(expression.identifier) : expression.identifier;
 				return t(
-					intepretation.expression.find($table, $property, $id),
+					interpretation.expression.find($table, $property, $id),
 					type
 				);
 			case 'property':
@@ -117,12 +117,12 @@ function compile(expression, intepretation) {
 						$expression[TYPE][expression.property].value
 					);
 					return t(
-						intepretation.expression.bind($value, new Scope({}, $expression), Infinity),
+						interpretation.expression.bind($value, new Scope({}, $expression), Infinity),
 						$value[TYPE]
 					);
 				}
 				return t(
-					intepretation.expression.field($expression, $property),
+					interpretation.expression.field($expression, $property),
 					$expression[TYPE][expression.property].type
 				);
 			case 'element':
@@ -136,7 +136,7 @@ function compile(expression, intepretation) {
 					if (expression.index.type != 'literal')
 						throw new CompileError.NonLiteralTupleIndex(expression);
 				return t(
-					intepretation.expression.element($expression, $index),
+					interpretation.expression.element($expression, $index),
 					$expression[TYPE] instanceof Array ? $expression[TYPE][0] : $expression[TYPE].element[expression.index.value]
 				);
 			case 'call':
@@ -145,7 +145,7 @@ function compile(expression, intepretation) {
 				if (!require('./Type.equals')($argument[TYPE], $expression[TYPE].argument))
 					throw new CompileError.WrongArgumentType(expression);
 				return t(
-					intepretation.expression.call($expression, $argument),
+					interpretation.expression.call($expression, $argument),
 					$expression[TYPE].result
 				);
 			case 'operation':
@@ -161,7 +161,7 @@ function compile(expression, intepretation) {
 					);
 				}
 				return t(
-					intepretation.expression.operation($operator, $left, $right),
+					interpretation.expression.operation($operator, $left, $right),
 					type
 				);
 			case 'conditional':
@@ -171,7 +171,7 @@ function compile(expression, intepretation) {
 				if ($true[TYPE] != $false[TYPE])
 					throw new CompileError.NonEqualConditionalType(expression);
 				return t(
-					intepretation.expression.conditional($condition, $true, $false),
+					interpretation.expression.conditional($condition, $true, $false),
 					$true[TYPE]
 				);
 			case 'filter':
@@ -185,7 +185,7 @@ function compile(expression, intepretation) {
 				if (!($expression[TYPE] instanceof Array))
 					throw new CompileError.NonArrayFilter(expression);
 				return t(
-					intepretation.expression.filter($expression, $filter),
+					interpretation.expression.filter($expression, $filter),
 					$expression[TYPE]
 				);
 			case 'map':
@@ -199,7 +199,7 @@ function compile(expression, intepretation) {
 				if (!($expression[TYPE] instanceof Array))
 					throw new CompileError.NonArrayMap(expression);
 				return t(
-					intepretation.expression.map($expression, $mapper),
+					interpretation.expression.map($expression, $mapper),
 					[$mapper[TYPE]]
 				);
 			case 'limit':
@@ -218,7 +218,7 @@ function compile(expression, intepretation) {
 				if (!($expression[TYPE] instanceof Array))
 					throw new CompileError.NonArrayLimit(expression);
 				return t(
-					intepretation.expression.limit($expression, [$start, $length]),
+					interpretation.expression.limit($expression, [$start, $length]),
 					$expression[TYPE]
 				);
 			case 'order':
@@ -235,7 +235,7 @@ function compile(expression, intepretation) {
 				if (typeof $orderer[TYPE] == 'object')
 					throw new CompileError.NonPrimitiveOrder(expression);
 				return t(
-					intepretation.expression.order($expression, $orderer, $direction),
+					interpretation.expression.order($expression, $orderer, $direction),
 					$expression[TYPE]
 				);
 			case 'group':
@@ -251,7 +251,7 @@ function compile(expression, intepretation) {
 				if (typeof $grouper[TYPE] != 'string')
 					throw new CompileError.NonPrimitiveGroup(expression);
 				return t(
-					intepretation.expression.group($expression, $grouper),
+					interpretation.expression.group($expression, $grouper),
 					[{
 						key: { type: $grouper[TYPE] },
 						value: { type: $expression[TYPE] }
@@ -262,7 +262,7 @@ function compile(expression, intepretation) {
 				if (!($expression[TYPE] instanceof Array))
 					throw new CompileError.NonArrayDistinct(expression);
 				return t(
-					intepretation.expression.distinct($expression),
+					interpretation.expression.distinct($expression),
 					$expression[TYPE]
 				);
 			case 'comma':
@@ -277,11 +277,11 @@ function compile(expression, intepretation) {
 						expression.body
 					);
 				return t(
-					intepretation.expression.bind($body, new Scope({ [$head.name]: $head.value })),
+					interpretation.expression.bind($body, new Scope({ [$head.name]: $head.value })),
 					$body[TYPE]
 				);
 			default:
-				return intepretation.expression['*'](expression);
+				return interpretation.expression['*'](expression);
 		}
 		function t($expression, type) {
 			$expression[TYPE] = type;

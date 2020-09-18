@@ -1,4 +1,4 @@
-import * as Intepretation from "./Intepretation";
+import * as Interpretation from "./Interpretation";
 import * as Scope from './Scope';
 import * as Environment from './Environment';
 type Table = {
@@ -9,5 +9,5 @@ type Function = (this: Environment<any> & {
 		table?: { [name: string]: Table };
 	};
 }) => any;
-var intepretation: Intepretation<Function>;
-export = intepretation;
+var interpretation: Interpretation<Function>;
+export = interpretation;

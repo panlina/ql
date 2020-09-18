@@ -2,7 +2,7 @@ import Scope from './Scope';
 import Environment from './Environment';
 import Type from './Type';
 import Expression from './Expression';
-interface Intepretation<T> {
+interface Interpretation<T> {
 	pre(global: Environment<Type>): void;
 	post(T): T;
 	expression: {
@@ -34,4 +34,4 @@ interface Intepretation<T> {
 		[name: string]: Type;
 	};
 };
-export = Intepretation;
+export = Interpretation;

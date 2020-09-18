@@ -2,7 +2,7 @@ import * as Scope from './Scope';
 import * as Environment from './Environment';
 import * as Expression from './Expression';
 import * as Type from './Type';
-import * as Intepretation from './Intepretation';
+import * as Interpretation from './Interpretation';
 function compile<T>(
 	this: Environment<Type> & {
 		scope: Scope<Type> & {
@@ -11,6 +11,6 @@ function compile<T>(
 		}
 	},
 	expression: Expression,
-	intepretation: Intepretation<T>
+	interpretation: Interpretation<T>
 ): T;
 export = compile;

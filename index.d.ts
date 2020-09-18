@@ -5,7 +5,7 @@ export * as Type from './Type';
 export * as Scope from './Scope';
 export * as Environment from './Environment';
 export * as Context from './Context';
-export * as Intepretation from './Intepretation';
+export * as Interpretation from './Interpretation';
 export * as parse from './parse';
 export * as compile from './compile';
 export * as generate from './generate';
