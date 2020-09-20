@@ -18,7 +18,7 @@ interface Interpretation<T> {
 		find($table: string, $property: string, $id: string): T;
 		field($expression: T, $property: string): T;
 		element($expression: T, $index: T): T;
-		call($expression: T, $argument: T): T;
+		call(this: Environment<Type>, $expression: T, $argument: T): T;
 		operation($operator: string, $left?: T, $right?: T): T;
 		conditional($condition: T, $true: T, $false: T): T;
 		filter($expression: T, $filter: T): T;

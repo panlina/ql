@@ -145,7 +145,8 @@ function compile(expression, interpretation) {
 				if (!require('./Type.equals')($argument[TYPE], $expression[TYPE].argument))
 					throw new CompileError.WrongArgumentType(expression);
 				return t(
-					interpretation.expression.call($expression, $argument),
+					// It's an exception to pass current environment to an expression interpreter. Its purpose is to make it possible for the interpretation to get the target environment, since `resolution` only provides `depth`.
+					interpretation.expression.call.call(this, $expression, $argument),
 					$expression[TYPE].result
 				);
 			case 'operation':
