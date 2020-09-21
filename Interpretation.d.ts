@@ -29,6 +29,7 @@ interface Interpretation<T> {
 		distinct($expression: T): T;
 		['*'](expression: Expression): T;
 		bind($value: T, scope: Scope<T>, environment: number = 0): T;
+		scope($expression: Scope<T>, expression: Expression): { [key: string]: any };
 	};
 	constant: {
 		[name: string]: Type;

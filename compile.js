@@ -112,7 +112,10 @@ function compile(expression, interpretation) {
 				if ($expression[TYPE][expression.property].value) {
 					var $value = compile.call(
 						global.push(
-							new Scope({}, $expression[TYPE])
+							Object.assign(
+								new Scope({}, $expression[TYPE]),
+								interpretation.expression.scope(new Scope({}, $expression), expression)
+							)
 						),
 						$expression[TYPE][expression.property].value
 					);
@@ -179,7 +182,10 @@ function compile(expression, interpretation) {
 				var $expression = compile.call(this, expression.expression),
 					$filter = compile.call(
 						this.push(
-							new Scope({}, $expression[TYPE][0])
+							Object.assign(
+								new Scope({}, $expression[TYPE][0]),
+								interpretation.expression.scope(new Scope({}, $expression), expression)
+							)
 						),
 						expression.filter
 					);
@@ -193,7 +199,10 @@ function compile(expression, interpretation) {
 				var $expression = compile.call(this, expression.expression),
 					$mapper = compile.call(
 						this.push(
-							new Scope({}, $expression[TYPE][0])
+							Object.assign(
+								new Scope({}, $expression[TYPE][0]),
+								interpretation.expression.scope(new Scope({}, $expression), expression)
+							)
 						),
 						expression.mapper
 					);
@@ -226,7 +235,10 @@ function compile(expression, interpretation) {
 				var $expression = compile.call(this, expression.expression),
 					$orderer = compile.call(
 						this.push(
-							new Scope({}, $expression[TYPE][0])
+							Object.assign(
+								new Scope({}, $expression[TYPE][0]),
+								interpretation.expression.scope(new Scope({}, $expression), expression)
+							)
 						),
 						expression.orderer
 					),
@@ -243,7 +255,10 @@ function compile(expression, interpretation) {
 				var $expression = compile.call(this, expression.expression),
 					$grouper = compile.call(
 						this.push(
-							new Scope({}, $expression[TYPE][0])
+							Object.assign(
+								new Scope({}, $expression[TYPE][0]),
+								interpretation.expression.scope(new Scope({}, $expression), expression)
+							)
 						),
 						expression.grouper
 					);
@@ -273,7 +288,10 @@ function compile(expression, interpretation) {
 				},
 					$body = compile.call(
 						this.push(
-							new Scope({ [$head.name]: $head.value[TYPE] })
+							Object.assign(
+								new Scope({ [$head.name]: $head.value[TYPE] }),
+								interpretation.expression.scope(new Scope({ [$head.name]: $head.value }), expression)
+							)
 						),
 						expression.body
 					);

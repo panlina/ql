@@ -162,7 +162,8 @@ module.exports = {
 					), global
 				);
 			};
-		}
+		},
+		scope() { return {}; }
 	},
 	constant: {
 		false: 'boolean',
