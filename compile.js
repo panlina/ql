@@ -13,6 +13,11 @@ function compile(expression, interpretation) {
 	var $expression = compile.call(this, expression);
 	return t(interpretation.post($expression), $expression[TYPE]);
 	function compile(expression) {
+		if (interpretation.expression.compile) {
+			var $expression = interpretation.expression.compile.call(this, expression);
+			if ($expression)
+				return $expression;
+		}
 		switch (expression.type) {
 			case 'literal':
 				var $value = expression.value;

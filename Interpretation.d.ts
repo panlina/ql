@@ -28,6 +28,7 @@ interface Interpretation<T> {
 		group($expression: T, $grouper: T): T;
 		distinct($expression: T): T;
 		['*'](expression: Expression): T;
+		compile(this: Environment<Type>, expression: Expression): T;
 		bind($value: T, scope: Scope<T>, environment: number = 0): T;
 		scope($expression: Scope<T>, expression: Expression): { [key: string]: any };
 	};
