@@ -304,8 +304,6 @@ function compile(expression, interpretation) {
 					interpretation.expression.bind($body, new Scope({ [$head.name]: $head.value })),
 					$body[TYPE]
 				);
-			default:
-				return interpretation.expression['*'](expression);
 		}
 		function t($expression, type) {
 			$expression[TYPE] = type;

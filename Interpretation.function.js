@@ -150,7 +150,6 @@ module.exports = {
 				);
 			};
 		},
-		['*'](expression) { },
 		bind($value, scope, environment = 0) {
 			return function (global) {
 				return $value.call(
