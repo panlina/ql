@@ -184,35 +184,35 @@ function compile(expression, interpretation) {
 					$true[TYPE]
 				);
 			case 'filter':
-				var $expression = compile.call(this, expression.expression),
-					$filter = compile.call(
-						this.push(
-							Object.assign(
-								new Scope({}, $expression[TYPE][0]),
-								interpretation.expression.scope(new Scope({}, $expression), expression)
-							)
-						),
-						expression.filter
-					);
+				var $expression = compile.call(this, expression.expression);
 				if (!($expression[TYPE] instanceof Array))
 					throw new CompileError.NonArrayFilter(expression);
+				var $filter = compile.call(
+					this.push(
+						Object.assign(
+							new Scope({}, $expression[TYPE][0]),
+							interpretation.expression.scope(new Scope({}, $expression), expression)
+						)
+					),
+					expression.filter
+				);
 				return t(
 					interpretation.expression.filter($expression, $filter),
 					$expression[TYPE]
 				);
 			case 'map':
-				var $expression = compile.call(this, expression.expression),
-					$mapper = compile.call(
-						this.push(
-							Object.assign(
-								new Scope({}, $expression[TYPE][0]),
-								interpretation.expression.scope(new Scope({}, $expression), expression)
-							)
-						),
-						expression.mapper
-					);
+				var $expression = compile.call(this, expression.expression);
 				if (!($expression[TYPE] instanceof Array))
 					throw new CompileError.NonArrayMap(expression);
+				var $mapper = compile.call(
+					this.push(
+						Object.assign(
+							new Scope({}, $expression[TYPE][0]),
+							interpretation.expression.scope(new Scope({}, $expression), expression)
+						)
+					),
+					expression.mapper
+				);
 				return t(
 					interpretation.expression.map($expression, $mapper),
 					[$mapper[TYPE]]
@@ -237,19 +237,19 @@ function compile(expression, interpretation) {
 					$expression[TYPE]
 				);
 			case 'order':
-				var $expression = compile.call(this, expression.expression),
-					$orderer = compile.call(
-						this.push(
-							Object.assign(
-								new Scope({}, $expression[TYPE][0]),
-								interpretation.expression.scope(new Scope({}, $expression), expression)
-							)
-						),
-						expression.orderer
-					),
-					$direction = expression.direction;
+				var $expression = compile.call(this, expression.expression);
 				if (!($expression[TYPE] instanceof Array))
 					throw new CompileError.NonArrayOrder(expression);
+				var $orderer = compile.call(
+					this.push(
+						Object.assign(
+							new Scope({}, $expression[TYPE][0]),
+							interpretation.expression.scope(new Scope({}, $expression), expression)
+						)
+					),
+					expression.orderer
+				),
+					$direction = expression.direction;
 				if (typeof $orderer[TYPE] == 'object')
 					throw new CompileError.NonPrimitiveOrder(expression);
 				return t(
@@ -257,18 +257,18 @@ function compile(expression, interpretation) {
 					$expression[TYPE]
 				);
 			case 'group':
-				var $expression = compile.call(this, expression.expression),
-					$grouper = compile.call(
-						this.push(
-							Object.assign(
-								new Scope({}, $expression[TYPE][0]),
-								interpretation.expression.scope(new Scope({}, $expression), expression)
-							)
-						),
-						expression.grouper
-					);
+				var $expression = compile.call(this, expression.expression);
 				if (!($expression[TYPE] instanceof Array))
 					throw new CompileError.NonArrayGroup(expression);
+				var $grouper = compile.call(
+					this.push(
+						Object.assign(
+							new Scope({}, $expression[TYPE][0]),
+							interpretation.expression.scope(new Scope({}, $expression), expression)
+						)
+					),
+					expression.grouper
+				);
 				if (typeof $grouper[TYPE] != 'string')
 					throw new CompileError.NonPrimitiveGroup(expression);
 				return t(
