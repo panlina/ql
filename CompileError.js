@@ -62,7 +62,7 @@ class NonArrayLimit extends CompileError {
 }
 class InvalidLimiter extends CompileError {
 	constructor(expression) { super(expression); }
-	get message() { return `limiter must be array of start followed by length, both constants.`; }
+	get message() { return `limiter must be tuple of start followed by length, both constants.`; }
 }
 class NonArrayOrder extends CompileError {
 	constructor(expression) { super(expression); }

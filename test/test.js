@@ -136,8 +136,8 @@ it('[0,1] map this+1 where this>1', function () {
 		[2]
 	);
 });
-it('[0,1,2,3] limit [1,2]', function () {
-	var q = ql`[0,1,2,3] limit [1,2]`;
+it('[0,1,2,3] limit {1,2}', function () {
+	var q = ql`[0,1,2,3] limit {1,2}`;
 	var _function = ql.compile.call(new ql.Environment(Object.assign(new ql.Scope({}), { type: type, table: type => `${type}s` })), q, interpretation);
 	assert(require('../Type.equals')(_function[TYPE], ['number']));
 	assert.deepEqual(
@@ -286,7 +286,7 @@ describe('compile error', function () {
 		}, CompileError.NonArrayMap);
 	});
 	it('non-array limit', function () {
-		var q = ql`user#1 limit [0,0]`;
+		var q = ql`user#1 limit {0,0}`;
 		assert.throws(() => {
 			ql.compile.call(new ql.Environment(Object.assign(new ql.Scope({}), { type: type, table: type => `${type}s` })), q, interpretation);
 		}, CompileError.NonArrayLimit);
@@ -347,9 +347,9 @@ describe('generate', function () {
 		var q = ql`(length (123+user#456.number)).x@789`;
 		assert.equal(ql.generate(q), "(length (123+user#456.number)).x@789");
 	});
-	it("[{a:0,b:a=0,a in b},1] map (this+1 limit [0,10])", function () {
-		var q = ql`[{a:0,b:a=0,a in b},1] map (this+1 limit [0,10])`;
-		assert.equal(ql.generate(q), "[{a:0,b:a=0,a in b},1] map (this+1 limit [0,10])");
+	it("[{a:0,b:a=0,a in b},1] map (this+1 limit {0,10})", function () {
+		var q = ql`[{a:0,b:a=0,a in b},1] map (this+1 limit {0,10})`;
+		assert.equal(ql.generate(q), "[{a:0,b:a=0,a in b},1] map (this+1 limit {0,10})");
 	});
 	it("distinct ([{0,(a=0,a in b)},1] order 0?0?1:2:1+a#(a#2) desc)", function () {
 		var q = ql`distinct ([{0,(a=0,a in b)},1] order 0?0?1:2:1+a#(a#2) desc)`;

@@ -219,7 +219,7 @@ function compile(expression, interpretation) {
 				);
 			case 'limit':
 				if (!(
-					expression.limiter.type == 'array' &&
+					expression.limiter.type == 'tuple' &&
 					expression.limiter.element.length == 2 &&
 					expression.limiter.element[0].type == 'literal' &&
 					typeof expression.limiter.element[0].value == 'number' &&
