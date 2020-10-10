@@ -105,6 +105,15 @@ module.exports = {
 				);
 			};
 		},
+		which($expression, $filter) {
+			return function (global) {
+				return $expression.call(this, global).filter(
+					value => truthy(
+						$filter.call(this.push(new Scope({}, value)), global)
+					)
+				)[0];
+			};
+		},
 		map($expression, $mapper) {
 			return function (global) {
 				return $expression.call(this, global).map(

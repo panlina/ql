@@ -200,6 +200,23 @@ function compile(expression, interpretation) {
 					interpretation.expression.filter($expression, $filter),
 					$expression[TYPE]
 				);
+			case 'which':
+				var $expression = compile.call(this, expression.expression);
+				if (!($expression[TYPE] instanceof Array))
+					throw new CompileError.NonArrayFilter(expression);
+				var $filter = compile.call(
+					this.push(
+						Object.assign(
+							new Scope({}, $expression[TYPE][0]),
+							interpretation.expression.scope(new Scope({}, $expression), expression)
+						)
+					),
+					expression.filter
+				);
+				return t(
+					interpretation.expression.which($expression, $filter),
+					$expression[TYPE][0]
+				);
 			case 'map':
 				var $expression = compile.call(this, expression.expression);
 				if (!($expression[TYPE] instanceof Array))

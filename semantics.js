@@ -36,6 +36,10 @@ var semantics = grammar.createSemantics().addOperation('parse', {
 		expression.parse(),
 		filter.parse()
 	),
+	ExpressionQuery_which: (expression, which, filter) => new Expression.Which(
+		expression.parse(),
+		filter.parse()
+	),
 	ExpressionQuery_map: (expression, map, mapper) => new Expression.Map(
 		expression.parse(),
 		mapper.parse()

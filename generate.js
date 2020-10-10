@@ -98,6 +98,14 @@ function generate(expression) {
 			if (precedence[expression.filter.type] >= precedence[expression.type])
 				filter = `(${filter})`;
 			return `${$expression} where ${filter}`;
+		case 'which':
+			var $expression = generate(expression.expression);
+			if (precedence[expression.expression.type] > precedence[expression.type])
+				$expression = `(${$expression})`;
+			var filter = generate(expression.filter);
+			if (precedence[expression.filter.type] >= precedence[expression.type])
+				filter = `(${filter})`;
+			return `${$expression} which ${filter}`;
 		case 'map':
 			var $expression = generate(expression.expression);
 			if (precedence[expression.expression.type] > precedence[expression.type])

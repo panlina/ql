@@ -105,6 +105,14 @@ class Filter extends Expression {
 	}
 }
 
+class Which extends Expression {
+	constructor(expression, filter) {
+		super('which');
+		this.expression = expression;
+		this.filter = filter;
+	}
+}
+
 class Map extends Expression {
 	constructor(expression, mapper) {
 		super('map');
@@ -174,6 +182,7 @@ module.exports.Call = Call;
 module.exports.Operation = Operation;
 module.exports.Conditional = Conditional;
 module.exports.Filter = Filter;
+module.exports.Which = Which;
 module.exports.Map = Map;
 module.exports.Limit = Limit;
 module.exports.Order = Order;

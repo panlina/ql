@@ -44,6 +44,15 @@ it('users where (posts where id>10)', function () {
 		data.users.filter(user => data.posts.filter(post => post.userId == user.id && post.id > 10).length > 0).length
 	);
 });
+it('users which (posts where id>90)', function () {
+	var q = ql`users which (posts where id>10)`;
+	var _function = ql.compile.call(new ql.Environment(Object.assign(new ql.Scope({}), { type: type, table: type => `${type}s` })), q, interpretation);
+	assert(require('../Type.equals')(_function[TYPE], type.user));
+	assert.deepEqual(
+		_function.call(new ql.Environment(Object.assign(new ql.Scope({}), { table: data }))),
+		data.users.find(user => data.posts.filter(post => post.userId == user.id && post.id > 10).length > 0)
+	);
+});
 it('users map (albums map photos)', function () {
 	var q = ql`users map (albums map photos)`;
 	var _function = ql.compile.call(new ql.Environment(Object.assign(new ql.Scope({}), { type: type, table: type => `${type}s` })), q, interpretation);
@@ -275,6 +284,12 @@ describe('compile error', function () {
 	});
 	it('non-array filter', function () {
 		var q = ql`user#1 where 0`;
+		assert.throws(() => {
+			ql.compile.call(new ql.Environment(Object.assign(new ql.Scope({}), { type: type, table: type => `${type}s` })), q, interpretation);
+		}, CompileError.NonArrayFilter);
+	});
+	it('non-array which', function () {
+		var q = ql`user#1 which 0`;
 		assert.throws(() => {
 			ql.compile.call(new ql.Environment(Object.assign(new ql.Scope({}), { type: type, table: type => `${type}s` })), q, interpretation);
 		}, CompileError.NonArrayFilter);
