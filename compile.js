@@ -96,13 +96,13 @@ function compile(expression, interpretation) {
 					new (require('./Type').Tuple)($element.map(e => e[TYPE]))
 				);
 			case 'id':
-				var type = global.scope.type[expression.identifier];
+				var type = global.scope.type[expression.table];
 				if (!type) throw new CompileError.UndefinedName(expression);
 				var $property = require('./Type.id')(type),
 					$id = compile.call(this, expression.id);
 				if (typeof $id[TYPE] == 'object')
 					throw new CompileError.NonPrimitiveId(expression);
-				var $table = global.scope.table ? global.scope.table(expression.identifier) : expression.identifier;
+				var $table = global.scope.table ? global.scope.table(expression.table) : expression.table;
 				return t(
 					interpretation.expression.find($table, $property, $id),
 					type

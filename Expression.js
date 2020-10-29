@@ -48,9 +48,9 @@ class Tuple extends Expression {
 }
 
 class Id extends Expression {
-	constructor(identifier, id) {
+	constructor(table, id) {
 		super('id');
-		this.identifier = identifier;
+		this.table = table;
 		this.id = id;
 	}
 }

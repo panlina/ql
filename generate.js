@@ -23,7 +23,7 @@ function generate(expression) {
 			var id = generate(expression.id);
 			if (precedence[expression.id.type] >= precedence[expression.type])
 				id = `(${id})`;
-			return `${expression.identifier}#${id}`;
+			return `${expression.table}#${id}`;
 		case 'property':
 			var $expression = generate(expression.expression);
 			if (precedence[expression.expression.type] > precedence[expression.type])
